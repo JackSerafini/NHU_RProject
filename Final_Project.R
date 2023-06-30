@@ -1,4 +1,4 @@
-Data <- read.csv("~/Documents/Uni/Basi di Dati B/data/WiscNursingHome.csv", header = TRUE)
+Data <- read.csv("WiscNursingHome.csv", header = TRUE)
 # Probabilmente anche CRYEAR: Data$CRYEAR <- factor(Data$CRYEAR)
 Data$URBAN <- factor(Data$URBAN)
 Data$PRO <- factor(Data$PRO)
