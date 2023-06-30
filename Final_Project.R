@@ -7,3 +7,4 @@ Data$SELFFUNDINS <- factor(Data$SELFFUNDINS)
 Data$MCERT <- factor(Data$MCERT)
 Data$ORGSTR <- factor(Data$ORGSTR)
 
+# funziona?
