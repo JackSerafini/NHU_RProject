@@ -4,6 +4,9 @@
 # -------
 
 
+## Analisi descrittiva univariata 
+
+
 # Creazione del dataset da WiscNursingHome
 
 Data <- read.csv("WiscNursingHome.csv", header = TRUE)
@@ -98,4 +101,3 @@ ggplot(datatorta, aes(x="", y=value, fill=group)) +
     coord_polar("y", start=0) +
     theme_void()
 
-# Prova contemporanea
