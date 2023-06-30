@@ -71,5 +71,3 @@ plot_grid(p1, p2, p3,
           p10, p11,
           nrow = 4, ncol = 3)
 
-# Prova Jack :(
-
