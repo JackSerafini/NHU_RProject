@@ -1,3 +1,9 @@
+
+## CACCA
+
+
+##### Codice
+
 # Creazione del dataset da WiscNursingHome
 Data <- read.csv("WiscNursingHome.csv", header = TRUE)
 # Fattorizzazione delle variabili categoriali
