@@ -5,7 +5,10 @@
 ## Analisi descrittiva univariata 
 
 
-# Creazione del dataset da WiscNursingHome
+# Creazione del dataset da WiscNursingHome e aggiunta delle librerie usate
+library(ggplot2)
+library(cowplot)
+library(dplyr)
 
 #>>>>>>> bdaa65f6d066304038d4ec5ac7f7468d1b5aabcd
 Data <- read.csv("WiscNursingHome.csv", header = TRUE)
@@ -18,10 +21,8 @@ Data$MCERT <- factor(Data$MCERT)
 Data$ORGSTR <- factor(Data$ORGSTR)
 Data$MSA <- factor(Data$MSA)
 
-
-library(ggplot2)
-library(cowplot)
-library(dplyr)
+# Vogliamo stimare un modello che utilizzi ?quale variabili? come variabile
+# risposta
 
 
 p1 <- ggplot(data = Data, aes(y = TPY)) +
