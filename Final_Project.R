@@ -14,15 +14,18 @@ library(cowplot)
 
 
 p1 <- ggplot(data = Data, aes(y = TPY)) +
-    geom_boxplot(fill = "yellow",width = 0.5) +
+    geom_boxplot(fill = "yellow",width = 0.2) +
+    xlim(c(-0.2, 0.2)) +
     theme_classic() 
 
 p2 <- ggplot(data = Data, aes(y = NUMBED)) +
-    geom_boxplot(fill = "yellow", width = 0.5) +
+    geom_boxplot(fill = "yellow", width = 0.2) +
+    xlim(c(-0.2, 0.2)) +
     theme_classic() 
 
 p3 <- ggplot(data = Data, aes(y = SQRFOOT)) +
-    geom_boxplot(fill = "yellow", width = 0.5) +
+    geom_boxplot(fill = "yellow", width = 0.2) +
+    xlim(c(-0.2, 0.2)) +
     theme_classic() 
 
 p4 <- ggplot(data = Data, aes(x = CRYEAR, fill = CRYEAR)) +
