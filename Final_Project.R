@@ -1,6 +1,4 @@
-# Creazione del dataset WiscNursingHome sotto Data
 Data <- read.csv("WiscNursingHome.csv", header = TRUE)
-# Fattorizzazione delle variabili categoriali
 Data$CRYEAR <- factor(Data$CRYEAR)
 Data$URBAN <- factor(Data$URBAN)
 Data$PRO <- factor(Data$PRO)
@@ -10,11 +8,11 @@ Data$MCERT <- factor(Data$MCERT)
 Data$ORGSTR <- factor(Data$ORGSTR)
 Data$MSA <- factor(Data$MSA)
 
-# Richiamo delle librerie
+
 library(ggplot2)
 library(cowplot)
 
-# Creazione dei grafici (orribili)
+
 p1 <- ggplot(data = Data, aes(y = TPY)) +
     geom_boxplot(fill = "yellow") +
     theme_classic() 
@@ -73,3 +71,9 @@ plot_grid(p1, p2, p3,
           p10, p11,
           nrow = 4, ncol = 3)
 
+datatorta <- data.frame(group = Data$MSA, value = length(Data$MSA))
+
+ggplot(datatorta, aes(x="", y=value, fill=group)) +
+    geom_bar(stat="identity", width=1) +
+    coord_polar("y", start=0) +
+    theme_void()
