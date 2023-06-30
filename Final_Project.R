@@ -1,3 +1,17 @@
+<<<<<<< HEAD
+=======
+
+# -------
+## CACCA
+# -------
+
+
+## Analisi descrittiva univariata 
+
+
+# Creazione del dataset da WiscNursingHome
+
+>>>>>>> bdaa65f6d066304038d4ec5ac7f7468d1b5aabcd
 Data <- read.csv("WiscNursingHome.csv", header = TRUE)
 Data$CRYEAR <- factor(Data$CRYEAR)
 Data$URBAN <- factor(Data$URBAN)
@@ -11,6 +25,7 @@ Data$MSA <- factor(Data$MSA)
 
 library(ggplot2)
 library(cowplot)
+library(dplyr)
 
 
 p1 <- ggplot(data = Data, aes(y = TPY)) +
@@ -74,3 +89,27 @@ plot_grid(p1, p2, p3,
           p10, p11,
           nrow = 4, ncol = 3)
 
+<<<<<<< HEAD
+=======
+# Grafico a torta gnam
+
+datatorta <- data.frame(group = Data$MSA, value = length(Data$MSA))
+
+ggplot(datatorta, aes(x="", y=value, fill=group)) +
+    geom_bar(stat="identity", width=1) +
+    coord_polar("y", start=0) +
+    theme_void()
+
+datatorta <- datatorta %>% 
+    arrange(desc(group)) %>%
+    mutate(prop = value / sum(datatorta$value) *100) %>%
+    mutate(ypos = cumsum(prop)- 0.5*prop )
+
+ggplot(datatorta, aes(x="", y=prop, fill=group)) +
+    geom_bar(stat="identity", width=1, color="white") +
+    coord_polar("y", start=0) +
+    theme_void() + 
+    theme(legend.position="none") +
+    geom_text(aes(y = ypos, label = group), color = "white", size=6) +
+    scale_fill_brewer(palette="Set1")
+>>>>>>> bdaa65f6d066304038d4ec5ac7f7468d1b5aabcd
