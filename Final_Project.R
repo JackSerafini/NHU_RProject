@@ -28,6 +28,7 @@ Data$MSA <- factor(Data$MSA)
 
 library(ggplot2)
 library(cowplot)
+library(dplyr)
 
 
 # Creazione dei grafici (orribili)
@@ -101,3 +102,15 @@ ggplot(datatorta, aes(x="", y=value, fill=group)) +
     coord_polar("y", start=0) +
     theme_void()
 
+datatorta <- datatorta %>% 
+    arrange(desc(group)) %>%
+    mutate(prop = value / sum(datatorta$value) *100) %>%
+    mutate(ypos = cumsum(prop)- 0.5*prop )
+
+ggplot(datatorta, aes(x="", y=prop, fill=group)) +
+    geom_bar(stat="identity", width=1, color="white") +
+    coord_polar("y", start=0) +
+    theme_void() + 
+    theme(legend.position="none") +
+    geom_text(aes(y = ypos, label = group), color = "white", size=6) +
+    scale_fill_brewer(palette="Set1")
