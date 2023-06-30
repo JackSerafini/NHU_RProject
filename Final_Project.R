@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-=======
-
-# -------
-## CACCA
-# -------
+#<<<<<<< HEAD
+#=======
 
 
 ## Analisi descrittiva univariata 
@@ -11,7 +7,7 @@
 
 # Creazione del dataset da WiscNursingHome
 
->>>>>>> bdaa65f6d066304038d4ec5ac7f7468d1b5aabcd
+#>>>>>>> bdaa65f6d066304038d4ec5ac7f7468d1b5aabcd
 Data <- read.csv("WiscNursingHome.csv", header = TRUE)
 Data$CRYEAR <- factor(Data$CRYEAR)
 Data$URBAN <- factor(Data$URBAN)
@@ -89,8 +85,8 @@ plot_grid(p1, p2, p3,
           p10, p11,
           nrow = 4, ncol = 3)
 
-<<<<<<< HEAD
-=======
+#<<<<<<< HEAD
+#=======
 # Grafico a torta gnam
 
 datatorta <- data.frame(group = Data$MSA, value = length(Data$MSA))
@@ -112,4 +108,5 @@ ggplot(datatorta, aes(x="", y=prop, fill=group)) +
     theme(legend.position="none") +
     geom_text(aes(y = ypos, label = group), color = "white", size=6) +
     scale_fill_brewer(palette="Set1")
->>>>>>> bdaa65f6d066304038d4ec5ac7f7468d1b5aabcd
+#>>>>>>> bdaa65f6d066304038d4ec5ac7f7468d1b5aabcd
+
