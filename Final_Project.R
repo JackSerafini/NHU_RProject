@@ -1,17 +1,21 @@
-#<<<<<<< HEAD
-#=======
+
+# -------
+## CACCA
+# -------
 
 
-## Analisi descrittiva univariata 
+## ANALISI DESCRITTIVA DEI DATI
+# Vediamo come si distribuisce ciascuna variabile e poi quali sono le relazioni delle variabili
+# con la variabile risposta
 
 
-# Creazione del dataset da WiscNursingHome e aggiunta delle librerie usate
-library(ggplot2)
-library(cowplot)
-library(dplyr)
+# Creazione del dataset da WiscNursingHome
 
-#>>>>>>> bdaa65f6d066304038d4ec5ac7f7468d1b5aabcd
 Data <- read.csv("WiscNursingHome.csv", header = TRUE)
+
+
+# Fattorizzazione delle variabili categoriali
+
 Data$CRYEAR <- factor(Data$CRYEAR)
 Data$URBAN <- factor(Data$URBAN)
 Data$PRO <- factor(Data$PRO)
@@ -21,93 +25,220 @@ Data$MCERT <- factor(Data$MCERT)
 Data$ORGSTR <- factor(Data$ORGSTR)
 Data$MSA <- factor(Data$MSA)
 
-# Vogliamo stimare un modello che utilizzi ?quale variabili? come variabile
-# risposta
 
+# Richiamo delle librerie
+
+library(ggplot2)
+library(cowplot)
+library(dplyr)
+
+
+# Creazione dei grafici (orribili)
+# Parto con le variabili quantitative
 
 p1 <- ggplot(data = Data, aes(y = TPY)) +
-    geom_boxplot(fill = "yellow",width = 0.2) +
-    xlim(c(-0.2, 0.2)) +
-    theme_classic() 
+  geom_boxplot(fill = "yellow") +
+  theme_classic() +
+  xlab("") +
+  ylab("TPY")
 
 p2 <- ggplot(data = Data, aes(y = NUMBED)) +
-    geom_boxplot(fill = "yellow", width = 0.2) +
-    xlim(c(-0.2, 0.2)) +
-    theme_classic() 
+  geom_boxplot(fill = "yellow") +
+  theme_classic() +
+  xlab("") +
+  ylab("")
 
-p3 <- ggplot(data = Data, aes(y = SQRFOOT)) +
-    geom_boxplot(fill = "yellow", width = 0.2) +
-    xlim(c(-0.2, 0.2)) +
-    theme_classic() 
+p3 <- ggplot(data = na.omit(Data), aes(y = SQRFOOT)) +
+  geom_boxplot(fill = "yellow") +
+  theme_classic() +
+  xlab("SQRFOOT") +
+  ylab("")
+
+p1.2 <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
+  geom_point() +
+  theme_classic() +
+  xlab("") +
+  ylab("")
+
+p1.3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT, y = TPY)) +
+  geom_point() +
+  theme_classic() +
+  xlab("") +
+  ylab("")
+
+p2.3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT, y = NUMBED)) +
+  geom_point() +
+  theme_classic() +
+  xlab("") +
+  ylab("")
+
+p2.1 <- ggplot(data = Data, aes(x = TPY, y = NUMBED)) +
+  geom_point() +
+  theme_classic() +
+  xlab("") +
+  ylab("NUMBED")
+
+p3.1 <- ggplot(data = na.omit(Data), aes(x = TPY, y = SQRFOOT)) +
+  geom_point() +
+  theme_classic()  +
+  xlab("TPY") +
+  ylab("SQRFOOT")
+
+p3.2 <- ggplot(data = na.omit(Data), aes(x = NUMBED, y = SQRFOOT)) +
+  geom_point() +
+  theme_classic() +
+  xlab("NUMBED") +
+  ylab("")
+
+
+# Metto nella griglia tutti i grafici brutti
+
+plot_grid(p1, p1.2, p1.3,  
+          p2.1, p2, p2.3,
+          p3.1, p3.2, p3,
+          nrow = 3, ncol = 3)
+
+# Queste sono le relazioni tra le varie variabili
+
+# Stampo le correlazioni
+
+cor(Data$TPY, Data$NUMBED)
+cor(na.omit(Data)$TPY, na.omit(Data)$SQRFOOT)
+cor(na.omit(Data)$NUMBED, na.omit(Data)$SQRFOOT)
+
+# Correlazione molto alta tra tutte e 3 le variabili
+# In ottica di analisi di regressione occhio a multicollinearit?
+# (non so se si dice cos? forse me lo sono inventato)
+
+
+# Variabili qualitative
 
 p4 <- ggplot(data = Data, aes(x = CRYEAR, fill = CRYEAR)) +
-    geom_bar(width = 0.5) +
-    theme_classic() +
-    theme(legend.position = "none")
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
 
 p5 <- ggplot(data = Data, aes(x = MSA, fill = MSA)) +
-    geom_bar(width = 0.5) +
-    theme_classic() +
-    theme(legend.position = "none")
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
 
 p6 <- ggplot(data = Data, aes(x = URBAN, fill = URBAN)) +
-    geom_bar(width = 0.5) +
-    theme_classic() +
-    theme(legend.position = "none")
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
 
 p7 <- ggplot(data = Data, aes(x = PRO, fill = PRO)) +
-    geom_bar(width = 0.5) +
-    theme_classic() +
-    theme(legend.position = "none")
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
 
 p8 <- ggplot(data = Data, aes(x = TAXEXEMPT, fill = TAXEXEMPT)) +
-    geom_bar(width = 0.5) +
-    theme_classic() +
-    theme(legend.position = "none")
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
 
 p9 <- ggplot(data = Data, aes(x = SELFFUNDINS, fill = SELFFUNDINS)) +
-    geom_bar(width = 0.5) +
-    theme_classic() +
-    theme(legend.position = "none")
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
 
 p10 <- ggplot(data = Data, aes(x = MCERT, fill = MCERT)) +
-    geom_bar(width = 0.5) +
-    theme_classic() +
-    theme(legend.position = "none")
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
 
 p11 <- ggplot(data = Data, aes(x = ORGSTR, fill = ORGSTR)) +
-    geom_bar(width = 0.5) +
-    theme_classic() +
-    theme(legend.position = "none")
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
 
-plot_grid(p1, p2, p3,
-          p4, p5, p6,
-          p7, p8, p9,
-          p10, p11,
-          nrow = 4, ncol = 3)
-
-#<<<<<<< HEAD
-#=======
 # Grafico a torta gnam
 
-datatorta <- data.frame(group = Data$MSA, value = length(Data$MSA))
+ppie <- ggplot(Data, aes(x="", y="", fill=MSA)) +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0) +
+  theme_void()
 
-ggplot(datatorta, aes(x="", y=value, fill=group)) +
-    geom_bar(stat="identity", width=1) +
-    coord_polar("y", start=0) +
-    theme_void()
 
-datatorta <- datatorta %>% 
-    arrange(desc(group)) %>%
-    mutate(prop = value / sum(datatorta$value) *100) %>%
-    mutate(ypos = cumsum(prop)- 0.5*prop )
+# Metto nella griglia tutti i grafici brutti
 
-ggplot(datatorta, aes(x="", y=prop, fill=group)) +
-    geom_bar(stat="identity", width=1, color="white") +
-    coord_polar("y", start=0) +
-    theme_void() + 
-    theme(legend.position="none") +
-    geom_text(aes(y = ypos, label = group), color = "white", size=6) +
-    scale_fill_brewer(palette="Set1")
-#>>>>>>> bdaa65f6d066304038d4ec5ac7f7468d1b5aabcd
+plot_grid(p4,p6,p7,p11,
+          p8,p9,p10,ppie,
+          nrow = 2)
 
+# NB per non vedere sminchiata la legenda bisogna mettere il grafico a schermo intero
+# ancora da capire come sistemare questo problema
+
+# Vediamo le distribuzioni condizionate della variabile risposta
+
+c4 <- ggplot(data = Data, aes(x = CRYEAR, y = TPY, fill = CRYEAR)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+c5 <- ggplot(data = Data, aes(x = URBAN, y = TPY, fill = URBAN)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+c6 <- ggplot(data = Data, aes(x = PRO, y = TPY, fill = PRO)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+c7 <- ggplot(data = Data, aes(x = ORGSTR, y = TPY, fill = ORGSTR)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+c8 <- ggplot(data = Data, aes(x = TAXEXEMPT, y = TPY, fill = TAXEXEMPT)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+c9 <- ggplot(data = Data, aes(x = SELFFUNDINS, y = TPY, fill = SELFFUNDINS)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+c10 <- ggplot(data = Data, aes(x = MCERT, y = TPY, fill = MCERT)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+c11 <- ggplot(data = Data, aes(x = MSA, y = TPY, fill = MSA)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+plot_grid(c4, c5, c6, c7,
+          c8, c9, c10, c11,
+          nrow = 2)
+
+# Come sempre il grafico di MSA ? strano perch? ha troppe determinazioni
+
+
+## REGRESSIONI LINEARI PER LA STIMA DI TPY
+# Proviamo prima le regressioni semplici con NUMBED e SQRFOOT
+# Bisogna probabilmente scegliere una sola delle due variabili perch? sono troppo correlate
+# Poi proviamo ad aggiungere tutte le variabili qualitative e vediamo come incidono
+# Modello ideale: 1 quantitativa + 1/2 qualitative (non ? detto per forza)
+
+
+## INFERENZA SUI RISULTATI
+# Boh ho aggiunto questa sezione perch? pu? essere simpatico e farci prendere qualche voto in pi?
+# Penso che sia sufficiente cercare su internet quali sono i test di ipotesi migliori
+# in base al modello di regressione che ci uscir?
+
+
+## CLUSTERING
+# Pu? essere figo provare a fare qualcosa, ma devo ancora recuperarmi la teoria quindi non so
