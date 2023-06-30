@@ -242,3 +242,48 @@ plot_grid(c4, c5, c6, c7,
 
 ## CLUSTERING
 # Pu? essere figo provare a fare qualcosa, ma devo ancora recuperarmi la teoria quindi non so
+
+# Provo a fare del clustering
+library(cluster)
+
+# Stampo di nuovo le quantitative
+ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
+  geom_point() +
+  theme_classic()
+ggplot(data = na.omit(Data), aes(x = SQRFOOT, y = TPY)) +
+  geom_point() +
+  theme_classic()
+
+# Provo a farlo utilizzando solo le variabili quantitative (per ora)
+
+# Costruisco le distanze (euclidee per variabili quantitative)
+dist.numbed <- daisy(scale(Data[,c("NUMBED", "TPY")]))
+as.matrix(dist.numbed)[1:5,1:5] #matrice delle distanze
+dist.sqrfoot <- daisy(scale(Data[,c("SQRFOOT", "TPY")]))
+as.matrix(dist.sqrfoot)[1:5,1:5] #matrice delle distanze
+# NB la funzione scale serve a standardizzare il dataset
+
+# Provo il clustering con il metodo delle k medie
+km.numbed <- kmeans(scale(Data[,c("NUMBED", "TPY")]), centers = 2)
+km.sqrfoot <- kmeans(scale(na.omit(Data[,c("SQRFOOT", "TPY")])), centers = 2)
+# Numerosità nei due cluster
+table(km.numbed$cluster)
+table(km.sqrfoot$cluster)
+# Numerosità molto asimmetriche
+
+# Visualizzo graficamente i clustering
+ggplot(Data, aes(x = NUMBED, y = TPY, col = factor(km.numbed$cluster))) +
+  geom_point() + 
+  theme_classic() +
+  theme(legend.position = "") 
+ggplot(na.omit(Data), aes(x = SQRFOOT, y = TPY, col = factor(km.sqrfoot$cluster))) +
+  geom_point() + 
+  theme_classic() +
+  theme(legend.position = "") 
+
+# Varianze between
+km.numbed$tot.withinss
+km.numbed$betweenss
+km.sqrfoot$tot.withinss
+km.sqrfoot$betweenss
+# Teoricamente il primo clustering (con numbed) è migliore perché ha varianza within minore
