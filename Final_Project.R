@@ -1,9 +1,16 @@
 
+# -------
 ## CACCA
+# -------
+
 
 # Creazione del dataset da WiscNursingHome
+
 Data <- read.csv("WiscNursingHome.csv", header = TRUE)
+
+
 # Fattorizzazione delle variabili categoriali
+
 Data$CRYEAR <- factor(Data$CRYEAR)
 Data$URBAN <- factor(Data$URBAN)
 Data$PRO <- factor(Data$PRO)
@@ -13,11 +20,15 @@ Data$MCERT <- factor(Data$MCERT)
 Data$ORGSTR <- factor(Data$ORGSTR)
 Data$MSA <- factor(Data$MSA)
 
+
 # Richiamo delle librerie
+
 library(ggplot2)
 library(cowplot)
 
+
 # Creazione dei grafici (orribili)
+
 p1 <- ggplot(data = Data, aes(y = TPY)) +
     geom_boxplot(fill = "yellow") +
     theme_classic() 
@@ -70,11 +81,15 @@ p11 <- ggplot(data = Data, aes(x = ORGSTR, fill = ORGSTR)) +
     theme_classic() +
     theme(legend.position = "none")
 
+# Metto nella griglia tutti i grafici brutti
+
 plot_grid(p1, p2, p3,
           p4, p5, p6,
           p7, p8, p9,
           p10, p11,
           nrow = 4, ncol = 3)
+
+# Grafico a torta gnam
 
 datatorta <- data.frame(group = Data$MSA, value = length(Data$MSA))
 
