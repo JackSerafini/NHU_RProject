@@ -287,3 +287,27 @@ km.numbed$betweenss
 km.sqrfoot$tot.withinss
 km.sqrfoot$betweenss
 # Teoricamente il primo clustering (con numbed) è migliore perché ha varianza within minore
+
+# Provo a fare cluster con dimensioni diverse da 2 a 10
+# Li valuto stampando le varianze within
+crit.n<-0
+crit.s<-0
+for (i in 2:10) {
+  set.seed(7)
+  group.numbed<-kmeans(scale(Data[,c("NUMBED", "TPY")]), i, nstart=10)
+  group.sqrfoot<-kmeans(scale(na.omit(Data[,c("SQRFOOT", "TPY")])), i, nstart=10)
+  crit.n[i-1]<-group.numbed$tot.withinss
+  crit.s[i-1]<-group.sqrfoot$tot.withinss
+}
+clsdb <- data.frame(index = 2:10, crit.n, crit.s)
+ggplot(clsdb, aes(index, crit.n)) +
+  geom_point() +
+  geom_line() +
+  theme_classic()
+ggplot(clsdb, aes(index, crit.s)) +
+  geom_point() +
+  geom_line() +
+  theme_classic()
+# In entrambi i casi il "gomito" sembra essere sul 3
+# Ad occhio NUMBED sembra meglio, ma nessuno dei due sembra tanta roba
+
