@@ -21,7 +21,7 @@ p2 <- ggplot(data = Data, aes(y = NUMBED)) +
     geom_boxplot(fill = "yellow") +
     theme_classic() 
 
-p3 <- ggplot(data = Data, aes(y = SQRFOOT)) +
+p3 <- ggplot(data = na.omit(Data), aes(y = SQRFOOT)) +
     geom_boxplot(fill = "yellow") +
     theme_classic() 
 
