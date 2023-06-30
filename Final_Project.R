@@ -79,3 +79,5 @@ ggplot(datatorta, aes(x="", y=value, fill=group)) +
     geom_bar(stat="identity", width=1) +
     coord_polar("y", start=0) +
     theme_void()
+
+# Prova contemporanea
