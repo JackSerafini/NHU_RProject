@@ -111,8 +111,8 @@ cor(na.omit(Data)$TPY, na.omit(Data)$SQRFOOT)
 cor(na.omit(Data)$NUMBED, na.omit(Data)$SQRFOOT)
 
 # Correlazione molto alta tra tutte e 3 le variabili
-# In ottica di analisi di regressione occhio a multicollinearit?
-# (non so se si dice cos? forse me lo sono inventato)
+# In ottica di analisi di regressione occhio a multicollinearità
+# (non so se si dice così forse me lo sono inventato)(penso di sì)
 
 
 # Variabili qualitative
@@ -165,7 +165,7 @@ p11 <- ggplot(data = Data, aes(x = ORGSTR, fill = ORGSTR)) +
   theme(legend.position = "none") +
   ylab("")
 
-# Grafico a torta gnam
+# Grafico a torta gnam :P
 
 ppie <- ggplot(Data, aes(x="", y="", fill=MSA)) +
   geom_bar(stat="identity", width=1) +
@@ -228,27 +228,27 @@ plot_grid(c4, c5, c6, c7,
           c8, c9, c10, c11,
           nrow = 2)
 
-# Come sempre il grafico di MSA ? strano perch? ha troppe determinazioni
+# Come sempre il grafico di MSA è strano perché ha troppe determinazioni
 
 
 
 
 ## REGRESSIONI LINEARI PER LA STIMA DI TPY
 # Proviamo prima le regressioni semplici con NUMBED e SQRFOOT
-# Bisogna probabilmente scegliere una sola delle due variabili perch? sono troppo correlate
+# Bisogna probabilmente scegliere una sola delle due variabili perché sono troppo correlate
 # Poi proviamo ad aggiungere tutte le variabili qualitative e vediamo come incidono
-# Modello ideale: 1 quantitativa + 1/2 qualitative (non ? detto per forza)
+# Modello ideale: 1 quantitativa + 1/2 qualitative (non è detto per forza)
 
 
-#Costruzione del modello
+# Costruzione del modello
 fit_NUMBED <- lm(Data$TPY ~ Data$NUMBED)
-#plot
+# plot
 par(mfrow = c(2,2))
 plot(fit_NUMBED)
 par(mfrow = c(1,1))
-#Il grafico dei residui è tipo perfetto
-#Viene violata un po la condizione di normalità sulle code
-#Ci sono un paio di valori estremi: sopreatutto il 564
+# Il grafico dei residui è tipo perfetto
+# Viene violata un po la condizione di normalità sulle code
+# Ci sono un paio di valori estremi: sopreatutto il 564
 Data[564,]
 #interpretazione dei valori
 summary(fit_NUMBED)
@@ -264,16 +264,16 @@ summary(fit_NUMBED)
 #' modello quasi perfetto
 
 #Diagramma di dispersione + retta di regressione lineare
-#Metto in evidenza il punto che era esrtemo sul grafico dei residui
+#Metto in evidenza il punto che era estremo sul grafico dei residui
 ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
   geom_point() +
   geom_smooth(se = F, method = 'lm') +
   theme_classic()+
   geom_point(aes(x = Data[564,'NUMBED'], y = Data[564,'TPY']), colour = "red")
 
-#Costruzione del modello
+# Costruzione del modello
 fit_SQRFOOT <- lm(Data$TPY ~ Data$SQRFOOT)
-#plot
+# plot
 par(mfrow = c(2,2))
 plot(fit_SQRFOOT)
 par(mfrow = c(1,1))
@@ -281,7 +281,7 @@ par(mfrow = c(1,1))
 #' la condizione di normalità viene meglio rispettata
 #' nell'ultimo grafico ci sono più valori estremi: 564, 200, 557
 
-#interpretazione dei valori
+# interpretazione dei valori
 summary(fit_SQRFOOT)
 #' Residui variano un bel po': la differenza fra il minimo e il massimo è di 140, ma
 #' la maggior parte dei valori sono compresi fra -15, e 15. Quindi come già visto prima
@@ -291,9 +291,9 @@ summary(fit_SQRFOOT)
 #' la pendenza della retta vicino a 1 quindi circa per ogni piede quadrato c'è un paziente
 #' in più all'anno
 
-#Diagramma di dispersione + retta di regressione lineare
-#Metto in evidenza i punti che era esrtemo sul grafico dei residui
-#Problema mi da dei warnins message
+# Diagramma di dispersione + retta di regressione lineare
+# Metto in evidenza i punti che era esrtemo sul grafico dei residui
+# Problema mi da dei warnins message
 ggplot(data = Data, aes(x = SQRFOOT, y = TPY)) +
   geom_point() +
   geom_smooth(se = F, method = 'lm') +
@@ -306,13 +306,15 @@ ggplot(data = Data, aes(x = SQRFOOT, y = TPY)) +
 
 
 ## INFERENZA SUI RISULTATI
-# Boh ho aggiunto questa sezione perch? pu? essere simpatico e farci prendere qualche voto in pi?
+# Boh ho aggiunto questa sezione perché può essere simpatico e farci prendere qualche voto in più
 # Penso che sia sufficiente cercare su internet quali sono i test di ipotesi migliori
-# in base al modello di regressione che ci uscir?
+# in base al modello di regressione che ci uscirà
+### Assolutamente d'accordo (Jack)
 
 
 ## CLUSTERING
-# Pu? essere figo provare a fare qualcosa, ma devo ancora recuperarmi la teoria quindi non so
+# Può essere figo provare a fare qualcosa, ma devo ancora recuperarmi la teoria quindi non so
+### Questo assolutamente da fare, fa parte del corso dopotutto (Jack)
 
 # Provo a fare del clustering
 library(cluster)
