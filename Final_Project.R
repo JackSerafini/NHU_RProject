@@ -37,23 +37,26 @@ library(factoextra)
 # Creazione dei grafici (orribili)
 # Parto con le variabili quantitative
 
-p1 <- ggplot(data = Data, aes(y = TPY)) +
-  geom_boxplot(fill = "yellow") +
+p1 <- ggplot(data = Data, aes(x = TPY)) +
+  geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
   theme_classic() +
   xlab("") +
-  ylab("TPY")
+  ylab("TPY") +
+  geom_density(col = "black", lwd = 0.75)
 
-p2 <- ggplot(data = Data, aes(y = NUMBED)) +
-  geom_boxplot(fill = "yellow") +
+p2 <- ggplot(data = Data, aes(x = NUMBED)) +
+  geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
   theme_classic() +
   xlab("") +
-  ylab("")
+  ylab("") +
+  geom_density(col = "black", lwd = 0.75)
 
-p3 <- ggplot(data = na.omit(Data), aes(y = SQRFOOT)) +
-  geom_boxplot(fill = "yellow") +
+p3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT)) +
+  geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
   theme_classic() +
   xlab("SQRFOOT") +
-  ylab("")
+  ylab("") +
+  geom_density(col = "black", lwd = 0.75)
 
 p1.2 <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
   geom_point() +
@@ -226,6 +229,8 @@ plot_grid(c4, c5, c6, c7,
           nrow = 2)
 
 # Come sempre il grafico di MSA ? strano perch? ha troppe determinazioni
+
+
 
 
 ## REGRESSIONI LINEARI PER LA STIMA DI TPY
@@ -415,4 +420,4 @@ sil <- silhouette(pam.sqrfoot$cluster, dist(scale(na.omit(Data[,c("SQRFOOT", "TP
 fviz_silhouette(sil)
 # Silhouette terribili, forse era meglio il metodo delle k-means
 
-
+# Per il clustering cumulato e condizonato alle variabili categoriale aspettiamo regressione
