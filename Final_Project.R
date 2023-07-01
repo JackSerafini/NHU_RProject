@@ -31,6 +31,7 @@ Data$MSA <- factor(Data$MSA)
 library(ggplot2)
 library(cowplot)
 library(dplyr)
+library(factoextra)
 
 
 # Creazione dei grafici (orribili)
@@ -271,15 +272,22 @@ table(km.numbed$cluster)
 table(km.sqrfoot$cluster)
 # Numerosità molto asimmetriche
 
+# Dataframe di supporto per la rappresentazione grafica
+data.centers.numbed <- data.frame(NUMBED = km.numbed$centers[,1]*sd(Data$NUMBED)+mean(Data$NUMBED),
+                                  TPY = km.numbed$centers[,2]*sd(Data$TPY)+mean(Data$TPY))
+data.centers.sqrfoot <- data.frame(SQRFOOT = km.sqrfoot$centers[,1]*sd(na.omit(Data$SQRFOOT))+mean(na.omit(Data$SQRFOOT)),
+                                  TPY = km.sqrfoot$centers[,2]*sd(Data$TPY)+mean(Data$TPY))
 # Visualizzo graficamente i clustering
 ggplot(Data, aes(x = NUMBED, y = TPY, col = factor(km.numbed$cluster))) +
   geom_point() + 
   theme_classic() +
-  theme(legend.position = "") 
+  theme(legend.position = "") +
+  geom_point(data = data.centers.numbed, aes(x = NUMBED, y = TPY), col = "black")
 ggplot(na.omit(Data), aes(x = SQRFOOT, y = TPY, col = factor(km.sqrfoot$cluster))) +
   geom_point() + 
   theme_classic() +
-  theme(legend.position = "") 
+  theme(legend.position = "") +
+  geom_point(data = data.centers.sqrfoot, aes(x = SQRFOOT, y = TPY), col = "black")
 
 # Varianze between
 km.numbed$tot.withinss
@@ -300,6 +308,7 @@ for (i in 2:10) {
   crit.s[i-1]<-group.sqrfoot$tot.withinss
 }
 clsdb <- data.frame(index = 2:10, crit.n, crit.s)
+# Visualizzazione grafica dei risultati
 ggplot(clsdb, aes(index, crit.n)) +
   geom_point() +
   geom_line() +
@@ -310,4 +319,35 @@ ggplot(clsdb, aes(index, crit.s)) +
   theme_classic()
 # In entrambi i casi il "gomito" sembra essere sul 3
 # Ad occhio NUMBED sembra meglio, ma nessuno dei due sembra tanta roba
+
+# Provo il clustering con metodo PAM
+pam.numbed <- pam(scale(Data[,c("NUMBED", "TPY")]), 2, metric = "euclidean")
+pam.numbed$medoids
+pam.sqrfoot <- pam(scale(na.omit(Data[,c("SQRFOOT", "TPY")])), 2, metric = "euclidean")
+pam.sqrfoot$medoids
+
+# Dataframe di supporto per la rappresentazione grafica
+data.medoids.numbed <- data.frame(NUMBED = pam.numbed$medoids[,1]*sd(Data$NUMBED)+mean(Data$NUMBED),
+                                  TPY = pam.numbed$medoids[,2]*sd(Data$TPY)+mean(Data$TPY))
+data.medoids.sqrfoot <- data.frame(SQRFOOT = pam.sqrfoot$medoids[,1]*sd(na.omit(Data$SQRFOOT))+mean(na.omit(Data$SQRFOOT)),
+                                   TPY = pam.sqrfoot$medoids[,2]*sd(Data$TPY)+mean(Data$TPY))
+# Visualizzazione grafica
+ggplot(Data, aes(x = NUMBED, y = TPY, col = factor(pam.numbed$cluster))) +
+  geom_point() + 
+  theme_classic() +
+  theme(legend.position = "") +
+  geom_point(data = data.medoids.numbed, aes(x = NUMBED, y = TPY), col = "black")
+ggplot(na.omit(Data), aes(x = SQRFOOT, y = TPY, col = factor(km.sqrfoot$cluster))) +
+  geom_point() + 
+  theme_classic() +
+  theme(legend.position = "") +
+  geom_point(data = data.medoids.sqrfoot, aes(x = SQRFOOT, y = TPY), col = "black")
+
+# Grafico della silhouette
+sil <- silhouette(pam.numbed$cluster, dist(scale(Data[,c("NUMBED", "TPY")])))
+fviz_silhouette(sil)
+sil <- silhouette(pam.sqrfoot$cluster, dist(scale(na.omit(Data[,c("SQRFOOT", "TPY")]))))
+fviz_silhouette(sil)
+# Silhouette terribili, forse era meglio il metodo delle k-means
+
 
