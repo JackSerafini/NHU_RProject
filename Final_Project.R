@@ -33,6 +33,12 @@ library(cowplot)
 library(dplyr)
 library(factoextra)
 
+## Forse da ggiungere anche una parte di analisi del database (una roba piccolina)
+summary(Data)
+
+#Ci sono alcuni dati mancanti?
+apply(is.na(Data), 2, which) 
+#Abbiamo 9 dati mancanti in SQRFOOT
 
 # Creazione dei grafici (orribili)
 # Parto con le variabili quantitative
