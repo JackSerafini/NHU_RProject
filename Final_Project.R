@@ -37,8 +37,11 @@ library(factoextra)
 summary(Data)
 
 #Ci sono alcuni dati mancanti?
-apply(is.na(Data), 2, which) 
+na.id.Data <- apply(is.na(Data), 2, which) 
 #Abbiamo 9 dati mancanti in SQRFOOT
+na.SQRFOOT <- na.id.Data$SQRFOOT
+#Data frame senza NA
+DataNa <- Data[-na.SQRFOOT,]
 
 # Creazione dei grafici (orribili)
 # Parto con le variabili quantitative
@@ -342,9 +345,9 @@ fit_loglogSQRFOOT_NUMBED <- lm(log(Data$TPY) ~ log(Data$SQRFOOT) + Data$NUMBED)
 
 summary(fit_loglogSQRFOOT_NUMBED)
 
-ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY))) +
-  geom_point() +
-  geom_smooth(se = F, method = 'lm', formula = y ~ x + Data$NUMBED, na.rm = T) +
+ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY))) +
+  geom_point(na.rm = T) +
+  geom_smooth(se = F, method = 'lm',formula = y ~ x + DataNa$NUMBED) +
   theme_classic()
 
 
