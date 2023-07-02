@@ -347,7 +347,7 @@ summary(fit_loglogSQRFOOT_NUMBED)
 
 ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY))) +
   geom_point(na.rm = T) +
-  geom_smooth(se = F, method = 'lm',formula = y ~ x + DataNa$NUMBED) +
+  geom_smooth(se = F, method = 'lm',formula = y ~ x * DataNa$NUMBED) +
   theme_classic()
 
 
