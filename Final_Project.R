@@ -290,6 +290,7 @@ summary(fit_SQRFOOT)
 #' intercetta a 33
 #' la pendenza della retta vicino a 1 quindi circa per ogni piede quadrato c'è un paziente
 #' in più all'anno
+#' l'Rquadro è 0.6751, ovvero vengono spiegati il 67% dei dati
 
 # Diagramma di dispersione + retta di regressione lineare
 # Metto in evidenza i punti che era esrtemo sul grafico dei residui
@@ -302,6 +303,29 @@ ggplot(data = Data, aes(x = SQRFOOT, y = TPY)) +
   geom_point(aes(x = Data[200,'SQRFOOT'], y = Data[200,'TPY']), colour = "red")  +
   geom_point(aes(x = Data[557,'SQRFOOT'], y = Data[557,'TPY']), colour = "red")  
 
+#Proviamo Un modello logaritmico
+# Costruzione del modello
+fit_loglogSQRFOOT <- lm(log(Data$TPY) ~ log(Data$SQRFOOT))
+# plot
+par(mfrow = c(2,2))
+plot(fit_loglogSQRFOOT)
+par(mfrow = c(1,1))
+#' con il doppio log si va alla vittoria
+#' il grafico dei residui è bellissimo e anche quello della qq-norm
+#' ci sono pochi valori estremi e sono meno estremi di prima
+
+# interpretazione dei valori
+summary(fit_loglogSQRFOOT)
+#' La varianza dei residui è molto bassa
+#' R^2 spiega il 53% dei dati, ma magari aggiungendo una variabile si va a migliorare
+
+
+#scater plot
+ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY))) +
+  geom_point() +
+  geom_smooth(se = F, method = 'lm') +
+  theme_classic()
+# Niente da dire bellisimo
 
 
 
