@@ -319,6 +319,7 @@ summary(fit_loglogSQRFOOT)
 #' La varianza dei residui è molto bassa
 #' R^2 spiega il 53% dei dati, ma magari aggiungendo una variabile si va a migliorare
 
+cor(log(Data$TPY), log(Data$SQRFOOT))
 
 #scater plot
 ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY))) +
@@ -326,6 +327,19 @@ ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY))) +
   geom_smooth(se = F, method = 'lm') +
   theme_classic()
 # Niente da dire bellisimo
+
+
+# Così per provare magari dopo non si aggiunge aggiungiamo anche l'alra variabile
+# quantitativa
+
+fit_loglogSQRFOOT_NUMBED <- lm(log(Data$TPY) ~ log(Data$SQRFOOT) + Data$NUMBED)
+
+summary(fit_loglogSQRFOOT_NUMBED)
+
+ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY))) +
+  geom_point() +
+  geom_smooth(se = F, method = 'lm', formula = y ~ x + Data$NUMBED, na.rm = T) +
+  theme_classic()
 
 
 
