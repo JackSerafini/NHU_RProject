@@ -34,10 +34,33 @@ library(cowplot)
 library(dplyr)
 library(factoextra)
 
-# Sta parte secondo me è un po' da rivedere, non la trovo utilissima (Jack)
-# ## Forse da aggiungere anche una parte di analisi del database (una roba piccolina)
-# summary(Data)
-# # 
+# Secondo me potremmo anche aggiungere una parte dove introduciamo brevemente il dataset (Jack)
+
+# Il dataset 'WiscNursingHome' racchiude le informazioni riguardo diverse centinaia
+# di case di riposo, informazioni che poi saranno utilizzate per prevedere il costo
+# della struttura negli anni successivi.
+# Nel dataset sono presenti 12 variabili:
+# hospID: l'ID rappresentativo della singola struttura
+# CRYEAR: il rapporto dei costi annuo
+# TPY: il totale pazienti annui
+# NUMBED: il numero di letti
+# SQRFOOT: il numero di piedi quadrati della struttura
+# MSA: codice dell'area statistica metropolitana (area divisa in 13 zone, più lo 0 se rurale)
+# URBAN: 1 se urbana, O se rurale
+# PRO: 0 se non-profit, 1 altrimenti
+# TAXEXEMPT: 1 se esente dalle tasse
+# SELFFUNDINS: 1 se autofinanziato per l'assicurazione
+# MCERT: 1 se certificato Medicare
+# ORGSTR: 1 se con finalità di lucro, 2 se esente dalle tasse, 3 se unità governativa
+
+# L'obiettivo della nostra analisi sarà quindi quello di capire come le varie
+# caratteristica di una casa di riposo sono tra loro collegate (se collegate in
+# alcun modo), per poter così prevedere tutto ciò che concerne una struttura negli
+# anni successivi, o perfino prevedere il futuro di una nuova struttura.
+
+## Forse da aggiungere anche una parte di analisi del database (una roba piccolina)
+summary(Data)
+#
 
 # Ci sono alcuni dati mancanti?
 na.id.Data <- apply(is.na(Data), 2, which) 
@@ -62,73 +85,75 @@ corrplot(cormat, method="number")
 # relazione lineare.
 
 
-# Creazione dei grafici (orribili)
-# Parto con le variabili quantitative
+## MESSO A COMMENTO TUTTA QUESTA PARTE CHE ORMAI È SUPERFLUA (ENRICO SCEGLI SE ELIMINARE)
 
-p1 <- ggplot(data = Data, aes(x = TPY)) +
-  geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
-  theme_classic() +
-  xlab("") +
-  ylab("TPY") +
-  geom_density(col = "black", lwd = 0.75)
-
-p2 <- ggplot(data = Data, aes(x = NUMBED)) +
-  geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
-  theme_classic() +
-  xlab("") +
-  ylab("") +
-  geom_density(col = "black", lwd = 0.75)
-
-p3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT)) +
-  geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
-  theme_classic() +
-  xlab("SQRFOOT") +
-  ylab("") +
-  geom_density(col = "black", lwd = 0.75)
-
-p1.2 <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
-  geom_point() +
-  theme_classic() +
-  xlab("") +
-  ylab("")
-
-p1.3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT, y = TPY)) +
-  geom_point() +
-  theme_classic() +
-  xlab("") +
-  ylab("")
-
-p2.3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT, y = NUMBED)) +
-  geom_point() +
-  theme_classic() +
-  xlab("") +
-  ylab("")
-
-p2.1 <- ggplot(data = Data, aes(x = TPY, y = NUMBED)) +
-  geom_point() +
-  theme_classic() +
-  xlab("") +
-  ylab("NUMBED")
-
-p3.1 <- ggplot(data = na.omit(Data), aes(x = TPY, y = SQRFOOT)) +
-  geom_point() +
-  theme_classic()  +
-  xlab("TPY") +
-  ylab("SQRFOOT")
-
-p3.2 <- ggplot(data = na.omit(Data), aes(x = NUMBED, y = SQRFOOT)) +
-  geom_point() +
-  theme_classic() +
-  xlab("NUMBED") +
-  ylab("")
-
-
-# Metto nella griglia tutti i grafici brutti
-
-plot_grid(p1, p1.2, p1.3,  
-          p2.1, p2, p2.3,
-          p3.1, p3.2, p3,
-          nrow = 3, ncol = 3)
+# # Creazione dei grafici (orribili)
+# # Parto con le variabili quantitative
+# 
+# p1 <- ggplot(data = Data, aes(x = TPY)) +
+#   geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
+#   theme_classic() +
+#   xlab("") +
+#   ylab("TPY") +
+#   geom_density(col = "black", lwd = 0.75)
+# 
+# p2 <- ggplot(data = Data, aes(x = NUMBED)) +
+#   geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
+#   theme_classic() +
+#   xlab("") +
+#   ylab("") +
+#   geom_density(col = "black", lwd = 0.75)
+# 
+# p3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT)) +
+#   geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
+#   theme_classic() +
+#   xlab("SQRFOOT") +
+#   ylab("") +
+#   geom_density(col = "black", lwd = 0.75)
+# 
+# p1.2 <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
+#   geom_point() +
+#   theme_classic() +
+#   xlab("") +
+#   ylab("")
+# 
+# p1.3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT, y = TPY)) +
+#   geom_point() +
+#   theme_classic() +
+#   xlab("") +
+#   ylab("")
+# 
+# p2.3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT, y = NUMBED)) +
+#   geom_point() +
+#   theme_classic() +
+#   xlab("") +
+#   ylab("")
+# 
+# p2.1 <- ggplot(data = Data, aes(x = TPY, y = NUMBED)) +
+#   geom_point() +
+#   theme_classic() +
+#   xlab("") +
+#   ylab("NUMBED")
+# 
+# p3.1 <- ggplot(data = na.omit(Data), aes(x = TPY, y = SQRFOOT)) +
+#   geom_point() +
+#   theme_classic()  +
+#   xlab("TPY") +
+#   ylab("SQRFOOT")
+# 
+# p3.2 <- ggplot(data = na.omit(Data), aes(x = NUMBED, y = SQRFOOT)) +
+#   geom_point() +
+#   theme_classic() +
+#   xlab("NUMBED") +
+#   ylab("")
+# 
+# 
+# # Metto nella griglia tutti i grafici brutti
+# 
+# plot_grid(p1, p1.2, p1.3,  
+#           p2.1, p2, p2.3,
+#           p3.1, p3.2, p3,
+#           nrow = 3, ncol = 3)
 
 # Queste sono le relazioni tra le varie variabili
 
@@ -187,7 +212,7 @@ p11 <- ggplot(data = Data, aes(x = ORGSTR, fill = ORGSTR)) +
   theme(legend.position = "none") +
   ylab("")
 
-# Grafico a torta gnam :P
+# Grafico a torta della variabile MSA
 
 ppie <- ggplot(Data, aes(x="", y="", fill=MSA)) +
   geom_bar(stat="identity", width=1) +
@@ -195,7 +220,7 @@ ppie <- ggplot(Data, aes(x="", y="", fill=MSA)) +
   theme_void()
 
 
-# Metto nella griglia tutti i grafici brutti
+# Grafico contemporaneamente tutti i grafici delle variabili categoriali
 
 plot_grid(p4,p6,p7,p11,
           p8,p9,p10,ppie,
