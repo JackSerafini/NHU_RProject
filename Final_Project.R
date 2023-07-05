@@ -91,69 +91,75 @@ corrplot(cormat, method="number")
 # # Parto con le variabili quantitative
 # 
 # p1 <- ggplot(data = Data, aes(x = TPY)) +
-#   geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
-#   theme_classic() +
-#   xlab("") +
-#   ylab("TPY") +
-#   geom_density(col = "black", lwd = 0.75)
+#    geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
+#   theme_bw() +
+#    xlab("") +
+#    ylab("TPY") +
+#    geom_density(col = "black", lwd = 0.75)
 # 
-# p2 <- ggplot(data = Data, aes(x = NUMBED)) +
-#   geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
-#   theme_classic() +
-#   xlab("") +
-#   ylab("") +
-#   geom_density(col = "black", lwd = 0.75)
+#  p2 <- ggplot(data = Data, aes(x = NUMBED)) +
+#    geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
+#    theme_bw() +
+#    xlab("") +
+#    ylab("") +
+#    geom_density(col = "black", lwd = 0.75)
 # 
-# p3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT)) +
-#   geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
-#   theme_classic() +
-#   xlab("SQRFOOT") +
-#   ylab("") +
-#   geom_density(col = "black", lwd = 0.75)
+#  p3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT)) +
+#    geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
+#    theme_bw() +
+#    xlab("SQRFOOT") +
+#    ylab("") +
+#    geom_density(col = "black", lwd = 0.75)
 # 
-# p1.2 <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
-#   geom_point() +
-#   theme_classic() +
-#   xlab("") +
-#   ylab("")
+#  p1.2 <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
+#    geom_point() +
+#    theme_bw() +
+#    xlab("") +
+#    ylab("") +
+#    geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
 # 
-# p1.3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT, y = TPY)) +
-#   geom_point() +
-#   theme_classic() +
-#   xlab("") +
-#   ylab("")
+#  p1.3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT, y = TPY)) +
+#    geom_point() +
+#    theme_bw() +
+#    xlab("") +
+#    ylab("") +
+#    geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
 # 
-# p2.3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT, y = NUMBED)) +
-#   geom_point() +
-#   theme_classic() +
-#   xlab("") +
-#   ylab("")
+#  p2.3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT, y = NUMBED)) +
+#    geom_point() +
+#    theme_bw() +
+#    xlab("") +
+#    ylab("") +
+#    geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
 # 
-# p2.1 <- ggplot(data = Data, aes(x = TPY, y = NUMBED)) +
-#   geom_point() +
-#   theme_classic() +
-#   xlab("") +
-#   ylab("NUMBED")
+#  p2.1 <- ggplot(data = Data, aes(x = TPY, y = NUMBED)) +
+#    geom_point() +
+#    theme_bw() +
+#    xlab("") +
+#    ylab("NUMBED") +
+#    geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
 # 
-# p3.1 <- ggplot(data = na.omit(Data), aes(x = TPY, y = SQRFOOT)) +
-#   geom_point() +
-#   theme_classic()  +
-#   xlab("TPY") +
-#   ylab("SQRFOOT")
+#  p3.1 <- ggplot(data = na.omit(Data), aes(x = TPY, y = SQRFOOT)) +
+#    geom_point() +
+#    theme_bw()  +
+#    xlab("TPY") +
+#    ylab("SQRFOOT") +
+#    geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
 # 
-# p3.2 <- ggplot(data = na.omit(Data), aes(x = NUMBED, y = SQRFOOT)) +
-#   geom_point() +
-#   theme_classic() +
-#   xlab("NUMBED") +
-#   ylab("")
+#  p3.2 <- ggplot(data = na.omit(Data), aes(x = NUMBED, y = SQRFOOT)) +
+#    geom_point() +
+#    theme_bw() +
+#    xlab("NUMBED") +
+#    ylab("") +
+#    geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
 # 
 # 
-# # Metto nella griglia tutti i grafici brutti
+#  # Metto nella griglia tutti i grafici brutti
 # 
-# plot_grid(p1, p1.2, p1.3,  
-#           p2.1, p2, p2.3,
-#           p3.1, p3.2, p3,
-#           nrow = 3, ncol = 3)
+#  plot_grid(p1, p1.2, p1.3,
+#            p2.1, p2, p2.3,
+#            p3.1, p3.2, p3,
+#            nrow = 3, ncol = 3)
 
 # Queste sono le relazioni tra le varie variabili
 
@@ -217,7 +223,7 @@ p11 <- ggplot(data = Data, aes(x = ORGSTR, fill = ORGSTR)) +
 ppie <- ggplot(Data, aes(x="", y="", fill=MSA)) +
   geom_bar(stat="identity", width=1) +
   coord_polar("y", start=0) +
-  theme_void()
+  theme_void() 
 
 
 # Grafico contemporaneamente tutti i grafici delle variabili categoriali
@@ -280,6 +286,32 @@ plot_grid(c4, c5, c6, c7,
 
 
 
+# Funzione per visualizzare la bontà dei residui graficamente
+resiplot <- function(fit) {
+  f <- ggplot(data = DataNa, aes(x = fitted.values(fit), y = resid(fit))) +
+    geom_point() +
+    theme_bw() +
+    xlab("Valori fittati") +
+    ylab("Residui") +
+    geom_hline(yintercept = 0, col = "black", lty = 2) +
+    geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
+  f1 <- ggplot(data = DataNa, mapping = aes(resid(fit))) +
+    geom_histogram(aes(y =after_stat(density)),bins = 20, col = "black", fill = "yellow", alpha = 1) + 
+    geom_density(linewidth = 0.8, fill = "pink", alpha = 0.3) +
+    theme_bw() +
+    xlab("Residui") +
+    ylab("Densità")
+  f2 <- ggplot(data.frame(resid = rstandard(fit)),aes(sample = resid)) + 
+    stat_qq() +
+    stat_qq_line(color = "red", linewidth = 1) +
+    theme_bw() +
+    xlab("Quantili teorici normale") +
+    ylab("Quantili empirici")
+  plot_grid(p, f,
+            f1, f2,
+            nrow = 2)
+}
+
 ## REGRESSIONI LINEARI PER LA STIMA DI TPY
 # Proviamo prima le regressioni semplici con NUMBED e SQRFOOT
 # Bisogna probabilmente scegliere una sola delle due variabili perché sono troppo correlate
@@ -288,11 +320,21 @@ plot_grid(c4, c5, c6, c7,
 
 
 # Costruzione del modello
-fit_NUMBED <- lm(Data$TPY ~ Data$NUMBED)
+fit_NUMBED <- lm(TPY ~ NUMBED, data = Data)
 # plot
 par(mfrow = c(2,2))
 plot(fit_NUMBED)
 par(mfrow = c(1,1))
+# Grafico della regressione
+p <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
+   geom_point() +
+   theme_bw() +
+   xlab("Numero di letti") +
+   ylab("Posti occupati all'anno") +
+   geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red")
+# Residui:
+resiplot(fit_NUMBED)
+
 # Il grafico dei residui è tipo perfetto
 # Viene violata un po la condizione di normalità sulle code
 # Ci sono un paio di valori estremi: sopreatutto il 564
@@ -305,7 +347,7 @@ summary(fit_NUMBED)
 #' Secondo coefficiente vicino all'1 ciò significa che per ogni posto letto in più
 #' ci si aspetta un paziente in più all'anno
 #' Attenzione il t value dell'intercetta non è motlo significativo al contrario dell'
-#' altro (che non mi viene il nome)
+#' altro (che non mi viene il nome (coefficiente?))
 #' L'R quadro si avvicina ad 1 quindi molto buono
 #' se non fosse per la poca significatività dell'intercetta potrebbe essere un 
 #' modello quasi perfetto
@@ -314,9 +356,9 @@ summary(fit_NUMBED)
 #Metto in evidenza il punto che era estremo sul grafico dei residui
 ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
   geom_point() +
-  geom_smooth(se = F, method = 'lm') +
+  geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red") +
   theme_classic()+
-  geom_point(aes(x = Data[564,'NUMBED'], y = Data[564,'TPY']), colour = "red")
+  geom_point(aes(x = Data[564,'NUMBED'], y = Data[564,'TPY']), colour = "red", size = 2)
 
 # Costruzione del modello
 fit_SQRFOOT <- lm(Data$TPY ~ Data$SQRFOOT)
@@ -324,13 +366,22 @@ fit_SQRFOOT <- lm(Data$TPY ~ Data$SQRFOOT)
 par(mfrow = c(2,2))
 plot(fit_SQRFOOT)
 par(mfrow = c(1,1))
+# Con ggplot
+p <- ggplot(data = DataNa, aes(x = SQRFOOT, y = TPY)) +
+  geom_point() +
+  theme_bw() +
+  xlab("Piedi quadrati") +
+  ylab("Posti occupati all'anno") +
+  geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red")
+# Residui:
+resiplot(fit_SQRFOOT)
 #' anche qui il grafico dei resuidi è molto buono
 #' la condizione di normalità viene meglio rispettata
 #' nell'ultimo grafico ci sono più valori estremi: 564, 200, 557
 
 # interpretazione dei valori
 summary(fit_SQRFOOT)
-#' Residui variano un bel po': la differenza fra il minimo e il massimo è di 140, ma
+#' Residui variano un bel po': la differenza fra il minimo e il massimo è di 240, ma
 #' la maggior parte dei valori sono compresi fra -15, e 15. Quindi come già visto prima
 #' oltre ad alcuni valori estremi i residui sono abbastanza piccoli
 #' I parametrei stimati sono entrambi molto significativi
