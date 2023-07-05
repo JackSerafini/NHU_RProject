@@ -359,6 +359,15 @@ ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY))) +
 ### Assolutamente d'accordo (Jack)
 
 
+
+## TRAIN TEST E TEST SET
+# Dividere il dataset in due parti, il train set e il test set
+# Applicare il modello di regressione individuato al train set
+# Vedere se riusciamo a prevedere così il test set
+# Tipo una sorta di test per vedere se funziona
+
+
+
 ## CLUSTERING
 # Può essere figo provare a fare qualcosa, ma devo ancora recuperarmi la teoria quindi non so
 ### Questo assolutamente da fare, fa parte del corso dopotutto (Jack)
