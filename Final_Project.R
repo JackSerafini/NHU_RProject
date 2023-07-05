@@ -407,8 +407,6 @@ ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY))) +
 
 
 ## CLUSTERING
-# Può essere figo provare a fare qualcosa, ma devo ancora recuperarmi la teoria quindi non so
-### Questo assolutamente da fare, fa parte del corso dopotutto (Jack)
 
 # Provo a fare del clustering
 library(cluster)
