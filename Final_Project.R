@@ -440,6 +440,103 @@ ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY))) +
   theme_classic()
 
 
+#' Proviamo a vedere i modelli con anche le variabili qualitative
+#' Analisi preliminare grafica:
+#' Stampo ogni fit colorando i pallini in base alle determinazioni delle variabili categoriche
+#' Probabilmente seguono tante righe di codice (inutili perché stampano solo grafici)
+ggplot(data = Data, aes(x = NUMBED, y = TPY, col = CRYEAR)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = NUMBED, y = TPY, col = URBAN)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = NUMBED, y = TPY, col = PRO)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = NUMBED, y = TPY, col = TAXEXEMPT)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = NUMBED, y = TPY, col = SELFFUNDINS)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = NUMBED, y = TPY, col = MCERT)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = NUMBED, y = TPY, col = ORGSTR)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = NUMBED, y = TPY, col = MSA)) +
+  geom_point() +
+  theme_bw()
+#' Non sembrano emergere relazioni interessanti
+#' Vediamo i grafici rispetto a SQRFOOT
+ggplot(data = Data, aes(x = SQRFOOT, y = TPY, col = CRYEAR)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = SQRFOOT, y = TPY, col = URBAN)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = SQRFOOT, y = TPY, col = PRO)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = SQRFOOT, y = TPY, col = TAXEXEMPT)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = SQRFOOT, y = TPY, col = SELFFUNDINS)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = SQRFOOT, y = TPY, col = MCERT)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = SQRFOOT, y = TPY, col = ORGSTR)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = SQRFOOT, y = TPY, col = MSA)) +
+  geom_point() +
+  theme_bw()
+#' Anche ora non sono chiarissimi, ma sembra esserci qualcosa
+#' Vediamo la trasformazione del doppio logaritmo
+ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = CRYEAR)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = URBAN)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
+  geom_point() +
+  theme_bw()
+# PRO sembra avere un po' di incidenza
+ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = TAXEXEMPT)) +
+  geom_point() +
+  theme_bw()
+# Anche TAXEXEMPT
+ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = SELFFUNDINS)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = MCERT)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = ORGSTR)) +
+  geom_point() +
+  theme_bw()
+ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = MSA)) +
+  geom_point() +
+  theme_bw()
+# Provo a fare i due modelli con PRO e TAXEXEMPT
+fitcacca1 <- lm(log(TPY) ~ log(SQRFOOT)*PRO, Data)
+summary(fitcacca1)
+# Il summary è decente
+ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
+  geom_point() +
+  theme_bw() +
+  xlab("Logaritmo dei piedi quadrati") +
+  ylab("Logaritmo dei posti occupati all'anno") +
+  geom_smooth(data = Data[Data$PRO == 0,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red")+
+  geom_smooth(data = Data[Data$PRO == 1,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "blue") 
+# Ci può stare, si può valutare anche solo il modello additivo
+
+  
+
 
 ## INFERENZA SUI RISULTATI
 # Boh ho aggiunto questa sezione perché può essere simpatico e farci prendere qualche voto in più
