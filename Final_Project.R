@@ -28,20 +28,39 @@ Data$MSA <- factor(Data$MSA)
 
 # Richiamo delle librerie
 
+library(corrplot)
 library(ggplot2)
 library(cowplot)
 library(dplyr)
 library(factoextra)
 
-## Forse da ggiungere anche una parte di analisi del database (una roba piccolina)
-summary(Data)
+# Sta parte secondo me è un po' da rivedere, non la trovo utilissima (Jack)
+# ## Forse da aggiungere anche una parte di analisi del database (una roba piccolina)
+# summary(Data)
+# # 
 
-#Ci sono alcuni dati mancanti?
+# Ci sono alcuni dati mancanti?
 na.id.Data <- apply(is.na(Data), 2, which) 
-#Abbiamo 9 dati mancanti in SQRFOOT
+# Abbiamo 10 dati mancanti in SQRFOOT
 na.SQRFOOT <- na.id.Data$SQRFOOT
-#Data frame senza NA
+# Data frame senza NA
 DataNa <- Data[-na.SQRFOOT,]
+
+# Proposta di grafici di correlazione (forse più visibili)
+
+# Dalle relazioni andiamo a togliere anche HospID perché ovviamente non c'è
+# relazione tra l'ID del singolo ospedale e i vari risultati
+pairs(DataNa[ , -c(1, 2, 6, 7, 8, 9, 10, 11, 12)], panel = panel.smooth)
+cormat <- cor(DataNa[, -c(1, 2, 6, 7, 8, 9, 10, 11, 12)]) 
+corrplot(cormat, method="number")
+
+# Si può subito vedere come ci sia una correlazione quasi totale tra il totale
+# patienti annui e il numero di letti. Inoltre, si può osservare anche un'ottima
+# correlazione tra il totale pazienti annui e i piedi quadrati della struttura, 
+# così come tra i piedi quadrati della struttura e il numero di letti.
+# Ciò suggerisce che tutte queste variabili saranno legate tra loro da una
+# relazione lineare.
+
 
 # Creazione dei grafici (orribili)
 # Parto con le variabili quantitative
@@ -112,12 +131,6 @@ plot_grid(p1, p1.2, p1.3,
           nrow = 3, ncol = 3)
 
 # Queste sono le relazioni tra le varie variabili
-
-# Stampo le correlazioni
-
-cor(Data$TPY, Data$NUMBED)
-cor(na.omit(Data)$TPY, na.omit(Data)$SQRFOOT)
-cor(na.omit(Data)$NUMBED, na.omit(Data)$SQRFOOT)
 
 # Correlazione molto alta tra tutte e 3 le variabili
 # In ottica di analisi di regressione occhio a multicollinearità
