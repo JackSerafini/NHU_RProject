@@ -535,15 +535,31 @@ ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = MSA)) +
 fitcacca1 <- lm(log(TPY) ~ log(SQRFOOT)*PRO, Data)
 summary(fitcacca1)
 # Il summary è decente
-ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
-  geom_point() +
+p <- ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
+  geom_point(show.legend = F) +
   theme_bw() +
   xlab("Logaritmo dei piedi quadrati") +
   ylab("Logaritmo dei posti occupati all'anno") +
   geom_smooth(data = Data[Data$PRO == 0,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red")+
   geom_smooth(data = Data[Data$PRO == 1,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "blue") 
 # Ci può stare, si può valutare anche solo il modello additivo
-  
+
+resiplot(fitcacca1, p)
+
+#Modello TAXEXEMPT
+fitcacca2 <- lm(log(TPY) ~ log(SQRFOOT)*TAXEXEMPT, Data)
+summary(fitcacca2)
+# Il summary è decente
+p <- ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = TAXEXEMPT)) +
+  geom_point(show.legend = F) +
+  theme_bw() +
+  xlab("Logaritmo dei piedi quadrati") +
+  ylab("Logaritmo dei posti occupati all'anno") +
+  geom_smooth(data = Data[Data$TAXEXEMPT == 0,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red")+
+  geom_smooth(data = Data[Data$TAXEXEMPT == 1,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "blue") 
+# Ci può stare, si può valutare anche solo il modello additivo
+resiplot(fitcacca2, p)
+
 
 
 ## INFERENZA SUI RISULTATI
@@ -559,6 +575,17 @@ ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
 # Applicare il modello di regressione individuato al train set
 # Vedere se riusciamo a prevedere così il test set
 # Tipo una sorta di test per vedere se funziona
+
+# Un'idea è quella di farlo rannare diverse volte senza set seed e poi si 
+# misura quanti dati ha azzeccato e si fa una media di come performa
+set.seed(69)
+
+#Divisione data set
+# 70% dei dati nel training e 30 nel test
+sample <- sample(c(TRUE, FALSE), nrow(Data), replace=TRUE, prob=c(0.7,0.3))
+train  <- Data[sample, ]
+test   <- Data[!sample, ]
+
 
 
 
