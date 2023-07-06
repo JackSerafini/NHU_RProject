@@ -393,9 +393,9 @@ summary(fit_SQRFOOT)
 # Diagramma di dispersione + retta di regressione lineare
 # Metto in evidenza i punti che era esrtemo sul grafico dei residui
 # Problema mi da dei warnins message
-ggplot(data = Data, aes(x = SQRFOOT, y = TPY)) +
+ggplot(data = DataNa, aes(x = SQRFOOT, y = TPY)) +
   geom_point() +
-  geom_smooth(se = F, method = 'lm') +
+  geom_smooth(se = F, method = 'lm', col = "red") +
   theme_classic() + 
   geom_point(aes(x = Data[564,'SQRFOOT'], y = Data[564,'TPY']), colour = "red")  +
   geom_point(aes(x = Data[200,'SQRFOOT'], y = Data[200,'TPY']), colour = "red")  +
@@ -433,11 +433,6 @@ ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY))) +
 fit_loglogSQRFOOT_NUMBED <- lm(log(Data$TPY) ~ log(Data$SQRFOOT) + Data$NUMBED)
 
 summary(fit_loglogSQRFOOT_NUMBED)
-
-ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY))) +
-  geom_point(na.rm = T) +
-  geom_smooth(se = F, method = 'lm',formula = y ~ x * DataNa$NUMBED) +
-  theme_classic()
 
 
 #' Proviamo a vedere i modelli con anche le variabili qualitative
@@ -505,7 +500,7 @@ ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = URBAN)) +
 ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
   geom_point() +
   theme_bw()
-# PRO sembra avere un po' di incidenza
+# PRO sembra avere un po' di incidenza (concordo leo)
 ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = TAXEXEMPT)) +
   geom_point() +
   theme_bw()
@@ -534,7 +529,6 @@ ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
   geom_smooth(data = Data[Data$PRO == 0,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red")+
   geom_smooth(data = Data[Data$PRO == 1,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "blue") 
 # Ci può stare, si può valutare anche solo il modello additivo
-
   
 
 
