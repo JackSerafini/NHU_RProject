@@ -287,15 +287,28 @@ plot_grid(c4, c5, c6, c7,
 
 
 # Funzione per visualizzare la bontà dei residui graficamente
-resiplot <- function(fit) {
-  f <- ggplot(data = DataNa, aes(x = fitted.values(fit), y = resid(fit))) +
+resiplot <- function(fit, p) {
+  #p è il primo grafico in alto a sinistra, così non c'è il rischio che gli si passi un p a caso
+  
+  
+  #per capire che data set utilizzare
+  if(length(fitted.values(fit)) == 717){
+    d = Data
+    print("resi plot utilizzando Data")
+  }
+  if(length(fitted.values(fit)) == 707){
+    d = DataNa
+    print("resi plot utilizzando DataNa")
+  }
+  
+  f <- ggplot(data = d, aes(x = fitted.values(fit), y = resid(fit))) +
     geom_point() +
     theme_bw() +
     xlab("Valori fittati") +
     ylab("Residui") +
     geom_hline(yintercept = 0, col = "black", lty = 2) +
     geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
-  f1 <- ggplot(data = DataNa, mapping = aes(resid(fit))) +
+  f1 <- ggplot(data = d, mapping = aes(resid(fit))) +
     geom_histogram(aes(y =after_stat(density)),bins = 20, col = "black", fill = "yellow", alpha = 1) + 
     geom_density(linewidth = 0.8, fill = "pink", alpha = 0.3) +
     theme_bw() +
@@ -307,6 +320,7 @@ resiplot <- function(fit) {
     theme_bw() +
     xlab("Quantili teorici normale") +
     ylab("Quantili empirici")
+
   plot_grid(p, f,
             f1, f2,
             nrow = 2)
@@ -333,7 +347,7 @@ p <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
    ylab("Posti occupati all'anno") +
    geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red")
 # Residui:
-resiplot(fit_NUMBED)
+resiplot(fit_NUMBED, p)
 
 # Il grafico dei residui è tipo perfetto
 # Viene violata un po la condizione di normalità sulle code
@@ -374,7 +388,7 @@ p <- ggplot(data = DataNa, aes(x = SQRFOOT, y = TPY)) +
   ylab("Posti occupati all'anno") +
   geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red")
 # Residui:
-resiplot(fit_SQRFOOT)
+resiplot(fit_SQRFOOT, p)
 #' anche qui il grafico dei resuidi è molto buono
 #' la condizione di normalità viene meglio rispettata
 #' nell'ultimo grafico ci sono più valori estremi: 564, 200, 557
