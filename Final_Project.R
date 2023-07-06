@@ -560,8 +560,17 @@ p <- ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = TAXEXEMPT)) +
 # Ci può stare, si può valutare anche solo il modello additivo
 resiplot(fitcacca2, p)
 
+## Predizione anno 2002
+summary(Data$CRYEAR)
+ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
+  geom_point() +
+  facet_wrap(vars(CRYEAR))+
+  theme_bw() +
+  xlab("Logaritmo dei piedi quadrati") +
+  ylab("Logaritmo pazienti annui")
 
 
+ 
 ## INFERENZA SUI RISULTATI
 # Boh ho aggiunto questa sezione perché può essere simpatico e farci prendere qualche voto in più
 # Penso che sia sufficiente cercare su internet quali sono i test di ipotesi migliori
