@@ -4,7 +4,7 @@
 # -------
 
 
-## ANALISI DESCRITTIVA DEI DATI
+## ANALISI DESCRITTIVA DEI DATI ------------------------------------------------
 # Vediamo come si distribuisce ciascuna variabile e poi quali sono le relazioni delle variabili
 # con la variabile risposta
 
@@ -17,13 +17,13 @@ Data <- read.csv("WiscNursingHome.csv", header = TRUE)
 # Fattorizzazione delle variabili categoriali
 
 Data$CRYEAR <- factor(Data$CRYEAR)
+Data$MSA <- factor(Data$MSA)
 Data$URBAN <- factor(Data$URBAN)
 Data$PRO <- factor(Data$PRO)
 Data$TAXEXEMPT <- factor(Data$TAXEXEMPT)
 Data$SELFFUNDINS <- factor(Data$SELFFUNDINS)
 Data$MCERT <- factor(Data$MCERT)
 Data$ORGSTR <- factor(Data$ORGSTR)
-Data$MSA <- factor(Data$MSA)
 
 
 # Richiamo delle librerie
@@ -54,9 +54,11 @@ library(factoextra)
 # ORGSTR: 1 se con finalità di lucro, 2 se esente dalle tasse, 3 se unità governativa
 
 # L'obiettivo della nostra analisi sarà quindi quello di capire come le varie
-# caratteristica di una casa di riposo sono tra loro collegate (se collegate in
+# caratteristiche di una casa di riposo sono tra loro collegate (se collegate in
 # alcun modo), per poter così prevedere tutto ciò che concerne una struttura negli
 # anni successivi, o perfino prevedere il futuro di una nuova struttura.
+# In maniera particolare, vogliamo analizzare quali sono le principali peculiarità
+# di una struttura che portano ad avere un numero maggiore di pazienti.
 
 ## Forse da aggiungere anche una parte di analisi del database (una roba piccolina)
 summary(Data)
@@ -69,7 +71,7 @@ na.SQRFOOT <- na.id.Data$SQRFOOT
 # Data frame senza NA
 DataNa <- Data[-na.SQRFOOT,]
 
-# Proposta di grafici di correlazione (forse più visibili)
+## Grafici di correlazione -----------------------------------------------------
 
 # Dalle relazioni andiamo a togliere anche HospID perché ovviamente non c'è
 # relazione tra l'ID del singolo ospedale e i vari risultati
@@ -85,134 +87,55 @@ corrplot(cormat, method="number")
 # relazione lineare.
 
 
-## MESSO A COMMENTO TUTTA QUESTA PARTE CHE ORMAI È SUPERFLUA (ENRICO SCEGLI SE ELIMINARE)
-
-# # Creazione dei grafici (orribili)
-# # Parto con le variabili quantitative
-# 
-# p1 <- ggplot(data = Data, aes(x = TPY)) +
-#    geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
-#   theme_bw() +
-#    xlab("") +
-#    ylab("TPY") +
-#    geom_density(col = "black", lwd = 0.75)
-# 
-#  p2 <- ggplot(data = Data, aes(x = NUMBED)) +
-#    geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
-#    theme_bw() +
-#    xlab("") +
-#    ylab("") +
-#    geom_density(col = "black", lwd = 0.75)
-# 
-#  p3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT)) +
-#    geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
-#    theme_bw() +
-#    xlab("SQRFOOT") +
-#    ylab("") +
-#    geom_density(col = "black", lwd = 0.75)
-# 
-#  p1.2 <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
-#    geom_point() +
-#    theme_bw() +
-#    xlab("") +
-#    ylab("") +
-#    geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
-# 
-#  p1.3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT, y = TPY)) +
-#    geom_point() +
-#    theme_bw() +
-#    xlab("") +
-#    ylab("") +
-#    geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
-# 
-#  p2.3 <- ggplot(data = na.omit(Data), aes(x = SQRFOOT, y = NUMBED)) +
-#    geom_point() +
-#    theme_bw() +
-#    xlab("") +
-#    ylab("") +
-#    geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
-# 
-#  p2.1 <- ggplot(data = Data, aes(x = TPY, y = NUMBED)) +
-#    geom_point() +
-#    theme_bw() +
-#    xlab("") +
-#    ylab("NUMBED") +
-#    geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
-# 
-#  p3.1 <- ggplot(data = na.omit(Data), aes(x = TPY, y = SQRFOOT)) +
-#    geom_point() +
-#    theme_bw()  +
-#    xlab("TPY") +
-#    ylab("SQRFOOT") +
-#    geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
-# 
-#  p3.2 <- ggplot(data = na.omit(Data), aes(x = NUMBED, y = SQRFOOT)) +
-#    geom_point() +
-#    theme_bw() +
-#    xlab("NUMBED") +
-#    ylab("") +
-#    geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
-# 
-# 
-#  # Metto nella griglia tutti i grafici brutti
-# 
-#  plot_grid(p1, p1.2, p1.3,
-#            p2.1, p2, p2.3,
-#            p3.1, p3.2, p3,
-#            nrow = 3, ncol = 3)
-
-# Queste sono le relazioni tra le varie variabili
-
-# Correlazione molto alta tra tutte e 3 le variabili
 # In ottica di analisi di regressione occhio a multicollinearità
 # (non so se si dice così forse me lo sono inventato)(penso di sì)
 
 
-# Variabili qualitative
+# Istogrammi delle variabili qualitative
 
-p4 <- ggplot(data = Data, aes(x = CRYEAR, fill = CRYEAR)) +
+p1 <- ggplot(data = Data, aes(x = CRYEAR, fill = CRYEAR)) +
   geom_bar() +
   theme_classic() +
   theme(legend.position = "none") +
   ylab("")
 
-p5 <- ggplot(data = Data, aes(x = MSA, fill = MSA)) +
+p2 <- ggplot(data = Data, aes(x = MSA, fill = MSA)) +
   geom_bar() +
   theme_classic() +
   theme(legend.position = "none") +
   ylab("")
 
-p6 <- ggplot(data = Data, aes(x = URBAN, fill = URBAN)) +
+p3 <- ggplot(data = Data, aes(x = URBAN, fill = URBAN)) +
   geom_bar() +
   theme_classic() +
   theme(legend.position = "none") +
   ylab("")
 
-p7 <- ggplot(data = Data, aes(x = PRO, fill = PRO)) +
+p4 <- ggplot(data = Data, aes(x = PRO, fill = PRO)) +
   geom_bar() +
   theme_classic() +
   theme(legend.position = "none") +
   ylab("")
 
-p8 <- ggplot(data = Data, aes(x = TAXEXEMPT, fill = TAXEXEMPT)) +
+p5 <- ggplot(data = Data, aes(x = TAXEXEMPT, fill = TAXEXEMPT)) +
   geom_bar() +
   theme_classic() +
   theme(legend.position = "none") +
   ylab("")
 
-p9 <- ggplot(data = Data, aes(x = SELFFUNDINS, fill = SELFFUNDINS)) +
+p6 <- ggplot(data = Data, aes(x = SELFFUNDINS, fill = SELFFUNDINS)) +
   geom_bar() +
   theme_classic() +
   theme(legend.position = "none") +
   ylab("")
 
-p10 <- ggplot(data = Data, aes(x = MCERT, fill = MCERT)) +
+p7 <- ggplot(data = Data, aes(x = MCERT, fill = MCERT)) +
   geom_bar() +
   theme_classic() +
   theme(legend.position = "none") +
   ylab("")
 
-p11 <- ggplot(data = Data, aes(x = ORGSTR, fill = ORGSTR)) +
+p8 <- ggplot(data = Data, aes(x = ORGSTR, fill = ORGSTR)) +
   geom_bar() +
   theme_classic() +
   theme(legend.position = "none") +
@@ -226,14 +149,15 @@ ppie <- ggplot(Data, aes(x="", y="", fill=MSA)) +
   theme_void() 
 
 
-# Grafico contemporaneamente tutti i grafici delle variabili categoriali
+# Grafico di tutti i grafici delle variabili categoriali
 
-plot_grid(p4,p6,p7,p11,
-          p8,p9,p10,ppie,
+plot_grid(p1,p3,p4,p8,
+          p5,p6,p7,ppie,
           nrow = 2)
 
 # NB per non vedere sminchiata la legenda bisogna mettere il grafico a schermo intero
-# ancora da capire come sistemare questo problema
+# ancora da capire come sistemare questo problema (il problema è dato dal fatto che la 
+# finestra di visualizzazione è troppo piccola, non c'è una vera risoluzione)
 
 # Vediamo le distribuzioni condizionate della variabile risposta
 
@@ -283,6 +207,11 @@ plot_grid(c4, c5, c6, c7,
 
 # Come sempre il grafico di MSA è strano perché ha troppe determinazioni
 
+# mostrano la distribuzione della variabile risposta rispetto alle determinazioni della variabile su x
+# se i boxplot sono moolto simili tra le determinazioni probailmente la variabile sulle x è ininfluente riguardo TPY
+# se invece sono traslati si possono valutare per l'inserimento in un modello
+# i vari puntini sono outliers
+
 
 
 
@@ -326,7 +255,8 @@ resiplot <- function(fit, p) {
             nrow = 2)
 }
 
-## REGRESSIONI LINEARI PER LA STIMA DI TPY
+## REGRESSIONI LINEARI PER LA STIMA DI TPY -------------------------------------
+
 # Proviamo prima le regressioni semplici con NUMBED e SQRFOOT
 # Bisogna probabilmente scegliere una sola delle due variabili perché sono troppo correlate
 # Poi proviamo ad aggiungere tutte le variabili qualitative e vediamo come incidono
@@ -335,10 +265,26 @@ resiplot <- function(fit, p) {
 
 # Costruzione del modello
 fit_NUMBED <- lm(TPY ~ NUMBED, data = Data)
-# plot
+# Summary
+summary(fit_NUMBED)
+# Studiando velocemente i valori ritornati dal summary, si può subito vedere come
+# questo modello sia ottimo: la mediana è molto vicina allo zero, il primo e il terzo
+# quartile sono disposti abbastanza simmetricamente rispetto lo zero e discorso simile
+# può essere fatto per i valori di minimo e massimo (magari il minimo è spostato più
+# verso il basso, ma stiamo comunque parlando di valori "piccoli").
+# Dal summary possiamo poi conoscere l'intercetta e il coefficiente angolare: l'intercetta
+# vale -0.8778 mentre il coefficiente angolare è uguale a 0.9272. Grazie a questi 
+# valori possiamo costruirci l'equazione della retta di regressione lineare:
+# TPY = -0.8778 + 0.9272 * NUMBED.
+# Infine, studiando la statistica R^2, possiamo vedere un valore pari a 0.9678,
+# il quale suggerisce un'aderenza del modello ai dati molto alta, quasi totale, circa del 97%.
+
+# Plot
 par(mfrow = c(2,2))
 plot(fit_NUMBED)
 par(mfrow = c(1,1))
+# Analizzando i grafici, dal primo dei Residuals vs Fitted si può notare come 
+
 # Grafico della regressione
 p <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
    geom_point() +
