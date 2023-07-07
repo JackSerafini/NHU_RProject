@@ -3,14 +3,10 @@
 # Vediamo come si distribuisce ciascuna variabile e poi quali sono le relazioni delle variabili
 # con la variabile risposta
 
-
 # Creazione del dataset da WiscNursingHome
-
 Data <- read.csv("WiscNursingHome.csv", header = TRUE)
 
-
 # Fattorizzazione delle variabili categoriali
-
 Data$CRYEAR <- factor(Data$CRYEAR)
 Data$MSA <- factor(Data$MSA)
 Data$URBAN <- factor(Data$URBAN)
@@ -20,16 +16,12 @@ Data$SELFFUNDINS <- factor(Data$SELFFUNDINS)
 Data$MCERT <- factor(Data$MCERT)
 Data$ORGSTR <- factor(Data$ORGSTR)
 
-
 # Richiamo delle librerie
-
 library(corrplot)
 library(ggplot2)
 library(cowplot)
 library(dplyr)
 library(factoextra)
-
-# Secondo me potremmo anche aggiungere una parte dove introduciamo brevemente il dataset (Jack)
 
 # Il dataset 'WiscNursingHome' racchiude le informazioni riguardo diverse centinaia
 # di case di riposo, informazioni che poi saranno utilizzate per prevedere il costo
@@ -145,7 +137,6 @@ ppie <- ggplot(Data, aes(x="", y="", fill=MSA)) +
 
 
 # Grafico di tutti i grafici delle variabili categoriali
-
 plot_grid(p1,p3,p4,p8,
           p5,p6,p7,ppie,
           nrow = 2)
@@ -206,8 +197,6 @@ plot_grid(c4, c5, c6, c7,
 # se i boxplot sono moolto simili tra le determinazioni probailmente la variabile sulle x è ininfluente riguardo TPY
 # se invece sono traslati si possono valutare per l'inserimento in un modello
 # i vari puntini sono outliers
-
-
 
 
 # Funzione per visualizzare la bontà dei residui graficamente
@@ -343,7 +332,7 @@ par(mfrow = c(1,1))
 
 # Con ggplot
 p <- ggplot(data = DataNa, aes(x = SQRFOOT, y = TPY)) +
-  geom_point() +
+  geom_point(shape=1) +
   theme_bw() +
   xlab("Piedi quadrati") +
   ylab("Posti occupati all'anno") +
@@ -360,7 +349,7 @@ resiplot(fit_SQRFOOT, p)
 # Metto in evidenza i punti che era esrtemo sul grafico dei residui
 # Problema mi da dei warnins message
 ggplot(data = DataNa, aes(x = SQRFOOT, y = TPY)) +
-  geom_point() +
+  geom_point(shape=1) +
   geom_smooth(se = F, method = 'lm', col = "red") +
   theme_classic() + 
   geom_point(aes(x = Data[564,'SQRFOOT'], y = Data[564,'TPY']), colour = "red")  +
@@ -537,7 +526,7 @@ ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
 # Vedere se riusciamo a prevedere così il test set
 # Tipo una sorta di test per vedere se funziona
 
-# Un'idea è quella di farlo rannare diverse volte senza set seed e poi si 
+# Un'idea è quella di farlo runnare diverse volte senza set seed e poi si 
 # misura quanti dati ha azzeccato e si fa una media di come performa
 set.seed(69)
 
@@ -550,7 +539,7 @@ test   <- Data[!sample, ]
 
 
 
-## CLUSTERING
+## CLUSTERING ------------------------------------------------------------------
 
 # Provo a fare del clustering
 library(cluster)
