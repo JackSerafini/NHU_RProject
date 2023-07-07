@@ -503,7 +503,6 @@ p <- ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = TAXEXEMPT)) +
   ylab("Logaritmo dei posti occupati all'anno") +
   geom_smooth(data = Data[Data$TAXEXEMPT == 0,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red")+
   geom_smooth(data = Data[Data$TAXEXEMPT == 1,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "blue") 
-# Ci può stare, si può valutare anche solo il modello additivo
 resiplot(fitcacca2, p)
 
 ## Predizione anno 2002
@@ -535,12 +534,29 @@ ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
 # misura quanti dati ha azzeccato e si fa una media di come performa
 set.seed(69)
 
+#SPOILER NON SO FARE STA ROBA
+
 #Divisione data set
 # 70% dei dati nel training e 30 nel test
-sample <- sample(c(TRUE, FALSE), nrow(Data), replace=TRUE, prob=c(0.7,0.3))
+sample <- sample(c(TRUE, FALSE), nrow(DataNa), replace=TRUE, prob=c(0.7,0.3))
 train  <- Data[sample, ]
 test   <- Data[!sample, ]
 
+#Faccio il fit con il modello che abbiamo selezionato (che in caso si può cambiare)
+fit_train <- lm(log(TPY) ~ log(SQRFOOT)*PRO, train)
+summary(fit_train)
+
+#Dati predetti
+pred <- predict.lm(fit_train, test)
+
+#Questo non so bene cosa rappresenta
+ggplot()+
+  geom_point(aes(x = test[,'SQRFOOT'], y = pred))
+
+#calcolo residui
+res <- test[,'TPY'] - pred
+summary(res)
+#Non so bene che variabile utilizzare per valutare il fit
 
 
 
