@@ -304,6 +304,7 @@ ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
   geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red") +
   theme_classic()+
   geom_point(aes(x = Data[564,'NUMBED'], y = Data[564,'TPY']), colour = "red", size = 2)
+# Secondo me si potrebbe direttamente metterlo nel grafico sopra (JACK)
 
 
 # Costruzione del modello TPY ~ SQRFOOT -----
