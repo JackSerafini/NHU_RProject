@@ -265,6 +265,7 @@ resiplot <- function(fit, p) {
 
 # Costruzione del modello
 fit_NUMBED <- lm(TPY ~ NUMBED, data = Data)
+
 # Summary
 summary(fit_NUMBED)
 # Studiando velocemente i valori ritornati dal summary, si può subito vedere come
@@ -283,7 +284,13 @@ summary(fit_NUMBED)
 par(mfrow = c(2,2))
 plot(fit_NUMBED)
 par(mfrow = c(1,1))
-# Analizzando i grafici, dal primo dei Residuals vs Fitted si può notare come 
+# Analizzando i grafici, dal primo dei Residuals vs Fitted si può notare come, nonostante
+# siano presenti degli outliers (sono outliers??) al di sotto della curva di regressione, 
+# i residui si dispongono in maniera per lo più simmetrica, suggerendo la linearità
+# del modello. 
+# Guardando il grafico qqnorm dei residui, possiamo nuovamente osservare un'ottima 
+# disposizione dei residui lungo la retta tratteggiata, il che significa che il nostro
+# modello soddisfa l'assunzione di gaussianità.
 
 # Grafico della regressione
 p <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
