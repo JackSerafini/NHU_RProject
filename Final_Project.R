@@ -1,9 +1,4 @@
 
-# -------
-## CACCA
-# -------
-
-
 ## ANALISI DESCRITTIVA DEI DATI ------------------------------------------------
 # Vediamo come si distribuisce ciascuna variabile e poi quali sono le relazioni delle variabili
 # con la variabile risposta
@@ -231,7 +226,7 @@ resiplot <- function(fit, p) {
   }
   
   f <- ggplot(data = d, aes(x = fitted.values(fit), y = resid(fit))) +
-    geom_point() +
+    geom_point(shape=1) +
     theme_bw() +
     xlab("Valori fittati") +
     ylab("Residui") +
@@ -244,7 +239,7 @@ resiplot <- function(fit, p) {
     xlab("Residui") +
     ylab("Densità")
   f2 <- ggplot(data.frame(resid = rstandard(fit)),aes(sample = resid)) + 
-    stat_qq() +
+    stat_qq(shape=1) +
     stat_qq_line(color = "red", linewidth = 1) +
     theme_bw() +
     xlab("Quantili teorici normale") +
@@ -263,22 +258,28 @@ resiplot <- function(fit, p) {
 # Modello ideale: 1 quantitativa + 1/2 qualitative (non è detto per forza)
 
 
-# Costruzione del modello
+# Costruzione del modello TPY ~ NUMBED -----
 fit_NUMBED <- lm(TPY ~ NUMBED, data = Data)
 
 # Summary
 summary(fit_NUMBED)
-# Studiando velocemente i valori ritornati dal summary, si può subito vedere come
-# questo modello sia ottimo: la mediana è molto vicina allo zero, il primo e il terzo
-# quartile sono disposti abbastanza simmetricamente rispetto lo zero e discorso simile
-# può essere fatto per i valori di minimo e massimo (magari il minimo è spostato più
-# verso il basso, ma stiamo comunque parlando di valori "piccoli").
+# Studiando i valori ritornati dal summary, si può subito vedere come
+# questo modello sia ottimo: per quanto riguarda i residui, la mediana è molto 
+# vicina allo zero, il primo e il terzo quartile sono disposti abbastanza 
+# simmetricamente rispetto lo zero e discorso simile può essere fatto per i 
+# valori di minimo e massimo (magari il minimo è spostato più verso il basso, 
+# ma stiamo comunque parlando di valori "piccoli").
 # Dal summary possiamo poi conoscere l'intercetta e il coefficiente angolare: l'intercetta
-# vale -0.8778 mentre il coefficiente angolare è uguale a 0.9272. Grazie a questi 
-# valori possiamo costruirci l'equazione della retta di regressione lineare:
+# vale -0.8778 (valore vicino allo zero, il che ha senso perché nel caso di 0 
+# letti ci si aspetta un numero di pazienti vicino allo zero) mentre il 
+# coefficiente angolare è uguale a 0.9272 (valore vicino all'1, infatti per ogni
+# posto letto in più ci si aspetta un paziente in più). Grazie a questi valori 
+# possiamo costruirci l'equazione della retta di regressione lineare:
 # TPY = -0.8778 + 0.9272 * NUMBED.
 # Infine, studiando la statistica R^2, possiamo vedere un valore pari a 0.9678,
 # il quale suggerisce un'aderenza del modello ai dati molto alta, quasi totale, circa del 97%.
+# (Attenzione il t value dell'intercetta non è motlo significativo al contrario dell'altro (che non mi viene il nome (coefficiente?)))
+# (se non fosse per la poca significatività dell'intercetta potrebbe essere un modello quasi perfetto)
 
 # Plot
 par(mfrow = c(2,2))
@@ -294,7 +295,7 @@ par(mfrow = c(1,1))
 
 # Grafico della regressione
 p <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
-   geom_point() +
+   geom_point(shape=1) +
    theme_bw() +
    xlab("Numero di letti") +
    ylab("Posti occupati all'anno") +
@@ -306,33 +307,40 @@ resiplot(fit_NUMBED, p)
 # Viene violata un po la condizione di normalità sulle code
 # Ci sono un paio di valori estremi: sopreatutto il 564
 Data[564,]
-#interpretazione dei valori
-summary(fit_NUMBED)
-#' Residui di nuovo molto buoni, hanno la mediana praticamente sullo zero
-#' intercetta vicino allo zero: ha senso ovvero se hai zero posti letto ti 
-#' aspetti un numero di pazienti vicino allo zero
-#' Secondo coefficiente vicino all'1 ciò significa che per ogni posto letto in più
-#' ci si aspetta un paziente in più all'anno
-#' Attenzione il t value dell'intercetta non è motlo significativo al contrario dell'
-#' altro (che non mi viene il nome (coefficiente?))
-#' L'R quadro si avvicina ad 1 quindi molto buono
-#' se non fosse per la poca significatività dell'intercetta potrebbe essere un 
-#' modello quasi perfetto
 
 #Diagramma di dispersione + retta di regressione lineare
 #Metto in evidenza il punto che era estremo sul grafico dei residui
 ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
-  geom_point() +
+  geom_point(shape=1) +
   geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red") +
   theme_classic()+
   geom_point(aes(x = Data[564,'NUMBED'], y = Data[564,'TPY']), colour = "red", size = 2)
 
-# Costruzione del modello
-fit_SQRFOOT <- lm(Data$TPY ~ Data$SQRFOOT)
-# plot
+
+# Costruzione del modello TPY ~ SQRFOOT -----
+fit_SQRFOOT <- lm(TPY ~ SQRFOOT, data = Data)
+
+# Summary
+summary(fit_SQRFOOT)
+# Studiando i residui dal summary, si può vedere questi si dispongano simmetricamente
+# rispetto lo zero, nonostante fra il minimo ed il massimo ci sia una differenza di 
+# 240, molto maggiore rispetto a quella riscontrata nel modello TPY ~ NUMBED. La
+# mediana si dispone comunque vicino allo 0, ed il primo ed il terzo quartile valgono
+# rispettivamente -15.391 e 15.615, oltre ad essere assolutamente simmetrici, ci
+# dicono anche che la maggior parte dei valori si troverà proprio in questo intervallo.
+# In questo modello l'intercetta vale 33.5475 mentre il coefficiente angolare è
+# pari a 1.1179 (molto vicino a 1, quindi circa per ogni piede quadrato c'è un 
+# paziente in più) (entrambi molto significativi?). Quindi, la retta di regressione
+# lineare risulta: TPY = 33.5475 + 1.1179 * SQRFOOT.
+# Infine, l'R^2 risulta pari a 0.6756, quindi abbiamo un'aderenza del modello di
+# circa il 68%, quindi di nuovo alta nonostante minore rispetto a quella del modello precedente.
+
+# Plot
 par(mfrow = c(2,2))
 plot(fit_SQRFOOT)
 par(mfrow = c(1,1))
+#
+
 # Con ggplot
 p <- ggplot(data = DataNa, aes(x = SQRFOOT, y = TPY)) +
   geom_point() +
@@ -340,22 +348,13 @@ p <- ggplot(data = DataNa, aes(x = SQRFOOT, y = TPY)) +
   xlab("Piedi quadrati") +
   ylab("Posti occupati all'anno") +
   geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red")
+
 # Residui:
 resiplot(fit_SQRFOOT, p)
 #' anche qui il grafico dei resuidi è molto buono
 #' la condizione di normalità viene meglio rispettata
 #' nell'ultimo grafico ci sono più valori estremi: 564, 200, 557
 
-# interpretazione dei valori
-summary(fit_SQRFOOT)
-#' Residui variano un bel po': la differenza fra il minimo e il massimo è di 240, ma
-#' la maggior parte dei valori sono compresi fra -15, e 15. Quindi come già visto prima
-#' oltre ad alcuni valori estremi i residui sono abbastanza piccoli
-#' I parametrei stimati sono entrambi molto significativi
-#' intercetta a 33
-#' la pendenza della retta vicino a 1 quindi circa per ogni piede quadrato c'è un paziente
-#' in più all'anno
-#' l'Rquadro è 0.6751, ovvero vengono spiegati il 67% dei dati
 
 # Diagramma di dispersione + retta di regressione lineare
 # Metto in evidenza i punti che era esrtemo sul grafico dei residui
