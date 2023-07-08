@@ -357,28 +357,30 @@ ggplot(data = DataNa, aes(x = SQRFOOT, y = TPY)) +
 
 #Proviamo Un modello logaritmico
 # Costruzione del modello
-fit_loglogSQRFOOT <- lm(log(Data$TPY) ~ log(Data$SQRFOOT))
-# plot
-par(mfrow = c(2,2))
-plot(fit_loglogSQRFOOT)
-par(mfrow = c(1,1))
-#' con il doppio log si va alla vittoria
-#' il grafico dei residui è bellissimo e anche quello della qq-norm
-#' ci sono pochi valori estremi e sono meno estremi di prima
+fit_loglogSQRFOOT <- lm(log(TPY) ~ log(SQRFOOT), data = Data)
 
 # interpretazione dei valori
 summary(fit_loglogSQRFOOT)
 #' La varianza dei residui è molto bassa
 #' R^2 spiega il 53% dei dati, ma magari aggiungendo una variabile si va a migliorare
 
+# Plot
+par(mfrow = c(2,2))
+plot(fit_loglogSQRFOOT)
+par(mfrow = c(1,1))
+
+#' con il doppio log si va alla vittoria
+#' il grafico dei residui è bellissimo e anche quello della qq-norm
+#' ci sono pochi valori estremi e sono meno estremi di prima
+
 cor(log(Data$TPY), log(Data$SQRFOOT))
 
-#scater plot
+# scatter plot
 ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY))) +
   geom_point() +
   geom_smooth(se = F, method = 'lm') +
   theme_classic()
-# Niente da dire bellisimo
+# Niente da dire bellissimo
 
 
 # Così per provare magari dopo non si aggiunge aggiungiamo anche l'alra variabile

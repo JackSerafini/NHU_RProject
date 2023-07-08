@@ -28,6 +28,7 @@ library(ggplot2)
 library(cowplot)
 library(dplyr)
 library(factoextra)
+library(cluster)
 
 # Creazione del dataset da WiscNursingHome
 Data <- read.csv("WiscNursingHome.csv", header = TRUE)
@@ -248,3 +249,19 @@ Studiando i residui dal summary, si può vedere questi si dispongano simmetricam
 In questo modello l'intercetta vale 33.5475 mentre il coefficiente angolare è pari a 1.1179 (molto vicino a 1, quindi circa per ogni piede quadrato c'è un paziente in più) (entrambi molto significativi?). Quindi, la retta di regressione lineare risulta:     
 *TPY* = 33.5475 + 1.1179 * *SQRFOOT*.   
 Infine, l'R^2 risulta pari a 0.6756, quindi abbiamo un'aderenza del modello di circa il 68%, quindi di nuovo alta nonostante minore rispetto a quella del modello precedente.
+
+
+-- Qua manca una parte enorme ma intanto vado avanti --
+
+
+### Modelli con Variabili Qualitative     
+
+
+-- Qua c'è da aggiungere questa parte --
+
+
+## Clustering
+
+
+-- Ovviamente da aggiungere anche questa parte --
+
