@@ -220,10 +220,12 @@ Poi proviamo ad aggiungere tutte le variabili qualitative e vediamo come incidon
 Modello ideale: 1 quantitativa + 1/2 qualitative (non è detto per forza) ---
 
 #### Costruzione del modello TPY ~ NUMBED
+
 ```{r echo=FALSE}
 fit_NUMBED <- lm(TPY ~ NUMBED, data = Data)
 summary(fit_NUMBED)
 ```
+
 Studiando i valori ritornati dal summary, si può subito vedere come questo modello sia ottimo: per quanto riguarda i residui, la mediana è molto vicina allo zero, il primo e il terzo quartile sono disposti abbastanza simmetricamente rispetto lo zero e discorso simile può essere fatto per i valori di minimo e massimo (magari il minimo è spostato più verso il basso, ma stiamo comunque parlando di valori "piccoli").     
 Dal summary possiamo poi conoscere l'intercetta e il coefficiente angolare: l'intercetta vale -0.8778 (valore vicino allo zero, il che ha senso perché nel caso di 0 letti ci si aspetta un numero di pazienti vicino allo zero) mentre il coefficiente angolare è uguale a 0.9272 (valore vicino all'1, infatti per ogni posto letto in più ci si aspetta un paziente in più). Grazie a questi valori possiamo costruirci l'equazione della retta di regressione lineare:   
 *TPY* = -0.8778 + 0.9272 * *NUMBED*.    

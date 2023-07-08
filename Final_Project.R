@@ -284,8 +284,8 @@ par(mfrow = c(1,1))
 p <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
    geom_point(shape=1) +
    theme_bw() +
-   xlab("Numero di letti") +
-   ylab("Posti occupati all'anno") +
+   xlab("NUMBED") +
+   ylab("TPY") +
    geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red")
 # Residui:
 resiplot(fit_NUMBED, p)
