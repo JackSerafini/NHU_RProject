@@ -499,6 +499,27 @@ p <- ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = TAXEXEMPT)) +
   geom_smooth(data = Data[Data$TAXEXEMPT == 1,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "blue") 
 resiplot(fitcacca2, p)
 
+
+# Provo PRO però solo additivo
+fitcacca3 <- lm(log(TPY) ~ log(SQRFOOT) + PRO, Data)
+summary(fitcacca3)
+# Il summary è decente
+p <- ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
+  geom_point(show.legend = F) +
+  theme_bw() +
+  xlab("Logaritmo dei piedi quadrati") +
+  ylab("Logaritmo dei posti occupati all'anno") +
+  geom_abline(slope = coef(fitcacca3)[2], intercept = coef(fitcacca3)[1], col = "darkgoldenrod1", linewidth = 1) +
+  geom_abline(slope = coef(fitcacca3)[2],intercept = coef(fitcacca3)[3] + coef(fitcacca3)[1], col = "deepskyblue1", linewidth = 1)
+# Ci può stare, si può valutare anche solo il modello additivo
+resiplot(fitcacca3, p)
+
+# Alla fine secondo me il modello migliore è solo NUMBED oppure SQRT(SQRFOOT)*PRO
+#(Enrico)
+# Io fare le conclusioni e i test su questi 2
+
+
+
 ## Predizione anno 2002
 summary(Data$CRYEAR)
 ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
@@ -532,7 +553,7 @@ set.seed(69)
 
 #Divisione data set
 # 70% dei dati nel training e 30 nel test
-sample <- sample(c(TRUE, FALSE), nrow(DataNa), replace=TRUE, prob=c(0.7,0.3))
+sample <- sample(c(TRUE, FALSE), nrow(DataNa), replace=TRUE, prob=c(0.8,0.2))
 train  <- Data[sample, ]
 test   <- Data[!sample, ]
 
