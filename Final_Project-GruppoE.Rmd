@@ -41,4 +41,20 @@ Data$TAXEXEMPT <- factor(Data$TAXEXEMPT)
 Data$SELFFUNDINS <- factor(Data$SELFFUNDINS)
 Data$MCERT <- factor(Data$MCERT)
 Data$ORGSTR <- factor(Data$ORGSTR)
+
+# Ci sono alcuni dati mancanti?
+na.id.Data <- apply(is.na(Data), 2, which) 
+# Abbiamo 10 dati mancanti in SQRFOOT
+na.SQRFOOT <- na.id.Data$SQRFOOT
+# Data frame senza NA
+DataNa <- Data[-na.SQRFOOT,]
 ```
+
+### Analisi dei Grafici di Correlazione       
+```{r echo=FALSE}
+pairs(DataNa[ , -c(1, 2, 6, 7, 8, 9, 10, 11, 12)], panel = panel.smooth)
+cormat <- cor(DataNa[, -c(1, 2, 6, 7, 8, 9, 10, 11, 12)]) 
+corrplot(cormat, method="number")
+```
+
+Si può subito vedere come ci sia una correlazione quasi totale tra il totale patienti annui e il numero di letti. Inoltre, si può osservare anche un'ottima correlazione tra il totale pazienti annui e i piedi quadrati della struttura, così come tra i piedi quadrati della struttura e il numero di letti. Ciò suggerisce che tutte queste variabili saranno legate tra loro da una relazione lineare.

@@ -68,7 +68,7 @@ corrplot(cormat, method="number")
 
 # Si può subito vedere come ci sia una correlazione quasi totale tra il totale
 # patienti annui e il numero di letti. Inoltre, si può osservare anche un'ottima
-# correlazione tra il totale pazienti annui e i piedi quadrati della struttura, 
+# correlazione tra il totale pazienti annui e i piedi quadrati della struttura,
 # così come tra i piedi quadrati della struttura e il numero di letti.
 # Ciò suggerisce che tutte queste variabili saranno legate tra loro da una
 # relazione lineare.
