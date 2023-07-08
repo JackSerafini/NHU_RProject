@@ -58,3 +58,67 @@ corrplot(cormat, method="number")
 ```
 
 Si può subito vedere come ci sia una correlazione quasi totale tra il totale patienti annui e il numero di letti. Inoltre, si può osservare anche un'ottima correlazione tra il totale pazienti annui e i piedi quadrati della struttura, così come tra i piedi quadrati della struttura e il numero di letti. Ciò suggerisce che tutte queste variabili saranno legate tra loro da una relazione lineare.
+
+Andiamo anche ad analizzare molto velocemente i grafici delle variabili qualitative:
+```{r echo=FALSE}
+p1 <- ggplot(data = Data, aes(x = CRYEAR, fill = CRYEAR)) +
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
+
+p2 <- ggplot(data = Data, aes(x = MSA, fill = MSA)) +
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
+
+p3 <- ggplot(data = Data, aes(x = URBAN, fill = URBAN)) +
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
+
+p4 <- ggplot(data = Data, aes(x = PRO, fill = PRO)) +
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
+
+p5 <- ggplot(data = Data, aes(x = TAXEXEMPT, fill = TAXEXEMPT)) +
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
+
+p6 <- ggplot(data = Data, aes(x = SELFFUNDINS, fill = SELFFUNDINS)) +
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
+
+p7 <- ggplot(data = Data, aes(x = MCERT, fill = MCERT)) +
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
+
+p8 <- ggplot(data = Data, aes(x = ORGSTR, fill = ORGSTR)) +
+  geom_bar() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("")
+
+# Grafico a torta della variabile MSA
+ppie <- ggplot(Data, aes(x="", y="", fill=MSA)) +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0) +
+  theme_void() 
+
+# Grafico di tutti i grafici delle variabili categoriali
+plot_grid(p1,p3,p4,p8,
+          p5,p6,p7,ppie,
+          nrow = 2)
+```
+
+## abbiamo un problema con la visualizzazione del grafico a torta

@@ -129,12 +129,10 @@ p8 <- ggplot(data = Data, aes(x = ORGSTR, fill = ORGSTR)) +
   ylab("")
 
 # Grafico a torta della variabile MSA
-
 ppie <- ggplot(Data, aes(x="", y="", fill=MSA)) +
   geom_bar(stat="identity", width=1) +
   coord_polar("y", start=0) +
   theme_void() 
-
 
 # Grafico di tutti i grafici delle variabili categoriali
 plot_grid(p1,p3,p4,p8,
