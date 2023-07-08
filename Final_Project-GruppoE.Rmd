@@ -57,7 +57,7 @@ cormat <- cor(DataNa[, -c(1, 2, 6, 7, 8, 9, 10, 11, 12)])
 corrplot(cormat, method="number")
 ```
 
-Si può subito vedere come ci sia una correlazione quasi totale tra il totale patienti annui e il numero di letti. Inoltre, si può osservare anche un'ottima correlazione tra il totale pazienti annui e i piedi quadrati della struttura, così come tra i piedi quadrati della struttura e il numero di letti. Ciò suggerisce che tutte queste variabili saranno legate tra loro da una relazione lineare.
+Si può subito vedere come ci sia una correlazione quasi totale tra il *TPY* (totale patienti annui) e il *NUMBED* (numero di letti). Inoltre, si può osservare anche un'ottima correlazione tra il totale pazienti annui e i piedi quadrati della struttura (*SQRFOOT*), così come tra i piedi quadrati della struttura e il numero di letti. Ciò suggerisce che tutte queste variabili saranno legate tra loro da una relazione lineare.
 
 Andiamo anche ad analizzare molto velocemente i grafici delle variabili qualitative:
 ```{r echo=FALSE}
@@ -121,4 +121,111 @@ plot_grid(p1,p3,p4,p8,
           nrow = 2)
 ```
 
-## abbiamo un problema con la visualizzazione del grafico a torta
+-- abbiamo un problema con la visualizzazione del grafico a torta --
+
+
+Andiamo anche a studiare velocemente le distribuzioni condizionate della variabile risposta:    
+
+```{r echo=FALSE}
+c4 <- ggplot(data = Data, aes(x = CRYEAR, y = TPY, fill = CRYEAR)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+c5 <- ggplot(data = Data, aes(x = URBAN, y = TPY, fill = URBAN)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+c6 <- ggplot(data = Data, aes(x = PRO, y = TPY, fill = PRO)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+c7 <- ggplot(data = Data, aes(x = ORGSTR, y = TPY, fill = ORGSTR)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+c8 <- ggplot(data = Data, aes(x = TAXEXEMPT, y = TPY, fill = TAXEXEMPT)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+c9 <- ggplot(data = Data, aes(x = SELFFUNDINS, y = TPY, fill = SELFFUNDINS)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+c10 <- ggplot(data = Data, aes(x = MCERT, y = TPY, fill = MCERT)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+c11 <- ggplot(data = Data, aes(x = MSA, y = TPY, fill = MSA)) +
+  geom_boxplot() +
+  theme_classic() +
+  theme(legend.position = "")
+
+plot_grid(c4, c5, c6, c7,
+          c8, c9, c10, c11,
+          nrow = 2)
+```
+```{r include=FALSE}
+resiplot <- function(fit, p) {
+  #p è il primo grafico in alto a sinistra, così non c'è il rischio che gli si passi un p a caso
+  
+  
+  #per capire che data set utilizzare
+  if(length(fitted.values(fit)) == 717){
+    d = Data
+    print("resi plot utilizzando Data")
+  }
+  if(length(fitted.values(fit)) == 707){
+    d = DataNa
+    print("resi plot utilizzando DataNa")
+  }
+  
+  f <- ggplot(data = d, aes(x = fitted.values(fit), y = resid(fit))) +
+    geom_point(shape=1) +
+    theme_bw() +
+    xlab("Valori fittati") +
+    ylab("Residui") +
+    geom_hline(yintercept = 0, col = "black", lty = 2) +
+    geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
+  f1 <- ggplot(data = d, mapping = aes(resid(fit))) +
+    geom_histogram(aes(y =after_stat(density)),bins = 20, col = "black", fill = "yellow", alpha = 1) + 
+    geom_density(linewidth = 0.8, fill = "pink", alpha = 0.3) +
+    theme_bw() +
+    xlab("Residui") +
+    ylab("Densità")
+  f2 <- ggplot(data.frame(resid = rstandard(fit)),aes(sample = resid)) + 
+    stat_qq(shape=1) +
+    stat_qq_line(color = "red", linewidth = 1) +
+    theme_bw() +
+    xlab("Quantili teorici normale") +
+    ylab("Quantili empirici")
+
+  plot_grid(p, f,
+            f1, f2,
+            nrow = 2)
+}
+```
+
+## REGRESSIONI LINEARI PER LA STIMA DI TPY
+
+--- Proviamo prima le regressioni semplici con NUMBED e SQRFOOT    
+Bisogna probabilmente scegliere una sola delle due variabili perché sono troppo correlate    
+Poi proviamo ad aggiungere tutte le variabili qualitative e vediamo come incidono    
+Modello ideale: 1 quantitativa + 1/2 qualitative (non è detto per forza) ---
+
+#### Costruzione del modello TPY ~ NUMBED
+```{r echo=FALSE}
+fit_NUMBED <- lm(TPY ~ NUMBED, data = Data)
+summary(fit_NUMBED)
+```
+Studiando i valori ritornati dal summary, si può subito vedere come questo modello sia ottimo: per quanto riguarda i residui, la mediana è molto vicina allo zero, il primo e il terzo quartile sono disposti abbastanza simmetricamente rispetto lo zero e discorso simile può essere fatto per i valori di minimo e massimo (magari il minimo è spostato più verso il basso, ma stiamo comunque parlando di valori "piccoli").     
+Dal summary possiamo poi conoscere l'intercetta e il coefficiente angolare: l'intercetta vale -0.8778 (valore vicino allo zero, il che ha senso perché nel caso di 0 letti ci si aspetta un numero di pazienti vicino allo zero) mentre il coefficiente angolare è uguale a 0.9272 (valore vicino all'1, infatti per ogni posto letto in più ci si aspetta un paziente in più). Grazie a questi valori possiamo costruirci l'equazione della retta di regressione lineare:   
+*TPY* = -0.8778 + 0.9272 * *NUMBED*.    
+Infine, studiando la statistica R^2, possiamo vedere un valore pari a 0.9678, il quale suggerisce un'aderenza del modello ai dati molto alta, quasi totale, circa del 97%.      
+-- (Attenzione il t value dell'intercetta non è motlo significativo al contrario dell'altro (che non mi viene il nome (coefficiente?))) (se non fosse per la poca significatività dell'intercetta potrebbe essere un modello quasi perfetto) --
