@@ -311,13 +311,13 @@ fit_SQRFOOT <- lm(TPY ~ SQRFOOT, data = Data)
 # Summary
 summary(fit_SQRFOOT)
 # Studiando i residui dal summary, si può vedere questi si dispongano simmetricamente
-# rispetto lo zero, nonostante fra il minimo ed il massimo ci sia una differenza di 
+# rispetto lo zero, nonostante fra il minimo ed il massimo ci sia una differenza di
 # 240, molto maggiore rispetto a quella riscontrata nel modello TPY ~ NUMBED. La
 # mediana si dispone comunque vicino allo 0, ed il primo ed il terzo quartile valgono
 # rispettivamente -15.391 e 15.615, oltre ad essere assolutamente simmetrici, ci
 # dicono anche che la maggior parte dei valori si troverà proprio in questo intervallo.
 # In questo modello l'intercetta vale 33.5475 mentre il coefficiente angolare è
-# pari a 1.1179 (molto vicino a 1, quindi circa per ogni piede quadrato c'è un 
+# pari a 1.1179 (molto vicino a 1, quindi circa per ogni piede quadrato c'è un
 # paziente in più) (entrambi molto significativi?). Quindi, la retta di regressione
 # lineare risulta: TPY = 33.5475 + 1.1179 * SQRFOOT.
 # Infine, l'R^2 risulta pari a 0.6756, quindi abbiamo un'aderenza del modello di
