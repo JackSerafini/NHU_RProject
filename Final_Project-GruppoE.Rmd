@@ -2,3 +2,21 @@
 #### Giacomo Serafini, Enrico Guerriero, Leonardo Marsich, Gilberto Bran
 
 ### Data Set
+Il dataset 'WiscNursingHome' racchiude le informazioni riguardo diverse centinaia di case di riposo, informazioni che poi saranno utilizzate per prevedere il costo??? della struttura negli anni successivi.
+Nel dataset sono presenti 12 variabili:
+
+* *hospID*: l'ID rappresentativo della singola struttura
+* *CRYEAR*: il rapporto dei costi annuo
+* *TPY*: il totale pazienti annui
+* *NUMBED*: il numero di letti
+* *SQRFOOT*: il numero di piedi quadrati della struttura
+* *MSA*: codice dell'area statistica metropolitana (area divisa in 13 zone, più lo 0 se rurale)
+* *URBAN*: 1 se urbana, O se rurale
+* *PRO*: 0 se non-profit, 1 altrimenti
+* *TAXEXEMPT*: 1 se esente dalle tasse
+* *SELFFUNDINS*: 1 se autofinanziato per l'assicurazione
+* *MCERT*: 1 se certificato Medicare
+* *ORGSTR*: 1 se con finalità di lucro, 2 se esente dalle tasse, 3 se unità governativa
+
+L'obiettivo della nostra analisi sarà quindi quello di capire come le varie caratteristiche di una casa di riposo sono tra loro collegate (se collegate in alcun modo), per poter così prevedere tutto ciò che concerne una struttura negli anni successivi, o perfino prevedere il futuro di una nuova struttura.
+In maniera particolare, vogliamo analizzare quali sono le principali peculiarità di una struttura che portano ad avere un numero maggiore di pazienti.
