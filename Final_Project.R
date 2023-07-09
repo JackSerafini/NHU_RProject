@@ -617,6 +617,66 @@ ggplot(data = test, aes(x = TPY, y = pred)) +
   theme_bw() +
   geom_abline(intercept = 0, slope = 1)
 
+#Facciamo un ciclo for nel quale separiamo più volte il data set in test e train
+#Numero di ripetizioni
+niter <- 100
+#prime due righe due modi diversi per calcolare l'r^2
+r <- matrix(data = 0, nrow = 2, ncol = niter)
+#vettore dei residui
+devres_v <- vector(mode = "numeric", length = niter)
+for (i in 1:niter){
+  #Divido il dataset
+  sample <- sample(c(TRUE, FALSE), nrow(DataNa), replace=TRUE, prob=c(0.9,0.1))
+  train  <- DataNa[sample, ]
+  test   <- DataNa[!sample, ]
+  
+  #Faccio il modello
+  fit_train <- lm(log(TPY) ~ log(SQRFOOT)*PRO, train)
+  summary(fit_train)
+  
+  #Predizion
+  pred <- predict.lm(fit_train, test)
+  
+  #calcolo residui
+  res <- test[,'TPY'] - exp(pred)
+  #media dati
+  m <- mean(test[,'TPY'])
+  # Residui totali
+  sst <- sum((test[,'TPY'] - m)^2)
+  #calcolo devianza dei residui
+  sse <- sum(res^2)
+  #devianza della regression
+  ssr <- sum((exp(pred) - m)^2)
+  
+  print(i)
+  
+  #Calcolo dell'r quadro
+  r1 <- (ssr / sst)
+  r2 <- (1 - sse / sst)
+  r[i, 1] <-  r1
+  r[i, 2] <-  r2
+  
+  #salvo i residui
+  devres_v[i] <- sse
+}
+
+#Distribuzioni degli r quadri calcolati
+ggplot(data = NULL, aes(r[,1])) +
+  geom_boxplot() +
+  xlim(c(0,1)) +
+  theme_bw()
+
+ggplot(data = NULL, aes(r[,2])) +
+  geom_boxplot() +
+  xlim(c(0,1)) +
+  theme_bw()
+
+ggplot(data = NULL, aes(devres_v)) +
+  geom_density() +
+  geom_point(aes(x = devres_v, y = 0)) +
+  theme_bw()
+
+#
 
 
 ## CLUSTERING ------------------------------------------------------------------
