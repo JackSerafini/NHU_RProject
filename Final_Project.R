@@ -572,7 +572,7 @@ set.seed(69)
 #SPOILER NON SO FARE STA ROBA
 
 #Divisione data set
-# 70% dei dati nel training e 30 nel test
+# 80% dei dati nel training e 20% nel test
 sample <- sample(c(TRUE, FALSE), nrow(DataNa), replace=TRUE, prob=c(0.8,0.2))
 train  <- Data[sample, ]
 test   <- Data[!sample, ]
