@@ -146,9 +146,15 @@ ppie <- ggplot(Data, aes(x="", y="", fill=MSA)) +
   coord_polar("y", start=0) +
   theme_void() 
 
+p9 <- ggplot(Data[Data$MSA != 0,], aes(x=MSA, fill=MSA)) +
+  geom_bar(width=1, col = "black") +
+  theme_classic() +
+  theme(legend.position = "") +
+  ylab("")
+
 # Grafico di tutti i grafici delle variabili categoriali
 plot_grid(p1,p3,p4,p8,
-          p5,p6,p7,ppie,
+          p5,p6,p7,p9,
           nrow = 2)
 
 # NB per non vedere sminchiata la legenda bisogna mettere il grafico a schermo intero
@@ -256,7 +262,6 @@ resiplot <- function(fit, p) {
 # Poi proviamo ad aggiungere tutte le variabili qualitative e vediamo come incidono
 # Modello ideale: 1 quantitativa + 1/2 qualitative (non è detto per forza)
 
-
 # Costruzione del modello TPY ~ NUMBED -----
 fit_NUMBED <- lm(TPY ~ NUMBED, data = Data)
 
@@ -299,7 +304,7 @@ p <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
    xlab("NUMBED") +
    ylab("TPY") +
    geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red") +
-  geom_point(aes(x = Data[564,'NUMBED'], y = Data[564,'TPY']), colour = "red", size = 2)
+  geom_point(aes(x = Data[564,'NUMBED'], y = Data[564,'TPY']), colour = "red", size = 1)
 # Residui:
 resiplot(fit_NUMBED, p)
 
