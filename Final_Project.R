@@ -290,10 +290,10 @@ par(mfrow = c(2,2))
 plot(fit_NUMBED)
 par(mfrow = c(1,1))
 # Analizzando i grafici, dal primo dei Residuals vs Fitted si può notare come, nonostante
-# siano presenti degli outliers (sono outliers??) al di sotto della curva di regressione, 
+# siano presenti degli outliers (sono outliers??) al di sotto della curva di regressione,
 # i residui si dispongono in maniera per lo più simmetrica, suggerendo la linearità
-# del modello. 
-# Guardando il grafico qqnorm dei residui, possiamo nuovamente osservare un'ottima 
+# del modello.
+# Guardando il grafico qqnorm dei residui, possiamo nuovamente osservare un'ottima
 # disposizione dei residui lungo la retta tratteggiata, il che significa che il nostro
 # modello soddisfa l'assunzione di gaussianità.
 
@@ -320,7 +320,6 @@ ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
   geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red") +
   theme_classic()+
   geom_point(aes(x = Data[564,'NUMBED'], y = Data[564,'TPY']), colour = "red", size = 2)
-# Secondo me si potrebbe direttamente metterlo nel grafico sopra (JACK)
 
 
 # Costruzione del modello TPY ~ SQRFOOT -----

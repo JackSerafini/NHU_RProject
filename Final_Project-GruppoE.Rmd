@@ -235,6 +235,25 @@ Infine, studiando la statistica R^2, possiamo vedere un valore pari a 0.9678, il
 -- (Attenzione il t value dell'intercetta non è motlo significativo al contrario dell'altro) (se non fosse per la poca significatività dell'intercetta potrebbe essere un modello quasi perfetto) --
 
 
+```{r echo=FALSE}
+# Grafico della regressione
+p <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
+   geom_point(shape=1) +
+   theme_bw() +
+   xlab("NUMBED") +
+   ylab("TPY") +
+   geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red") +
+  geom_point(aes(x = Data[564,'NUMBED'], y = Data[564,'TPY']), colour = "red", size = 1)
+# Residui:
+resiplot(fit_NUMBED, p)
+```
+
+Dallo scatterplot dato dalla relazione tra *TPY* come variabile risposta e *NUMBED* come variabile esplicativa, si vede subito come sia presente una relazione lineare tra le due
+Analizzando i grafici, dal primo dei Residuals vs Fitted si può notare come, nonostante siano presenti degli outliers (sono outliers??) al di sotto della curva di regressione, i residui si dispongono in maniera per lo più simmetrica, suggerendo la linearità del modello.
+Guardando il grafico qqnorm dei residui, possiamo nuovamente osservare un'ottima
+disposizione dei residui lungo la retta tratteggiata, il che significa che il nostro
+modello soddisfa l'assunzione di gaussianità.
+
 -- Qua manca ancora una parte su questo modello --
 
 
