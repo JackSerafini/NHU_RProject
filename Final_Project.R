@@ -298,7 +298,8 @@ p <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
    theme_bw() +
    xlab("NUMBED") +
    ylab("TPY") +
-   geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red")
+   geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red") +
+  geom_point(aes(x = Data[564,'NUMBED'], y = Data[564,'TPY']), colour = "red", size = 2)
 # Residui:
 resiplot(fit_NUMBED, p)
 
@@ -744,3 +745,4 @@ ggplot(na.omit(Data), aes(x = SQRFOOT, y = TPY, col = factor(km.sqrfoot$cluster)
 
 # A livello interpretativo può avere senso tenere un modello che tiene conto dei tre cluster
 # Potrebbe avere senso per definire ospedali di piccole, medie e grandi dimensioni
+
