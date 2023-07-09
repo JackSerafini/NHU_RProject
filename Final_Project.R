@@ -311,13 +311,13 @@ fit_SQRFOOT <- lm(TPY ~ SQRFOOT, data = Data)
 # Summary
 summary(fit_SQRFOOT)
 # Studiando i residui dal summary, si può vedere questi si dispongano simmetricamente
-# rispetto lo zero, nonostante fra il minimo ed il massimo ci sia una differenza di 
+# rispetto lo zero, nonostante fra il minimo ed il massimo ci sia una differenza di
 # 240, molto maggiore rispetto a quella riscontrata nel modello TPY ~ NUMBED. La
 # mediana si dispone comunque vicino allo 0, ed il primo ed il terzo quartile valgono
 # rispettivamente -15.391 e 15.615, oltre ad essere assolutamente simmetrici, ci
 # dicono anche che la maggior parte dei valori si troverà proprio in questo intervallo.
 # In questo modello l'intercetta vale 33.5475 mentre il coefficiente angolare è
-# pari a 1.1179 (molto vicino a 1, quindi circa per ogni piede quadrato c'è un 
+# pari a 1.1179 (molto vicino a 1, quindi circa per ogni piede quadrato c'è un
 # paziente in più) (entrambi molto significativi?). Quindi, la retta di regressione
 # lineare risulta: TPY = 33.5475 + 1.1179 * SQRFOOT.
 # Infine, l'R^2 risulta pari a 0.6756, quindi abbiamo un'aderenza del modello di
@@ -357,28 +357,30 @@ ggplot(data = DataNa, aes(x = SQRFOOT, y = TPY)) +
 
 #Proviamo Un modello logaritmico
 # Costruzione del modello
-fit_loglogSQRFOOT <- lm(log(Data$TPY) ~ log(Data$SQRFOOT))
-# plot
-par(mfrow = c(2,2))
-plot(fit_loglogSQRFOOT)
-par(mfrow = c(1,1))
-#' con il doppio log si va alla vittoria
-#' il grafico dei residui è bellissimo e anche quello della qq-norm
-#' ci sono pochi valori estremi e sono meno estremi di prima
+fit_loglogSQRFOOT <- lm(log(TPY) ~ log(SQRFOOT), data = Data)
 
 # interpretazione dei valori
 summary(fit_loglogSQRFOOT)
 #' La varianza dei residui è molto bassa
 #' R^2 spiega il 53% dei dati, ma magari aggiungendo una variabile si va a migliorare
 
+# Plot
+par(mfrow = c(2,2))
+plot(fit_loglogSQRFOOT)
+par(mfrow = c(1,1))
+
+#' con il doppio log si va alla vittoria
+#' il grafico dei residui è bellissimo e anche quello della qq-norm
+#' ci sono pochi valori estremi e sono meno estremi di prima
+
 cor(log(Data$TPY), log(Data$SQRFOOT))
 
-#scater plot
+# scatter plot
 ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY))) +
   geom_point() +
   geom_smooth(se = F, method = 'lm') +
   theme_classic()
-# Niente da dire bellisimo
+# Niente da dire bellissimo
 
 
 # Così per provare magari dopo non si aggiunge aggiungiamo anche l'alra variabile
