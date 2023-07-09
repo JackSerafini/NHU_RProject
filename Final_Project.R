@@ -576,6 +576,25 @@ summary(res)
 #Non so bene che variabile utilizzare per valutare il fit
 
 
+# provo a fare training - test set per il modello con NUMBED
+set.seed(69)
+sample <- sample(c(TRUE, FALSE), nrow(DataNa), replace=TRUE, prob=c(0.9,0.1))
+train  <- Data[sample, ]
+test   <- Data[!sample, ]
+fit_train <- lm(TPY ~ NUMBED, train)
+pred <- predict.lm(fit_train, test)
+# Scatterplot ma i punti rossi sono i predict
+ggplot(Data, aes(x = NUMBED, y = TPY))+
+  geom_point(data = train, aes(x = NUMBED, y = TPY)) +
+  geom_point(data = test, aes(x = NUMBED, y = pred), col = "red") +
+  theme_bw()
+# Vediamo la differenza tra i dati predictati e i dati reali
+ggplot(data = test, aes(x = TPY, y = pred)) +
+  geom_point() +
+  theme_bw() +
+  geom_abline(intercept = 0, slope = 1)
+
+
 
 ## CLUSTERING ------------------------------------------------------------------
 
