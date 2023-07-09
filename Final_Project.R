@@ -586,11 +586,16 @@ pred <- predict.lm(fit_train, test)
 
 #Questo non so bene cosa rappresenta
 ggplot()+
-  geom_point(aes(x = test[,'SQRFOOT'], y = pred))
+  geom_point(aes(x = test[,'TPY'], y = exp(pred))) +
+  theme_bw()
 
 #calcolo residui
-res <- test[,'TPY'] - pred
+res <- test[,'TPY'] - exp(pred)
 summary(res)
+ggplot(data = test, aes(x = SQRFOOT, y = res)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 0) +
+  theme_bw()
 #Non so bene che variabile utilizzare per valutare il fit
 
 
