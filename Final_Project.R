@@ -617,6 +617,32 @@ ggplot(data = test, aes(x = TPY, y = pred)) +
   theme_bw() +
   geom_abline(intercept = 0, slope = 1)
 
+res <- test[,'TPY'] - pred
+summary(res)
+ggplot(data = test, aes(x = NUMBED, y = res)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 0) +
+  theme_bw()
+
+
+# sta parte fa schifo non mettiamola
+# la lascio che magari poi la riprendo, ma non ci sta
+
+alphalevels <- c(0.5, 0.55, 0.6, 0.65,  0.7, 0.75, 0.8, 0.85, 0.9, 0.95)
+stdev <- vector(mode = "numeric", length = 10)
+for(i in 1:10) {
+  set.seed(69)
+  sample <- sample(c(TRUE, FALSE), nrow(Data), replace=TRUE,
+                   prob=c(1-alphalevels[i],alphalevels[i]))
+  train  <- Data[sample, ]
+  test   <- Data[!sample, ]
+  fit_train <- lm(TPY ~ NUMBED, train)
+  pred <- predict.lm(fit_train, test)
+  stdev[i] <- sd(test[,'TPY'] - pred)
+}
+
+ggplot(data.frame(alphalevels, stdev),aes(x = alphalevels, y = stdev)) +
+  geom_point()
 
 
 ## CLUSTERING ------------------------------------------------------------------
