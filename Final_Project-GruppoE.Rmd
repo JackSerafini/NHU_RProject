@@ -2,7 +2,7 @@
 #### Giacomo Serafini, Enrico Guerriero, Leonardo Marsich, Gilberto Bran
 
 ### Data Set
-Il dataset *WiscNursingHome* racchiude le informazioni riguardo diverse centinaia di case di riposo, informazioni che poi saranno utilizzate per prevedere il costo??? della struttura negli anni successivi.   
+Il dataset *WiscNursingHome* racchiude le informazioni riguardo diverse centinaia di case di riposo, informazioni che poi saranno utilizzate per capire come si relaziona il numero di pazienti rispetto alle caratteristiche della struttura.   
 Nel dataset sono presenti 12 variabili:
 
 * *hospID*: l'ID rappresentativo della singola struttura
@@ -18,8 +18,7 @@ Nel dataset sono presenti 12 variabili:
 * *MCERT*: 1 se certificato Medicare
 * *ORGSTR*: 1 se con finalità di lucro, 2 se esente dalle tasse, 3 se unità governativa
 
-L'obiettivo della nostra analisi sarà quindi quello di capire come le varie caratteristiche di una casa di riposo sono tra loro collegate (se collegate in alcun modo), per poter così prevedere tutto ciò che concerne una struttura negli anni successivi, o perfino prevedere il futuro di una nuova struttura.   
-In maniera particolare, vogliamo analizzare quali sono le principali peculiarità di una struttura che portano ad avere un numero maggiore di pazienti.
+L'obiettivo della nostra analisi sarà quindi quello di capire come le varie caratteristiche di una casa di riposo sono tra loro collegate (se collegate in alcun modo), per poter così capire quali sono le principali peculiarità di una struttura che portano ad avere un numero maggiore di pazienti.
 
 ```{r include=FALSE}
 # Richiamo delle librerie
@@ -68,10 +67,10 @@ p1 <- ggplot(data = Data, aes(x = CRYEAR, fill = CRYEAR)) +
   theme(legend.position = "none") +
   ylab("")
 
-p2 <- ggplot(data = Data, aes(x = MSA, fill = MSA)) +
-  geom_bar() +
+p2 <- ggplot(Data[Data$MSA != 0,], aes(x=MSA, fill=MSA)) +
+  geom_bar(width=1, col = "black") +
   theme_classic() +
-  theme(legend.position = "none") +
+  theme(legend.position = "") +
   ylab("")
 
 p3 <- ggplot(data = Data, aes(x = URBAN, fill = URBAN)) +
@@ -117,12 +116,12 @@ ppie <- ggplot(Data, aes(x="", y="", fill=MSA)) +
   theme_void() 
 
 # Grafico di tutti i grafici delle variabili categoriali
-plot_grid(p1,p3,p4,p8,
-          p5,p6,p7,ppie,
+plot_grid(p1,p2,p3,p4,
+          p5,p6,p7,p8,
           nrow = 2)
 ```
 
--- abbiamo un problema con la visualizzazione del grafico a torta --
+Abbiamo deciso per quanto riguarda la variabile *MSA* di non includere le osservazioni appartenenti alla classe "0", ovvero le case di riposo poste in zone rurali, poiché già rappresentate nella variabile *URBAN*.
 
 
 Andiamo anche a studiare velocemente le distribuzioni condizionate della variabile risposta:    
