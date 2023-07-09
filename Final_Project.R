@@ -58,6 +58,18 @@ na.SQRFOOT <- na.id.Data$SQRFOOT
 # Data frame senza NA
 DataNa <- Data[-na.SQRFOOT,]
 
+# DataNa è significativo per il dataset?
+cor(DataNa$NUMBED, DataNa$SQRFOOT)
+# Le due variabili sono estremamente correlate
+# Vediamo quali sono i dati di NUMBED che corrispondono ai valori mancanti
+ggplot(data = DataNa, aes(x = NUMBED, y = TPY)) +
+  geom_point() +
+  geom_point(data = Data[na.SQRFOOT,], aes(x = NUMBED, y = TPY), col = "red") +
+  theme_bw()
+# I dati mancanti sembrano essere effettivamente dei dati "a caso"
+# Anche se concentrati negli ospedali più piccoli
+
+
 ## Grafici di correlazione -----------------------------------------------------
 
 # Dalle relazioni andiamo a togliere anche HospID perché ovviamente non c'è
