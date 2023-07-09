@@ -232,7 +232,7 @@ Dal summary possiamo poi conoscere l'intercetta e il coefficiente angolare: l'in
 *TPY* = -0.8778 + 0.9272 * *NUMBED*.    
 Infine, studiando la statistica R^2, possiamo vedere un valore pari a 0.9678, il quale suggerisce un'aderenza del modello ai dati molto alta, quasi totale, circa del 97%.      
 
--- (Attenzione il t value dell'intercetta non è motlo significativo al contrario dell'altro (che non mi viene il nome (coefficiente?))) (se non fosse per la poca significatività dell'intercetta potrebbe essere un modello quasi perfetto) --
+-- (Attenzione il t value dell'intercetta non è motlo significativo al contrario dell'altro) (se non fosse per la poca significatività dell'intercetta potrebbe essere un modello quasi perfetto) --
 
 
 -- Qua manca ancora una parte su questo modello --
