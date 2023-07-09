@@ -290,10 +290,10 @@ par(mfrow = c(2,2))
 plot(fit_NUMBED)
 par(mfrow = c(1,1))
 # Analizzando i grafici, dal primo dei Residuals vs Fitted si può notare come, nonostante
-# siano presenti degli outliers (sono outliers??) al di sotto della curva di regressione, 
+# siano presenti degli outliers (sono outliers??) al di sotto della curva di regressione,
 # i residui si dispongono in maniera per lo più simmetrica, suggerendo la linearità
-# del modello. 
-# Guardando il grafico qqnorm dei residui, possiamo nuovamente osservare un'ottima 
+# del modello.
+# Guardando il grafico qqnorm dei residui, possiamo nuovamente osservare un'ottima
 # disposizione dei residui lungo la retta tratteggiata, il che significa che il nostro
 # modello soddisfa l'assunzione di gaussianità.
 
@@ -320,7 +320,6 @@ ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
   geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red") +
   theme_classic()+
   geom_point(aes(x = Data[564,'NUMBED'], y = Data[564,'TPY']), colour = "red", size = 2)
-# Secondo me si potrebbe direttamente metterlo nel grafico sopra (JACK)
 
 
 # Costruzione del modello TPY ~ SQRFOOT -----
@@ -617,6 +616,26 @@ ggplot(data = test, aes(x = TPY, y = pred)) +
   theme_bw() +
   geom_abline(intercept = 0, slope = 1)
 
+
+# sta parte fa schifo non mettiamola
+# la lascio che magari poi la riprendo, ma non ci sta
+
+alphalevels <- c(0.5, 0.55, 0.6, 0.65,  0.7, 0.75, 0.8, 0.85, 0.9, 0.95)
+stdev <- vector(mode = "numeric", length = 10)
+for(i in 1:10) {
+  set.seed(69)
+  sample <- sample(c(TRUE, FALSE), nrow(Data), replace=TRUE,
+                   prob=c(1-alphalevels[i],alphalevels[i]))
+  train  <- Data[sample, ]
+  test   <- Data[!sample, ]
+  fit_train <- lm(TPY ~ NUMBED, train)
+  pred <- predict.lm(fit_train, test)
+  stdev[i] <- sd(test[,'TPY'] - pred)
+}
+
+ggplot(data.frame(alphalevels, stdev),aes(x = alphalevels, y = stdev)) +
+  geom_point()
+
 #Facciamo un ciclo for nel quale separiamo più volte il data set in test e train
 #Numero di ripetizioni
 niter <- 100
@@ -676,7 +695,12 @@ ggplot(data = NULL, aes(devres_v)) +
   geom_point(aes(x = devres_v, y = 0)) +
   theme_bw()
 
-#
+res <- test[,'TPY'] - pred
+summary(res)
+ggplot(data = test, aes(x = NUMBED, y = res)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 0) +
+  theme_bw()
 
 
 ## CLUSTERING ------------------------------------------------------------------
