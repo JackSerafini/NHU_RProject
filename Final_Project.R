@@ -716,4 +716,31 @@ sil <- silhouette(pam.sqrfoot$cluster, dist(scale(na.omit(Data[,c("SQRFOOT", "TP
 fviz_silhouette(sil)
 # Silhouette terribili, forse era meglio il metodo delle k-means
 
-# Per il clustering cumulato e condizonato alle variabili categoriale aspettiamo regressione
+
+# Provo il clusering con il metodo delle k medie però con 3 nuclei
+km.numbed <- kmeans(scale(Data[,c("NUMBED", "TPY")]), centers = 3)
+km.sqrfoot <- kmeans(scale(na.omit(Data[,c("SQRFOOT", "TPY")])), centers = 3)
+# Numerosità nei due cluster
+table(km.numbed$cluster)
+table(km.sqrfoot$cluster)
+
+# Dataframe di supporto per la rappresentazione grafica
+data.centers.numbed <- data.frame(NUMBED = km.numbed$centers[,1]*sd(Data$NUMBED)+mean(Data$NUMBED),
+                                  TPY = km.numbed$centers[,2]*sd(Data$TPY)+mean(Data$TPY))
+data.centers.sqrfoot <- data.frame(SQRFOOT = km.sqrfoot$centers[,1]*sd(na.omit(Data$SQRFOOT))+mean(na.omit(Data$SQRFOOT)),
+                                   TPY = km.sqrfoot$centers[,2]*sd(Data$TPY)+mean(Data$TPY))
+
+# Visualizzo graficamente i clustering
+ggplot(Data, aes(x = NUMBED, y = TPY, col = factor(km.numbed$cluster))) +
+  geom_point() + 
+  theme_classic() +
+  theme(legend.position = "") +
+  geom_point(data = data.centers.numbed, aes(x = NUMBED, y = TPY), col = "black")
+ggplot(na.omit(Data), aes(x = SQRFOOT, y = TPY, col = factor(km.sqrfoot$cluster))) +
+  geom_point() + 
+  theme_classic() +
+  theme(legend.position = "") +
+  geom_point(data = data.centers.sqrfoot, aes(x = SQRFOOT, y = TPY), col = "black")
+
+# A livello interpretativo può avere senso tenere un modello che tiene conto dei tre cluster
+# Potrebbe avere senso per definire ospedali di piccole, medie e grandi dimensioni
