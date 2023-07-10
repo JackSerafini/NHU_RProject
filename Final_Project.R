@@ -390,7 +390,7 @@ par(mfrow = c(1,1))
 #' il grafico dei residui è bellissimo e anche quello della qq-norm
 #' ci sono pochi valori estremi e sono meno estremi di prima
 
-cor(log(Data$TPY), log(Data$SQRFOOT))
+cor(log(DataNa$TPY), log(DataNa$SQRFOOT))
 
 # scatter plot
 ggplot(data = Data, aes(x = log(SQRFOOT), y = log(TPY))) +
@@ -538,6 +538,11 @@ resiplot(fitcacca3, p)
 # Io fare le conclusioni e i test su questi 2
 
 
+# Provo ancora un modello
+
+fitcacca3 <- lm(log(TPY) ~ log(SQRFOOT)*ORGSTR, Data)
+summary(fitcacca3)
+
 
 ## Predizione anno 2002
 summary(Data$CRYEAR)
@@ -548,13 +553,6 @@ ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
   xlab("Logaritmo dei piedi quadrati") +
   ylab("Logaritmo pazienti annui")
 
-
- 
-## INFERENZA SUI RISULTATI
-# Boh ho aggiunto questa sezione perché può essere simpatico e farci prendere qualche voto in più
-# Penso che sia sufficiente cercare su internet quali sono i test di ipotesi migliori
-# in base al modello di regressione che ci uscirà
-### Assolutamente d'accordo (Jack)
 
 
 

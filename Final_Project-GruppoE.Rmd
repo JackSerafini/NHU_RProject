@@ -556,11 +556,11 @@ resiplot <- function(fit, p) {
 }
 ```
 
-## REGRESSIONI LINEARI SEMPLICI PER LA STIMA DI TPY
+## Regressioni Lineari Semplici per la Stima di TPY
 
 I due modelli di regressione semplice sono con le variabili NUMBED e SQRFOOT, in quanto si tratta delle uniche variabili quantitative del dataset.
 
-#### Costruzione del modello TPY ~ NUMBED
+#### Costruzione del Modello TPY ~ NUMBED
 
 ```{r echo=FALSE}
 fit_NUMBED <- lm(TPY ~ NUMBED, data = Data)
@@ -600,7 +600,7 @@ Tuttavia il modello è comunque più che accettabile, nonostante la non-normalit
 Eventuali trasformazioni per rendere i residui gaussiani rendono il modello maggiormente eteroschedastico, quindi le rifiutiamo a favore di un modello più omoschedastico e facile da interpretare.
 
 
-#### Costruzione del modello TPY ~ SQRFOOT
+#### Costruzione del Modello TPY ~ SQRFOOT
 
 Analizziamo ora il secondo modello con SQRFOOT come variabile esplicativa.
 ```{r echo=FALSE}
@@ -618,10 +618,54 @@ Questo modello risulta comunque peggiore di quello con NUMBED.
 C'è però da considerare che, nel caso di SQRFOOT, il modello migliora qualora si effettui una trasformazione logaritmica della variabile risposta e della variabile esplicativa, ma verrà ripreso in seguito.
 
 
-### Modelli con Variabili Qualitative     
+### Regressione Lineare Multipla con Variabili Categoriche    
+
+Per costruire un modello di regressione multipla abbiamo provato ad aggiungere una variabile qualitativa ai modelli ottenuti precedentemente; non è stato preso in considerazione il modello che tiene conto sia di NUMBED sia di SQRFOOT, poiché le due variabili sono fortemente correlate e potrebbero generare effetti di multicollinearità.
+
+Il primo modello proposto, con NUMBED, non è significativamente migliorabile con l'aggiunta di variabili categoriche, poiché la varianza dei dati è già spiegata molto bene e le nuove variabili risultano poco significative lasciando pressoché invariato l'$R^2$.
+
+Procediamo quindi con la costruzione di un modello di regressione multipla introducendo una nuova variabile nel modello con SQRFOOT; in particolare, utilizzeremo il modello che considera le trasformazioni logaritmiche di TPY e SQRFOOT.
+
+Per quanto riguarda le variabili dicotomiche, i due modelli migliori sono quelli individuati con l'introduzione delle variabili PRO e TAXEXEMPT:
+
+```{r}
+fitcacca1 <- lm(log(TPY) ~ log(SQRFOOT)*PRO, Data)
+summary(fitcacca1)
+fitcacca2 <- lm(log(TPY) ~ log(SQRFOOT)*TAXEXEMPT, Data)
+summary(fitcacca2)
+```
+Anche graficamente sembrano funzionare:
+```{r}
+p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
+  geom_point(show.legend = F, alpha = 0.8, shape = 1) +
+  theme_bw() +
+  xlab("Log(SQRFOOT)") +
+  ylab("Log(TPY)") +
+  geom_smooth(data = DataNa[DataNa$PRO == 0,], se = F, method = 'lm', formula = 'y ~ x', lwd = 1, col = "salmon")+
+  geom_smooth(data = DataNa[DataNa$PRO == 1,], se = F, method = 'lm', formula = 'y ~ x', lwd = 1, col = "darkgoldenrod1") +
+  scale_color_manual(values = c("salmon", "darkgoldenrod1"))
+resiplot(fitcacca1, p)
+p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = TAXEXEMPT)) +
+  geom_point(show.legend = F, alpha = 0.8, shape = 1) +
+  theme_bw() +
+  xlab("Log(SQRFOOT)") +
+  ylab("Log(TPY)") +
+  geom_smooth(data = DataNa[DataNa$TAXEXEMPT == 0,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "salmon")+
+  geom_smooth(data = DataNa[DataNa$TAXEXEMPT == 1,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "goldenrod1") +
+  scale_color_manual(values = c("salmon", "darkgoldenrod1"))
+resiplot(fitcacca2, p)
+```
+Si osserva come entrambe le versioni siano molto valide, sembra quindi immediato pensare che il modello con la variabile ORGSTR sia ancora più valido, in quanto ORGSTR "unione" di PRO e TAXEXEMPT (vale 1 se "profit", 2 se "tax exempt" e 3 se "governmental unit"); tuttavia, risulta invece non significativa la differenza tra profit e governmental unit, sia per quanto riguarda l'intercetta sia per quanto riguarda l'interazione moltiplicativa.
+
+Per maggiore significatività dei coefficienti e leggera superiorità in $R^2$ si sceglie quindi come preferibile il modello con la variabile categorica PRO.
 
 
--- Qua c'è da aggiungere questa parte --
+## Train Set e Test Set
+
+Per verificare la bontà dei due modelli individuati, si divide il dataset in due sottoinsiemi (casuali) composti l'uno dall'80% dei dati, l'altro dal restante 20%
+
+
+
 
 
 ## Clustering
