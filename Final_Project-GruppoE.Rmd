@@ -662,14 +662,12 @@ Per maggiore significatività dei coefficienti e leggera superiorità in $R^2$ s
 
 ## Train Set e Test Set
 
-Per verificare la bontà dei due modelli individuati, si divide il dataset in due sottoinsiemi (casuali) composti l'uno dall'80% dei dati, l'altro dal restante 20%
-
-
+Per verificare la bontà dei due modelli individuati, si divide il dataset in due sottoinsiemi (casuali) composti l'uno dall'80% (Train Set) dei dati, l'altro dal restante 20% (Test Set).
+La verifica avviene costruendo i due modelli che abbiamo ricavato sfruttando le osservazioni del Train Set, e poi utilizzarle per stimare le osservazioni nel Test Set.
 
 
 
 ## Clustering
 
 
--- Ovviamente da aggiungere anche questa parte --
 
