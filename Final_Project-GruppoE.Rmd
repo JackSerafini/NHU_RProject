@@ -52,9 +52,11 @@ DataNa <- Data[-na.SQRFOOT,]
 ```
 
 Visualizziamo il dataset:
+
 ```{r, include = T, echo = F}
 summary(Data)
 ```
+
 Nel dataset sono presenti solo 10 dati mancanti nella colonna SQRFOOT.
 
 
@@ -62,6 +64,7 @@ Nel dataset sono presenti solo 10 dati mancanti nella colonna SQRFOOT.
 
 La variabile risposta individuata è la variabile TPY, ovvero il numero totale di pazienti ospitati nella casa di riposo in un anno.
 Osserviamo in primo luogo la distribuzione di TPY:
+
 ```{r, include = T, echo = F}
 summary(Data$TPY)
 r1 <- ggplot(data = Data, aes(y = TPY)) +
@@ -116,6 +119,7 @@ plot_grid(title,
 
 Si osserva un'assimetria destra nella distribuzione di TPY: la coda destra è molto lunga, come si vede da entrambi i grafici; inoltre, la media è superiore alla mediana.
 Ci sono trasformazioni della variabile che possono renderla simmetrica, la migliore che è stata individuata è la trasformazione logaritmica:
+
 ```{r, include = T, echo = F}
 summary(log(Data$TPY))
 r1 <- ggplot(data = Data, aes(y = log(TPY))) +
@@ -573,14 +577,17 @@ Sull'intercetta si può fare un'ulteriore considerazione: lo standard error è 0
 Infine, studiando la statistica $R^2$, possiamo vedere un valore pari a 0.9678, il quale suggerisce un'aderenza del modello ai dati molto alta, quasi totale, circa del 97%.
 
 Ora proviamo a costruire il modello senza intercetta, così da stabilire se possa essere migliore
-```{r, echo = F}
+
+```{r, echo=FALSE}
 fit_NUMBED <- lm(TPY ~ NUMBED -1, data = Data)
 summary(fit_NUMBED)
 ```
+
 Il modello sembra essere migliorato, considerando che il coefficiente dell'$R^2$ è salito al 99.29%.
 Dal momento che risulta plausibile e sensato che una casa di riposo con 0 posti letto ospiti 0 pazienti, accettiamo questo modello senza intercetta.
 $$TPY = 0.920075\times NUMBED$$
 Rappresentiamo graficamente la regressione e i suoi residui, così da poterli analizzare:
+
 ```{r echo=FALSE}
 p <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
    geom_point(shape=1) +
@@ -614,28 +621,32 @@ In questo modello l'intercetta vale 33.5475 mentre il coefficiente angolare è p
 Infine, l'R^2 risulta pari a 0.6756, quindi abbiamo un'aderenza del modello di circa il 68%, quindi di nuovo alta nonostante minore rispetto a quella del modello precedente.
 La retta di regressione lineare risulta essere:
 $$TPY = 33.54754 + 1.11786 \times SQRFOOT$$
-Questo modello risulta comunque peggiore di quello con NUMBED.
-C'è però da considerare che, nel caso di SQRFOOT, il modello migliora qualora si effettui una trasformazione logaritmica della variabile risposta e della variabile esplicativa, ma verrà ripreso in seguito.
+Questo modello risulta comunque peggiore di quello con *NUMBED*.
+C'è però da considerare che, nel caso di *SQRFOOT*, il modello migliora qualora si effettui una trasformazione logaritmica della variabile risposta e della variabile esplicativa, ma verrà ripreso in seguito.
 
 
 ### Regressione Lineare Multipla con Variabili Categoriche    
 
-Per costruire un modello di regressione multipla abbiamo provato ad aggiungere una variabile qualitativa ai modelli ottenuti precedentemente; non è stato preso in considerazione il modello che tiene conto sia di NUMBED sia di SQRFOOT, poiché le due variabili sono fortemente correlate e potrebbero generare effetti di multicollinearità.
+Per costruire un modello di regressione multipla abbiamo provato ad aggiungere una variabile qualitativa ai modelli ottenuti precedentemente; non è stato preso in considerazione il modello che tiene conto sia di *NUMBED* sia di *SQRFOOT*, poiché le due variabili sono fortemente correlate e potrebbero generare effetti di multicollinearità.
 
-Il primo modello proposto, con NUMBED, non è significativamente migliorabile con l'aggiunta di variabili categoriche, poiché la varianza dei dati è già spiegata molto bene e le nuove variabili risultano poco significative lasciando pressoché invariato l'$R^2$.
+Il primo modello proposto, con *NUMBED*, non è significativamente migliorabile con l'aggiunta di variabili categoriche, poiché la varianza dei dati è già spiegata molto bene e le nuove variabili risultano poco significative lasciando pressoché invariato l'$R^2$.
 
-Procediamo quindi con la costruzione di un modello di regressione multipla introducendo una nuova variabile nel modello con SQRFOOT; in particolare, utilizzeremo il modello che considera le trasformazioni logaritmiche di TPY e SQRFOOT.
+Procediamo quindi con la costruzione di un modello di regressione multipla introducendo una nuova variabile nel modello con *SQRFOOT*; in particolare, utilizzeremo il modello che considera le trasformazioni logaritmiche di *TPY* e *SQRFOOT*.
 
-Per quanto riguarda le variabili dicotomiche, i due modelli migliori sono quelli individuati con l'introduzione delle variabili PRO e TAXEXEMPT:
+Per quanto riguarda le variabili dicotomiche, i due modelli migliori sono quelli individuati con l'introduzione delle variabili *PRO* e *TAXEXEMPT*:
 
-```{r}
-fitcacca1 <- lm(log(TPY) ~ log(SQRFOOT)*PRO, Data)
-summary(fitcacca1)
-fitcacca2 <- lm(log(TPY) ~ log(SQRFOOT)*TAXEXEMPT, Data)
-summary(fitcacca2)
+```{r echo=FALSE}
+fit_SQR_PRO <- lm(log(TPY) ~ log(SQRFOOT)*PRO, Data)
+summary(fit_SQR_PRO)
+fit_SQR_TAX <- lm(log(TPY) ~ log(SQRFOOT)*TAXEXEMPT, Data)
+summary(fit_SQR_TAX)
 ```
+
 Anche graficamente sembrano funzionare:
-```{r}
+
+* Modello con PRO
+
+```{r echo=FALSE}
 p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
   geom_point(show.legend = F, alpha = 0.8, shape = 1) +
   theme_bw() +
@@ -644,7 +655,12 @@ p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
   geom_smooth(data = DataNa[DataNa$PRO == 0,], se = F, method = 'lm', formula = 'y ~ x', lwd = 1, col = "salmon")+
   geom_smooth(data = DataNa[DataNa$PRO == 1,], se = F, method = 'lm', formula = 'y ~ x', lwd = 1, col = "darkgoldenrod1") +
   scale_color_manual(values = c("salmon", "darkgoldenrod1"))
-resiplot(fitcacca1, p)
+resiplot(fit_SQR_PRO, p)
+```
+
+* Modello con TAXEXEMPT
+
+```{r echo=FALSE}
 p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = TAXEXEMPT)) +
   geom_point(show.legend = F, alpha = 0.8, shape = 1) +
   theme_bw() +
@@ -653,11 +669,12 @@ p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = TAXEXEMPT))
   geom_smooth(data = DataNa[DataNa$TAXEXEMPT == 0,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "salmon")+
   geom_smooth(data = DataNa[DataNa$TAXEXEMPT == 1,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "goldenrod1") +
   scale_color_manual(values = c("salmon", "darkgoldenrod1"))
-resiplot(fitcacca2, p)
+resiplot(fit_SQR_TAX, p)
 ```
-Si osserva come entrambe le versioni siano molto valide, sembra quindi immediato pensare che il modello con la variabile ORGSTR sia ancora più valido, in quanto ORGSTR "unione" di PRO e TAXEXEMPT (vale 1 se "profit", 2 se "tax exempt" e 3 se "governmental unit"); tuttavia, risulta invece non significativa la differenza tra profit e governmental unit, sia per quanto riguarda l'intercetta sia per quanto riguarda l'interazione moltiplicativa.
 
-Per maggiore significatività dei coefficienti e leggera superiorità in $R^2$ si sceglie quindi come preferibile il modello con la variabile categorica PRO.
+Si osserva come entrambe le versioni siano molto valide, sembra quindi immediato pensare che il modello con la variabile ORGSTR sia ancora più valido, in quanto *ORGSTR* "unione" di *PRO* e *TAXEXEMPT* (vale 1 se "profit", 2 se "tax exempt" e 3 se "governmental unit"); tuttavia, risulta invece non significativa la differenza tra profit e governmental unit, sia per quanto riguarda l'intercetta sia per quanto riguarda l'interazione moltiplicativa.
+
+Per maggiore significatività dei coefficienti e leggera superiorità in $R^2$ si sceglie quindi come preferibile il modello con la variabile categorica *PRO*.
 
 
 ## Train Set e Test Set
