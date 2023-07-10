@@ -1,7 +1,7 @@
 # Progetto Finale - Gruppo E
 #### Giacomo Serafini, Enrico Guerriero, Leonardo Marsich, Gilberto Bran
 
-### Data Set
+## Data Set
 Il dataset *WiscNursingHome* racchiude le informazioni riguardo diverse centinaia di case di riposo, informazioni che poi saranno utilizzate per capire come si relaziona il numero di pazienti rispetto alle caratteristiche della struttura.   
 Nel dataset sono presenti 12 variabili:
 
@@ -57,7 +57,7 @@ summary(Data)
 Nel dataset sono presenti solo 10 dati mancanti nella colonna SQRFOOT.
 
 
-### Variabile Risposta
+## Variabile Risposta
 
 La variabile risposta individuata è la variabile TPY, ovvero il numero totale di pazienti ospitati nella casa di riposo in un anno.
 Osserviamo in primo luogo la distribuzione di TPY:
@@ -170,13 +170,187 @@ plot_grid(title,
 
 
 
-### Variabili Quantitative
+## Variabili Quantitative
 
+Iniziamo a vedere le variabili esplicative quantitative, quindi NUMBED e SQRFOOT.
+
+```{r, include = T, echo = F}
+summary(log(Data$NUMBED))
+summary(log(Data$SQRFOOT))
+c1 <- ggplot(data = Data, aes(y = NUMBED)) +
+  geom_boxplot(fill = "yellow") +
+  theme_bw() +
+  labs(y = "NUMBED") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 12),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank()) +
+  xlim(-0.8,0.8) +
+  geom_segment(data  = Data, aes(x = -0.375, xend = 0.375, y = mean(NUMBED), yend = mean(NUMBED)),
+               linewidth = 1, linetype = "dashed") +
+  xlab("")+
+  geom_text(data = Data, aes(x = 0.4, y = mean(NUMBED), label = sprintf("Media")),
+            hjust = 0, vjust = 0) +
+  geom_text(data = Data, aes(x = 0.4, y = median(NUMBED) - 25,
+                             label = sprintf("Mediana")),
+            hjust = 0, vjust = 0)
+c2 <- ggplot(data = Data, aes(x = NUMBED)) +
+  geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
+  geom_density(linewidth = 0.8, fill = "pink", alpha = 0.3) +
+  theme_bw() +
+  labs(y = "NUMBED", x = "") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 12),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank())
+c3 <- ggplot(data = DataNa, aes(y = SQRFOOT)) +
+  geom_boxplot(fill = "yellow") +
+  theme_bw() +
+  labs(y = "SQRFOOT") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 12),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank()) +
+  xlim(-0.8,0.8) +
+  geom_segment(data  = DataNa, aes(x = -0.375, xend = 0.375, y = mean(SQRFOOT), yend = mean(SQRFOOT)),
+               linewidth = 1, linetype = "dashed") +
+  xlab("")+
+  geom_text(data = DataNa, aes(x = 0.4, y = mean(SQRFOOT), label = sprintf("Media")),
+            hjust = 0, vjust = 0) +
+  geom_text(data = DataNa, aes(x = 0.4, y = median(SQRFOOT) - 10,
+                             label = sprintf("Mediana")),
+            hjust = 0, vjust = 0)
+c4 <- ggplot(data = DataNa, aes(x = SQRFOOT)) +
+  geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
+  geom_density(linewidth = 0.8, fill = "pink", alpha = 0.3) +
+  theme_bw() +
+  labs(y = "SQRFOOT", x = "") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 12),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank())
+title <- ggdraw() + 
+  draw_label(
+    "Distribuzione di NUMBED e SQRFOOT",
+    fontface = 'bold',
+    x = 0,
+    hjust = 0
+  ) +
+  theme(
+    plot.margin = margin(0, 0, 0, 7)
+  )
+rowsplot <- plot_grid(c1, c2,
+                      c3, c4,
+          nrow = 2)
+plot_grid(title,
+          rowsplot,
+          ncol = 1,
+          rel_heights = c(0.1, 2))
+```
+
+Si osserva una forte asimmetricità analoga a TPY anche nelle distribuzioni delle variabili esplicative, in particolare in SQRFOOT.
+
+Analizziamo ora le correlazioni tra le variabili quantitative (compresa la risposta)
 
 ```{r echo=FALSE}
 pairs(DataNa[ , -c(1, 2, 6, 7, 8, 9, 10, 11, 12)], panel = panel.smooth)
 cormat <- cor(DataNa[, -c(1, 2, 6, 7, 8, 9, 10, 11, 12)]) 
 corrplot(cormat, method="number")
+
+title1 <- ggdraw() +
+  draw_label(
+    "TPY",
+    fontface = 'bold',
+    x = 0.5,
+    y = 0.5,
+    hjust = 0.5,
+    vjust = 0.5,
+    size = 20
+  )
+title2 <- ggdraw() +
+  draw_label(
+    "NUMBED",
+    fontface = 'bold',
+    x = 0.5,
+    y = 0.5,
+    hjust = 0.5,
+    vjust = 0.5,
+    size = 20
+  )
+title3 <- ggdraw() +
+  draw_label(
+    "SQRFOOT",
+    fontface = 'bold',
+    x = 0.5,
+    y = 0.5,
+    hjust = 0.5,
+    vjust = 0.5,
+    size = 20
+  )
+cor1 <- ggdraw() +
+  draw_label(
+    round(cor(Data$TPY, Data$NUMBED), digits = 3),
+    fontface = 'bold',
+    x = 0.5,
+    y = 0.5,
+    hjust = 0.5,
+    vjust = 0.5,
+    size = 20
+  )
+cor2 <-ggdraw() +
+  draw_label(
+    round(cor(DataNa$TPY, DataNa$SQRFOOT), digits = 3),
+    fontface = 'bold',
+    x = 0.5,
+    y = 0.5,
+    hjust = 0.5,
+    vjust = 0.5,
+    size = 20
+  )
+cor3 <- ggdraw() +
+  draw_label(
+    round(cor(DataNa$NUMBED, DataNa$SQRFOOT), digits = 3),
+    fontface = 'bold',
+    x = 0.5,
+    y = 0.5,
+    hjust = 0.5,
+    vjust = 0.5,
+    size = 20
+  )
+sc1 <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
+   geom_point(shape=1) +
+   theme_minimal() +
+   xlab("") +
+   ylab("") +
+   geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
+sc2 <- ggplot(data = DataNa, aes(x = SQRFOOT, y = TPY)) +
+   geom_point(shape=1) +
+   theme_minimal() +
+   xlab("") +
+   ylab("") +
+   geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
+sc3 <- ggplot(data = DataNa, aes(x = SQRFOOT, y = NUMBED)) +
+   geom_point(shape=1) +
+   theme_minimal() +
+   xlab("") +
+   ylab("") +
+   geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
+plot_grid(title1, sc1, sc2,
+          cor1, title2, sc3,
+          cor2, cor3, title3,
+          nrow = 3)
 ```
 
 Si può subito vedere come ci sia una correlazione quasi totale tra il *TPY* (totale patienti annui) e il *NUMBED* (numero di letti). Inoltre, si può osservare anche un'ottima correlazione tra il totale pazienti annui e i piedi quadrati della struttura (*SQRFOOT*), così come tra i piedi quadrati della struttura e il numero di letti. Ciò suggerisce che tutte queste variabili saranno legate tra loro da una relazione lineare.
