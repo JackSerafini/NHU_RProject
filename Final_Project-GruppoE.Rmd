@@ -594,27 +594,28 @@ resiplot(fit_NUMBED, p)
 
 Dallo scatterplot dato dalla relazione tra *TPY* come variabile risposta e *NUMBED* come variabile esplicativa, si vede subito come sia presente una relazione lineare tra le due
 Analizzando i grafici, dal primo dei Residuals vs Fitted si può notare come, nonostante siano presenti degli outliers al di sotto della curva di regressione, i residui si dispongono in maniera per lo più simmetrica, suggerendo la linearità del modello.
-Guardando il grafico qqnorm dei residui, possiamo nuovamente osservare un'ottima
-disposizione dei residui lungo la retta tratteggiata, il che significa che il nostro
-modello soddisfa l'assunzione di gaussianità.
-
--- Qua manca ancora una parte su questo modello --
+Anche l'omoschedasticità sembra essere soddisfatta, a meno di una varianza leggermente minore per gli ospedali con meno persone, ma poi sembra stabilizzarsi.
+Gli altri due grafici, invece, non ci permettono di affermare lo stesso per quanto riguarda la gaussianità; infatti le code sono molto più pesanti di una normale, specialmente la coda inferiore.
+Tuttavia il modello è comunque più che accettabile, nonostante la non-normalità dei residui.
+Eventuali trasformazioni per rendere i residui gaussiani rendono il modello maggiormente eteroschedastico, quindi le rifiutiamo a favore di un modello più omoschedastico e facile da interpretare.
 
 
 #### Costruzione del modello TPY ~ SQRFOOT
 
+Analizziamo ora il secondo modello con SQRFOOT come variabile esplicativa.
 ```{r echo=FALSE}
 fit_SQRFOOT <- lm(TPY ~ SQRFOOT, data = Data)
 summary(fit_SQRFOOT)
 ```
 
-Studiando i residui dal summary, si può vedere questi si dispongano simmetricamente rispetto lo zero, nonostante fra il minimo ed il massimo ci sia una differenza di 240, molto maggiore rispetto a quella riscontrata nel modello *TPY* ~ *NUMBED*. La mediana si dispone comunque vicino allo 0, ed il primo ed il terzo quartile valgono rispettivamente -15.391 e 15.615, oltre ad essere assolutamente simmetrici, ci dicono anche che la maggior parte dei valori si troverà proprio in questo intervallo.    
-In questo modello l'intercetta vale 33.5475 mentre il coefficiente angolare è pari a 1.1179 (molto vicino a 1, quindi circa per ogni piede quadrato c'è un paziente in più) (entrambi molto significativi?). Quindi, la retta di regressione lineare risulta:     
-*TPY* = 33.5475 + 1.1179 * *SQRFOOT*.   
+Studiando i residui dal summary, si può vedere questi si dispongano simmetricamente rispetto lo zero, nonostante fra il minimo ed il massimo ci sia una differenza di 240, molto maggiore rispetto al range interquartilico e alla distanza riscontrata nel modello *TPY* ~ *NUMBED*.
+La mediana si dispone comunque vicino allo 0, ed il primo ed il terzo quartile valgono rispettivamente -15.391 e 15.615, oltre ad essere assolutamente simmetrici, ci dicono anche che la metà dei valori si troverà proprio in questo intervallo.    
+In questo modello l'intercetta vale 33.5475 mentre il coefficiente angolare è pari a 1.1179 (molto vicino a 1, quindi circa per ogni piede quadrato c'è un paziente in più). 
 Infine, l'R^2 risulta pari a 0.6756, quindi abbiamo un'aderenza del modello di circa il 68%, quindi di nuovo alta nonostante minore rispetto a quella del modello precedente.
-
-
--- Qua manca una parte enorme ma intanto vado avanti --
+La retta di regressione lineare risulta essere:
+$$TPY = 33.54754 + 1.11786 \times SQRFOOT$$
+Questo modello risulta comunque peggiore di quello con NUMBED.
+C'è però da considerare che, nel caso di SQRFOOT, il modello migliora qualora si effettui una trasformazione logaritmica della variabile risposta e della variabile esplicativa, ma verrà ripreso in seguito.
 
 
 ### Modelli con Variabili Qualitative     
