@@ -63,10 +63,10 @@ La variabile risposta individuata è la variabile TPY, ovvero il numero totale d
 Osserviamo in primo luogo la distribuzione di TPY:
 ```{r, include = T, echo = F}
 summary(Data$TPY)
-ggplot(data = Data, aes(y = TPY)) +
+r1 <- ggplot(data = Data, aes(y = TPY)) +
   geom_boxplot(fill = "yellow") +
   theme_bw() +
-  labs(y = "TPY", title = "Distribuzione di TPY") +
+  labs(y = "TPY") +
   theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
         axis.title = element_text(size = 14),
         axis.text = element_text(size = 12),
@@ -78,14 +78,95 @@ ggplot(data = Data, aes(y = TPY)) +
   geom_segment(data  = Data, aes(x = -0.375, xend = 0.375, y = mean(TPY), yend = mean(TPY)),
                linewidth = 1, linetype = "dashed") +
   xlab("")+
-  geom_text(data = Data, aes(x = 0.4, y = mean(TPY), label = sprintf("Media: %.2f", mean(TPY))),
+  geom_text(data = Data, aes(x = 0.4, y = mean(TPY), label = sprintf("Media")),
             hjust = 0, vjust = 0) +
   geom_text(data = Data, aes(x = 0.4, y = median(TPY) - 10,
-                             label = sprintf("Mediana: %.2f", median(TPY))),
+                             label = sprintf("Mediana")),
             hjust = 0, vjust = 0)
-  
+r2 <- ggplot(data = Data, aes(x = TPY)) +
+  geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
+  geom_density(linewidth = 0.8, fill = "pink", alpha = 0.3) +
+  theme_bw() +
+  labs(y = "TPY", x = "") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 12),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank())
+title <- ggdraw() + 
+  draw_label(
+    "Distribuzione di TPY",
+    fontface = 'bold',
+    x = 0,
+    hjust = 0
+  ) +
+  theme(
+    plot.margin = margin(0, 0, 0, 7)
+  )
+rowsplot <- plot_grid(r1, r2,
+          nrow = 1)
+plot_grid(title,
+          rowsplot,
+          ncol = 1,
+          rel_heights = c(0.1, 1))
 ```
 
+Si osserva un'assimetria destra nella distribuzione di TPY: la coda destra è molto lunga, come si vede da entrambi i grafici; inoltre, la media è superiore alla mediana.
+Ci sono trasformazioni della variabile che possono renderla simmetrica, la migliore che è stata individuata è la trasformazione logaritmica:
+```{r, include = T, echo = F}
+summary(log(Data$TPY))
+r1 <- ggplot(data = Data, aes(y = log(TPY))) +
+  geom_boxplot(fill = "yellow") +
+  theme_bw() +
+  labs(y = "log(TPY)") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 12),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank()) +
+  xlim(-0.8,0.8) +
+  geom_segment(data  = Data, aes(x = -0.375, xend = 0.375,
+                                 y = mean(log(TPY)), yend = mean(log(TPY))),
+               linewidth = 1, linetype = "dashed") +
+  xlab("")+
+  geom_text(data = Data, aes(x = 0.4, y = mean(log(TPY)-0.1), label = sprintf("Media")),
+            hjust = 0, vjust = 0) +
+  geom_text(data = Data, aes(x = 0.4, y = median(log(TPY))+0.05,
+                             label = sprintf("Mediana")),
+            hjust = 0, vjust = 0)
+r2 <- ggplot(data = Data, aes(x = log(TPY))) +
+  geom_histogram(aes(y = after_stat(density)), col = "black", fill = "yellow", bins = 20) +
+  geom_density(linewidth = 0.8, fill = "pink", alpha = 0.3) +
+  theme_bw() +
+  labs(y = "log(TPY)", x = "") +
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 12),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank())
+title <- ggdraw() + 
+  draw_label(
+    "Distribuzione del logaritmo di TPY",
+    fontface = 'bold',
+    x = 0,
+    hjust = 0
+  ) +
+  theme(
+    plot.margin = margin(0, 0, 0, 7)
+  )
+rowsplot <- plot_grid(r1, r2,
+          nrow = 1)
+plot_grid(title,
+          rowsplot,
+          ncol = 1,
+          rel_heights = c(0.1, 1))
+```
 
 
 
