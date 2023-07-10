@@ -28,6 +28,7 @@ library(cowplot)
 library(dplyr)
 library(factoextra)
 library(cluster)
+library(grid)
 
 # Creazione del dataset da WiscNursingHome
 Data <- read.csv("WiscNursingHome.csv", header = TRUE)
@@ -265,88 +266,115 @@ Si osserva una forte asimmetricità analoga a TPY anche nelle distribuzioni dell
 Analizziamo ora le correlazioni tra le variabili quantitative (compresa la risposta)
 
 ```{r echo=FALSE}
-pairs(DataNa[ , -c(1, 2, 6, 7, 8, 9, 10, 11, 12)], panel = panel.smooth)
-cormat <- cor(DataNa[, -c(1, 2, 6, 7, 8, 9, 10, 11, 12)]) 
-corrplot(cormat, method="number")
-
-title1 <- ggdraw() +
-  draw_label(
-    "TPY",
-    fontface = 'bold',
-    x = 0.5,
-    y = 0.5,
-    hjust = 0.5,
-    vjust = 0.5,
-    size = 20
-  )
-title2 <- ggdraw() +
-  draw_label(
-    "NUMBED",
-    fontface = 'bold',
-    x = 0.5,
-    y = 0.5,
-    hjust = 0.5,
-    vjust = 0.5,
-    size = 20
-  )
-title3 <- ggdraw() +
-  draw_label(
-    "SQRFOOT",
-    fontface = 'bold',
-    x = 0.5,
-    y = 0.5,
-    hjust = 0.5,
-    vjust = 0.5,
-    size = 20
-  )
-cor1 <- ggdraw() +
-  draw_label(
+plot <- ggplot() +
+  theme_void()
+riquadro <- rectGrob(gp = gpar(fill = "white", col = "black"))
+plot <- plot + annotation_custom(riquadro, xmin = 0, xmax = 1, ymin = 0, ymax = 1)
+title1 <- plot + annotation_custom(ggplotGrob(
+  ggdraw() +
+    draw_label(
+      "TPY",
+      fontface = 'bold',
+      x = 0.5,
+      y = 0.5,
+      hjust = 0.5,
+      vjust = 0.5,
+      size = 20
+    )
+), xmin = 0, xmax = 1, ymin = 0, ymax = 1)
+title2 <- plot + annotation_custom(ggplotGrob(
+  ggdraw() +
+    draw_label(
+      "NUMBED",
+      fontface = 'bold',
+      x = 0.5,
+      y = 0.5,
+      hjust = 0.5,
+      vjust = 0.5,
+      size = 20
+    )
+), xmin = 0, xmax = 1, ymin = 0, ymax = 1)
+title3 <- plot + annotation_custom(ggplotGrob(
+  ggdraw() +
+    draw_label(
+      "SQRFOOT",
+      fontface = 'bold',
+      x = 0.5,
+      y = 0.5,
+      hjust = 0.5,
+      vjust = 0.5,
+      size = 20
+    )
+), xmin = 0, xmax = 1, ymin = 0, ymax = 1)
+cor1 <- plot + annotation_custom(ggplotGrob(
+  ggdraw() +
+    draw_label(
     round(cor(Data$TPY, Data$NUMBED), digits = 3),
-    fontface = 'bold',
-    x = 0.5,
-    y = 0.5,
-    hjust = 0.5,
-    vjust = 0.5,
-    size = 20
-  )
-cor2 <-ggdraw() +
-  draw_label(
+      fontface = 'bold',
+      x = 0.5,
+      y = 0.5,
+      hjust = 0.5,
+      vjust = 0.5,
+      size = 20
+    )
+), xmin = 0, xmax = 1, ymin = 0, ymax = 1)
+cor2 <- plot + annotation_custom(ggplotGrob(
+  ggdraw() +
+    draw_label(
     round(cor(DataNa$TPY, DataNa$SQRFOOT), digits = 3),
-    fontface = 'bold',
-    x = 0.5,
-    y = 0.5,
-    hjust = 0.5,
-    vjust = 0.5,
-    size = 20
-  )
-cor3 <- ggdraw() +
-  draw_label(
+      fontface = 'bold',
+      x = 0.5,
+      y = 0.5,
+      hjust = 0.5,
+      vjust = 0.5,
+      size = 20
+    )
+), xmin = 0, xmax = 1, ymin = 0, ymax = 1)
+cor3 <- plot + annotation_custom(ggplotGrob(
+  ggdraw() +
+    draw_label(
     round(cor(DataNa$NUMBED, DataNa$SQRFOOT), digits = 3),
-    fontface = 'bold',
-    x = 0.5,
-    y = 0.5,
-    hjust = 0.5,
-    vjust = 0.5,
-    size = 20
-  )
-sc1 <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
+      fontface = 'bold',
+      x = 0.5,
+      y = 0.5,
+      hjust = 0.5,
+      vjust = 0.5,
+      size = 20
+    )
+), xmin = 0, xmax = 1, ymin = 0, ymax = 1)
+sc1 <- plot + annotation_custom(ggplotGrob(
+  ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
    geom_point(shape=1) +
-   theme_minimal() +
+   theme_void() +
    xlab("") +
    ylab("") +
-   geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
-sc2 <- ggplot(data = DataNa, aes(x = SQRFOOT, y = TPY)) +
+   geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red") +
+  theme(axis.ticks.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_blank())), xmin = 0, xmax = 1, ymin = 0, ymax = 1)
+sc2 <- plot + annotation_custom(ggplotGrob(
+  ggplot(data = DataNa, aes(x = SQRFOOT, y = TPY)) +
    geom_point(shape=1) +
-   theme_minimal() +
+   theme_void() +
    xlab("") +
    ylab("") +
-   geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
-sc3 <- ggplot(data = DataNa, aes(x = SQRFOOT, y = NUMBED)) +
+   geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red") +
+  theme(axis.ticks.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_blank())), xmin = 0, xmax = 1, ymin = 0, ymax = 1)
+sc3 <- plot + annotation_custom(ggplotGrob(
+  ggplot(data = DataNa, aes(x = SQRFOOT, y = NUMBED)) +
    geom_point(shape=1) +
-   theme_minimal() +
+   theme_void() +
    xlab("") +
    ylab("") +
-   geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red")
+   geom_smooth(se = F, method = 'loess', formula = 'y ~ x', lwd = 0.75, col = "red") +
+  theme(axis.ticks.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_blank())), xmin = 0, xmax = 1, ymin = 0, ymax = 1)
 plot_grid(title1, sc1, sc2,
           cor1, title2, sc3,
           cor2, cor3, title3,

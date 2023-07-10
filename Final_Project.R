@@ -840,3 +840,4 @@ ggplot(na.omit(Data), aes(x = SQRFOOT, y = TPY, col = factor(km.sqrfoot$cluster)
 # A livello interpretativo può avere senso tenere un modello che tiene conto dei tre cluster
 # Potrebbe avere senso per definire ospedali di piccole, medie e grandi dimensioni
 
+
