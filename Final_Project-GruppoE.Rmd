@@ -315,7 +315,8 @@ cor1 <- plot + annotation_custom(ggplotGrob(
       y = 0.5,
       hjust = 0.5,
       vjust = 0.5,
-      size = 20
+      size = 20,
+    color = "red"
     )
 ), xmin = 0, xmax = 1, ymin = 0, ymax = 1)
 cor2 <- plot + annotation_custom(ggplotGrob(
@@ -327,7 +328,8 @@ cor2 <- plot + annotation_custom(ggplotGrob(
       y = 0.5,
       hjust = 0.5,
       vjust = 0.5,
-      size = 20
+      size = 20,
+    color = "red"
     )
 ), xmin = 0, xmax = 1, ymin = 0, ymax = 1)
 cor3 <- plot + annotation_custom(ggplotGrob(
@@ -339,7 +341,8 @@ cor3 <- plot + annotation_custom(ggplotGrob(
       y = 0.5,
       hjust = 0.5,
       vjust = 0.5,
-      size = 20
+      size = 20,
+    color = "red"
     )
 ), xmin = 0, xmax = 1, ymin = 0, ymax = 1)
 sc1 <- plot + annotation_custom(ggplotGrob(
@@ -381,63 +384,70 @@ plot_grid(title1, sc1, sc2,
           nrow = 3)
 ```
 
-Si può subito vedere come ci sia una correlazione quasi totale tra il *TPY* (totale patienti annui) e il *NUMBED* (numero di letti). Inoltre, si può osservare anche un'ottima correlazione tra il totale pazienti annui e i piedi quadrati della struttura (*SQRFOOT*), così come tra i piedi quadrati della struttura e il numero di letti. Ciò suggerisce che tutte queste variabili saranno legate tra loro da una relazione lineare.
+Si può subito vedere come ci sia una correlazione quasi totale tra il *TPY* (totale patienti annui) e il *NUMBED* (numero di letti). Inoltre, si può osservare anche un'alta correlazione positiva tra il totale pazienti annui e i piedi quadrati della struttura (*SQRFOOT*), così come tra i piedi quadrati della struttura e il numero di letti. Ciò suggerisce che tutte queste variabili possano essere legate tra loro da una relazione lineare.
 
-Andiamo anche ad analizzare molto velocemente i grafici delle variabili qualitative:
+
+## Variabili Categoriche
+
+Ora segue anche una breve analisi delle variabili categoriche, in primo luogo delle loro distribuzioni di frequenza.
+
 ```{r echo=FALSE}
 p1 <- ggplot(data = Data, aes(x = CRYEAR, fill = CRYEAR)) +
-  geom_bar() +
+  geom_bar(col = "black")+
+  scale_fill_manual(values = heat.colors(2)) +
   theme_classic() +
   theme(legend.position = "none") +
   ylab("")
 
 p2 <- ggplot(Data[Data$MSA != 0,], aes(x=MSA, fill=MSA)) +
-  geom_bar(width=1, col = "black") +
+  geom_bar(col = "black")+
+  scale_fill_manual(values = heat.colors(13)) + 
   theme_classic() +
   theme(legend.position = "") +
   ylab("")
 
 p3 <- ggplot(data = Data, aes(x = URBAN, fill = URBAN)) +
-  geom_bar() +
-  theme_classic() +
+  geom_bar(col = "black")+
+  scale_fill_manual(values = heat.colors(2)) +
+  theme_classic() + 
   theme(legend.position = "none") +
   ylab("")
 
 p4 <- ggplot(data = Data, aes(x = PRO, fill = PRO)) +
-  geom_bar() +
-  theme_classic() +
+  geom_bar(col = "black")+
+  scale_fill_manual(values = heat.colors(2)) +
+  theme_classic() + 
   theme(legend.position = "none") +
   ylab("")
 
 p5 <- ggplot(data = Data, aes(x = TAXEXEMPT, fill = TAXEXEMPT)) +
-  geom_bar() +
-  theme_classic() +
+  geom_bar(col = "black")+
+  scale_fill_manual(values = heat.colors(2)) +
+  theme_classic() + 
   theme(legend.position = "none") +
   ylab("")
 
 p6 <- ggplot(data = Data, aes(x = SELFFUNDINS, fill = SELFFUNDINS)) +
-  geom_bar() +
-  theme_classic() +
+  geom_bar(col = "black")+
+  scale_fill_manual(values = heat.colors(2)) +
+  theme_classic() + 
   theme(legend.position = "none") +
   ylab("")
 
 p7 <- ggplot(data = Data, aes(x = MCERT, fill = MCERT)) +
-  geom_bar() +
+  geom_bar(col = "black")+
+  scale_fill_manual(values = heat.colors(2)) +
   theme_classic() +
   theme(legend.position = "none") +
   ylab("")
 
 p8 <- ggplot(data = Data, aes(x = ORGSTR, fill = ORGSTR)) +
-  geom_bar() +
-  theme_classic() +
+  geom_bar(col = "black")+
+  scale_fill_manual(values = heat.colors(3)) +
+  theme_classic() +  
   theme(legend.position = "none") +
   ylab("")
 
-# Grafico a torta della variabile MSA
-ppie <- ggplot(Data, aes(x="", y="", fill=MSA)) +
-  geom_bar(stat="identity", width=1) +
-  coord_polar("y", start=0) +
-  theme_void() 
 
 # Grafico di tutti i grafici delle variabili categoriali
 plot_grid(p1,p2,p3,p4,
@@ -445,7 +455,7 @@ plot_grid(p1,p2,p3,p4,
           nrow = 2)
 ```
 
-Abbiamo deciso per quanto riguarda la variabile *MSA* di non includere le osservazioni appartenenti alla classe "0", ovvero le case di riposo poste in zone rurali, poiché già rappresentate nella variabile *URBAN*.
+Abbiamo deciso per quanto riguarda la variabile *MSA* di non includere graficamente le osservazioni appartenenti alla classe "0", ovvero le case di riposo poste in zone rurali, poiché già rappresentate nella variabile *URBAN*.
 
 
 Andiamo anche a studiare velocemente le distribuzioni condizionate della variabile risposta:    
@@ -453,43 +463,51 @@ Andiamo anche a studiare velocemente le distribuzioni condizionate della variabi
 ```{r echo=FALSE}
 c4 <- ggplot(data = Data, aes(x = CRYEAR, y = TPY, fill = CRYEAR)) +
   geom_boxplot() +
+  scale_fill_manual(values = heat.colors(2)) +
   theme_classic() +
   theme(legend.position = "")
 
 c5 <- ggplot(data = Data, aes(x = URBAN, y = TPY, fill = URBAN)) +
   geom_boxplot() +
   theme_classic() +
-  theme(legend.position = "")
+  theme(legend.position = "")+
+  scale_fill_manual(values = heat.colors(2))
 
 c6 <- ggplot(data = Data, aes(x = PRO, y = TPY, fill = PRO)) +
   geom_boxplot() +
   theme_classic() +
-  theme(legend.position = "")
+  theme(legend.position = "")+
+  scale_fill_manual(values = heat.colors(2))
 
 c7 <- ggplot(data = Data, aes(x = ORGSTR, y = TPY, fill = ORGSTR)) +
   geom_boxplot() +
   theme_classic() +
-  theme(legend.position = "")
+  theme(legend.position = "")+
+  scale_fill_manual(values = heat.colors(3))
 
 c8 <- ggplot(data = Data, aes(x = TAXEXEMPT, y = TPY, fill = TAXEXEMPT)) +
   geom_boxplot() +
   theme_classic() +
-  theme(legend.position = "")
+  theme(legend.position = "")+
+  scale_fill_manual(values = heat.colors(2))
 
 c9 <- ggplot(data = Data, aes(x = SELFFUNDINS, y = TPY, fill = SELFFUNDINS)) +
   geom_boxplot() +
   theme_classic() +
-  theme(legend.position = "")
+  theme(legend.position = "")+
+  scale_fill_manual(values = heat.colors(2))
 
 c10 <- ggplot(data = Data, aes(x = MCERT, y = TPY, fill = MCERT)) +
   geom_boxplot() +
   theme_classic() +
-  theme(legend.position = "")
+  theme(legend.position = "")+
+  scale_fill_manual(values = heat.colors(2))
 
 c11 <- ggplot(data = Data, aes(x = MSA, y = TPY, fill = MSA)) +
   geom_boxplot() +
   theme_classic() +
-  theme(legend.position = "")
+  theme(legend.position = "")+
+  scale_fill_manual(values = heat.colors(14))
 
 plot_grid(c4, c5, c6, c7,
           c8, c9, c10, c11,
@@ -500,15 +518,16 @@ plot_grid(c4, c5, c6, c7,
 resiplot <- function(fit, p) {
   #p è il primo grafico in alto a sinistra, così non c'è il rischio che gli si passi un p a caso
   
-  
+  # sopprimo il seguente output temporaneamente
+
   #per capire che data set utilizzare
   if(length(fitted.values(fit)) == 717){
     d = Data
-    print("resi plot utilizzando Data")
+    #print("resi plot utilizzando Data")
   }
   if(length(fitted.values(fit)) == 707){
     d = DataNa
-    print("resi plot utilizzando DataNa")
+    #print("resi plot utilizzando DataNa")
   }
   
   f <- ggplot(data = d, aes(x = fitted.values(fit), y = resid(fit))) +
@@ -537,12 +556,9 @@ resiplot <- function(fit, p) {
 }
 ```
 
-## REGRESSIONI LINEARI PER LA STIMA DI TPY
+## REGRESSIONI LINEARI SEMPLICI PER LA STIMA DI TPY
 
---- Proviamo prima le regressioni semplici con NUMBED e SQRFOOT    
-Bisogna probabilmente scegliere una sola delle due variabili perché sono troppo correlate    
-Poi proviamo ad aggiungere tutte le variabili qualitative e vediamo come incidono    
-Modello ideale: 1 quantitativa + 1/2 qualitative (non è detto per forza) ---
+I due modelli di regressione semplice sono con le variabili NUMBED e SQRFOOT, in quanto si tratta delle uniche variabili quantitative del dataset.
 
 #### Costruzione del modello TPY ~ NUMBED
 
@@ -551,16 +567,21 @@ fit_NUMBED <- lm(TPY ~ NUMBED, data = Data)
 summary(fit_NUMBED)
 ```
 
-Studiando i valori ritornati dal summary, si può subito vedere come questo modello sia ottimo: per quanto riguarda i residui, la mediana è molto vicina allo zero, il primo e il terzo quartile sono disposti abbastanza simmetricamente rispetto lo zero e discorso simile può essere fatto per i valori di minimo e massimo (magari il minimo è spostato più verso il basso, ma stiamo comunque parlando di valori "piccoli").     
-Dal summary possiamo poi conoscere l'intercetta e il coefficiente angolare: l'intercetta vale -0.8778 (valore vicino allo zero, il che ha senso perché nel caso di 0 letti ci si aspetta un numero di pazienti vicino allo zero) mentre il coefficiente angolare è uguale a 0.9272 (valore vicino all'1, infatti per ogni posto letto in più ci si aspetta un paziente in più). Grazie a questi valori possiamo costruirci l'equazione della retta di regressione lineare:   
-*TPY* = -0.8778 + 0.9272 * *NUMBED*.    
-Infine, studiando la statistica R^2, possiamo vedere un valore pari a 0.9678, il quale suggerisce un'aderenza del modello ai dati molto alta, quasi totale, circa del 97%.      
+Studiando i valori ritornati dal summary, si può subito vedere come questo modello sia ottimo: per quanto riguarda i residui, la mediana è molto vicina allo zero, il primo e il terzo quartile sono disposti abbastanza simmetricamente rispetto lo zero, con minimo e massimo invece non si può fare lo stesso discorso e sono molto lontani dai quartili della distribuzione.     
+Nel summary possiamo poi individuare l'intercetta e il coefficiente angolare: l'intercetta vale -0.8778 (valore vicino allo zero, il che ha senso perché nel caso di 0 letti ci si aspetta un numero di pazienti vicino allo zero) mentre il coefficiente angolare è uguale a 0.9272 (valore vicino all'1, infatti per ogni posto letto in più ci si aspetta un paziente in più).
+Sull'intercetta si può fare un'ulteriore considerazione: lo standard error è 0.6925, quasi quanto l'intercetta; risulta infatti, dal test del t-value, che l'ipotesi nulla che il coefficiente sia nullo non può essere rifiutata.
+Infine, studiando la statistica $R^2$, possiamo vedere un valore pari a 0.9678, il quale suggerisce un'aderenza del modello ai dati molto alta, quasi totale, circa del 97%.
 
--- (Attenzione il t value dell'intercetta non è motlo significativo al contrario dell'altro) (se non fosse per la poca significatività dell'intercetta potrebbe essere un modello quasi perfetto) --
-
-
+Ora proviamo a costruire il modello senza intercetta, così da stabilire se possa essere migliore
+```{r, echo = F}
+fit_NUMBED <- lm(TPY ~ NUMBED -1, data = Data)
+summary(fit_NUMBED)
+```
+Il modello sembra essere migliorato, considerando che il coefficiente dell'$R^2$ è salito al 99.29%.
+Dal momento che risulta plausibile e sensato che una casa di riposo con 0 posti letto ospiti 0 pazienti, accettiamo questo modello senza intercetta.
+$$TPY = 0.920075\times NUMBED$$
+Rappresentiamo graficamente la regressione e i suoi residui, così da poterli analizzare:
 ```{r echo=FALSE}
-# Grafico della regressione
 p <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
    geom_point(shape=1) +
    theme_bw() +
@@ -568,12 +589,11 @@ p <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
    ylab("TPY") +
    geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red") +
   geom_point(aes(x = Data[564,'NUMBED'], y = Data[564,'TPY']), colour = "red", size = 1)
-# Residui:
 resiplot(fit_NUMBED, p)
 ```
 
 Dallo scatterplot dato dalla relazione tra *TPY* come variabile risposta e *NUMBED* come variabile esplicativa, si vede subito come sia presente una relazione lineare tra le due
-Analizzando i grafici, dal primo dei Residuals vs Fitted si può notare come, nonostante siano presenti degli outliers (sono outliers??) al di sotto della curva di regressione, i residui si dispongono in maniera per lo più simmetrica, suggerendo la linearità del modello.
+Analizzando i grafici, dal primo dei Residuals vs Fitted si può notare come, nonostante siano presenti degli outliers al di sotto della curva di regressione, i residui si dispongono in maniera per lo più simmetrica, suggerendo la linearità del modello.
 Guardando il grafico qqnorm dei residui, possiamo nuovamente osservare un'ottima
 disposizione dei residui lungo la retta tratteggiata, il che significa che il nostro
 modello soddisfa l'assunzione di gaussianità.
