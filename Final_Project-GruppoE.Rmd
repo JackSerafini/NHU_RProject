@@ -799,12 +799,12 @@ quantile(err, 0.6896)
 ```
 E l'errore relativo a quel quantile è del 23%. Quindi concludiamo che l'errore relativo della nostra predizione sulla percentuale di dati che il nostro modello prometteva di spiegare è al massimo del 23%.
 
-### Ripetuta train- test
-La divisione del data-set fra quello di train e di test è casuale, quindi per controllare che non siamo stati fortunati nel caso che abbiamo studiato andremo a ripetere il processo 
+### Esecuzione ripetuta del proceso train-test
+La divisione del data-set fra quello di train e di test è casuale, quindi per controllare che non siamo stati fortunati nel caso che abbiamo studiato andremo a ripetere il processo 100 volte ed analizzare i risultati attraverso l'R^2 la varianza sui residui e l'errore relativo sui residui.
 
-#### primo modello
+#### regressione semplice TPY ~ NUMBED - 1
 
-```{r}
+```{r echo=False, warning=FALSE}
 #Facciamo un ciclo for nel quale separiamo più volte il data set in test e train
 #Numero di ripetizioni
 niter <- 100
@@ -845,104 +845,52 @@ for (i in 1:niter){
   e[1, i] <- sse / length(res)
   e[2, i] <- mean(abs(res) / abs(test[,'TPY']))
 }
-
-#Distribuzioni degli r quadri calcolati
-r21 <- ggplot(data = NULL, aes(y = r[1,])) +
-  geom_boxplot() +
-  ylim(c(0.5,1))+
-  ylab("R^2")+
-  theme_bw()
-
-r22 <- ggplot(data = NULL, aes(y = r[2,])) +
-  geom_boxplot() +
-  ylim(c(0.5,1))+
-  ylab("R^2")+
-  theme_bw()
-
-
-
-plot_grid(r21, r22)
 ```
 
+```{r echo=False}
+#Distribuzioni degli r quadri calcolati
+#Questa formula non funziona
+r21 <- ggplot(data = NULL, aes(y = r[1,])) +
+  geom_boxplot() +
+  ylab("R^2")+
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 12, bounds = FALSE))+
+  theme_bw()
+
+r22 <- ggplot(data = NULL, aes(x = r[2,])) +
+  geom_boxplot() +
+  xlab("R^2")+
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 12, bounds = FALSE))+
+  theme_bw()
+
+r22
+```
+
+
+Per calcolare R^2 abbiamo usato la seguente formula
+$$R^2 = 1 - \frac{dev_{res}} {dev_{tot}}$$
+Come si può notare dal gradico la maggior parte dei dati si avvicina all'R^2 calcolato nel modello che considera la completezza dei dati, ovvero: 0.9929
 
 ```{r echo=FALSE}
 rd <- ggplot(data = NULL, aes(e[1,])) +
   geom_boxplot()+
   ggtitle("Distribuzione varianze dei residui")+
   theme_bw()+
-  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())+
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 12, bounds = FALSE))
   
 
 rer <- ggplot(data = NULL, aes(x = e[2,]))+
   geom_boxplot() +
   ggtitle("Distibuzione media errori relativi")+
   theme_bw()+
-  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())+
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 7, bounds = FALSE))
 
 plot_grid(rd, rer)
 ```
+Dal grafico si può notare che in media gli errori relativi sono molto piccoli, quasi tutti più piccoli del 10%.
+(((Non so bene valutare la varianza dei residui)))
 
-
-```{r echo=FALSE}
-#Facciamo un ciclo for nel quale separiamo più volte il data set in test e train
-#Numero di ripetizioni
-niter <- 100
-#prime due righe due modi diversi per calcolare l'r^2
-r <- matrix(data = 0, nrow = 2, ncol = niter)
-#vettore dei residui
-devres_v <- vector(mode = "numeric", length = niter)
-for (i in 1:niter){
-  #Divido il dataset
-  sample <- sample(c(TRUE, FALSE), nrow(DataNa), replace=TRUE, prob=c(0.9,0.1))
-  train  <- DataNa[sample, ]
-  test   <- DataNa[!sample, ]
-  
-  #Faccio il modello
-  fit_train <- lm(log(TPY) ~ log(SQRFOOT)*PRO, train)
-  
-  #Predizion
-  pred <- predict.lm(fit_train, test)
-  
-  #calcolo residui
-  res <- test[,'TPY'] - exp(pred)
-  #media dati
-  m <- mean(test[,'TPY'])
-  # Residui totali
-  sst <- sum((test[,'TPY'] - m)^2)
-  #calcolo devianza dei residui
-  sse <- sum(res^2)
-  #devianza della regression
-  ssr <- sum((exp(pred) - m)^2)
-  
-  print(i)
-  
-  #Calcolo dell'r quadro
-  r1 <- (ssr / sst)
-  r2 <- (1 - sse / sst)
-  r[1, i] <-  r1
-  r[2, i] <-  r2
-  
-  #salvo i residui
-  devres_v[i] <- sse
-}
-
-#Distribuzioni degli r quadri calcolati
-ggplot(data = NULL, aes(r[,1])) +
-  geom_boxplot() +
-  xlim(c(0,1)) +
-  theme_bw()
-
-ggplot(data = NULL, aes(r[,2])) +
-  geom_boxplot() +
-  xlim(c(0,1)) +
-  theme_bw()
-
-
-ggplot(data = NULL, aes(devres_v)) +
-  geom_density() +
-  geom_point(aes(x = devres_v, y = 0)) +
-  theme_bw()
-```
 
 #### secondo modello
 
@@ -988,6 +936,11 @@ for (i in 1:niter){
   e[2, i] <- mean(abs(res) / abs(test[,'TPY']))
 }
 
+
+```
+
+
+```{r echo = FALSE, warning=FALSE}
 #Distribuzioni degli r quadri calcolati
 r21 <- ggplot(data = NULL, aes(y = r[1,])) +
   geom_boxplot() +
@@ -995,17 +948,17 @@ r21 <- ggplot(data = NULL, aes(y = r[1,])) +
   ylab("R^2")+
   theme_bw()
 
-r22 <- ggplot(data = NULL, aes(y = r[2,])) +
+r22 <- ggplot(data = NULL, aes(x = r[2,])) +
   geom_boxplot() +
-  ylim(c(0.5,1))+
-  ylab("R^2")+
+  xlab("R^2")+
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 12, bounds = FALSE))+
   theme_bw()
 
 
-
-plot_grid(r21, r22)
+r22
 ```
 
+Ricordiamo che l'R^2 ottenuto in precedenza è 0.6896, e possiamo andare a notare che la nostra distribuzione si avvicina molto a quel valore.
 
 ```{r echo=FALSE}
 rd <- ggplot(data = NULL, aes(e[1,])) +
@@ -1019,13 +972,14 @@ rer <- ggplot(data = NULL, aes(x = e[2,]))+
   geom_boxplot() +
   ggtitle("Distibuzione media errori relativi")+
   theme_bw()+
-  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())+
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 9, bounds = FALSE))
 
 plot_grid(rd, rer)
 ```
+Come abbiamo notato anche prima l'errore relativo in questo modello è più alto rispetto al primo ma osserviamo che le medie superano difficilmente il 0.28 
 
-
-
+Dopo entrambe le analisi possiamo concludere che entrambi i modelli performano bene nel processo di train-test e i due casi specifici che siamo siamo andati a studiare non erano dei casi estremi.
 
 ## Clustering
 
