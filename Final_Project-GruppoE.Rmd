@@ -180,7 +180,9 @@ plot_grid(title,
 Iniziamo a vedere le variabili esplicative quantitative, quindi NUMBED e SQRFOOT.
 
 ```{r, include = T, echo = F}
+"Summary NUMBED"
 summary(log(Data$NUMBED))
+"Summary SQRFOOT"
 summary(log(Data$SQRFOOT))
 c1 <- ggplot(data = Data, aes(y = NUMBED)) +
   geom_boxplot(fill = "yellow") +
