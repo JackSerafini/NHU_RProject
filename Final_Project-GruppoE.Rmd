@@ -847,7 +847,7 @@ for (i in 1:niter){
 }
 ```
 
-```{r echo=False}
+```{r echo=F}
 #Distribuzioni degli r quadri calcolati
 #Questa formula non funziona
 r21 <- ggplot(data = NULL, aes(y = r[1,])) +
@@ -894,7 +894,7 @@ Dal grafico si può notare che in media gli errori relativi sono molto piccoli, 
 
 #### secondo modello
 
-```{r}
+```{r echo = F}
 #Facciamo un ciclo for nel quale separiamo più volte il data set in test e train
 #Numero di ripetizioni
 niter <- 100
