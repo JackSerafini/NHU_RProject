@@ -57,13 +57,12 @@ Visualizziamo il dataset:
 summary(Data)
 ```
 
-Nel dataset sono presenti solo 10 dati mancanti nella colonna SQRFOOT.
+Nel dataset sono presenti solo 10 dati mancanti nella colonna *SQRFOOT*.
 
 
 ## Variabile Risposta
 
-La variabile risposta individuata è la variabile TPY, ovvero il numero totale di pazienti ospitati nella casa di riposo in un anno.
-Osserviamo in primo luogo la distribuzione di TPY:
+La variabile risposta individuata è la variabile *TPY*, ovvero il numero totale di pazienti ospitati nella casa di riposo in un anno:
 
 ```{r, include = T, echo = F}
 summary(Data$TPY)
@@ -117,7 +116,7 @@ plot_grid(title,
           rel_heights = c(0.1, 1))
 ```
 
-Si osserva un'assimetria destra nella distribuzione di TPY: la coda destra è molto lunga, come si vede da entrambi i grafici; inoltre, la media è superiore alla mediana.
+Si osserva un'assimetria destra nella distribuzione di *TPY*: la coda destra è molto lunga, come si vede da entrambi i grafici; inoltre, la media è superiore alla mediana.
 Ci sono trasformazioni della variabile che possono renderla simmetrica, la migliore che è stata individuata è la trasformazione logaritmica:
 
 ```{r, include = T, echo = F}
@@ -177,7 +176,7 @@ plot_grid(title,
 
 ## Variabili Quantitative
 
-Iniziamo a vedere le variabili esplicative quantitative, quindi NUMBED e SQRFOOT.
+Iniziamo a vedere le variabili esplicative quantitative, quindi *NUMBED* e *SQRFOOT*.
 
 ```{r, include = T, echo = F}
 "Summary NUMBED"
@@ -267,9 +266,9 @@ plot_grid(title,
           rel_heights = c(0.1, 2))
 ```
 
-Si osserva una forte asimmetricità analoga a TPY anche nelle distribuzioni delle variabili esplicative, in particolare in SQRFOOT.
+Si osserva una forte asimmetricità analoga a *TPY* anche nelle distribuzioni delle variabili esplicative, in particolare in *SQRFOOT*.
 
-Analizziamo ora le correlazioni tra le variabili quantitative (compresa la risposta)
+Analizziamo ora le correlazioni tra le variabili quantitative (compresa la risposta):
 
 ```{r echo=FALSE}
 plot <- ggplot() +
@@ -578,7 +577,7 @@ Nel summary possiamo poi individuare l'intercetta e il coefficiente angolare: l'
 Sull'intercetta si può fare un'ulteriore considerazione: lo standard error è 0.6925, quasi quanto l'intercetta; risulta infatti, dal test del t-value, che l'ipotesi nulla che il coefficiente sia nullo non può essere rifiutata.
 Infine, studiando la statistica $R^2$, possiamo vedere un valore pari a 0.9678, il quale suggerisce un'aderenza del modello ai dati molto alta, quasi totale, circa del 97%.
 
-Ora proviamo a costruire il modello senza intercetta, così da stabilire se possa essere migliore
+Ora proviamo a costruire il modello senza intercetta, così da stabilire se possa essere migliore:
 
 ```{r, echo=FALSE}
 fit_NUMBED <- lm(TPY ~ NUMBED -1, data = Data)
@@ -611,7 +610,8 @@ Eventuali trasformazioni per rendere i residui gaussiani rendono il modello magg
 
 #### Costruzione del Modello TPY ~ SQRFOOT
 
-Analizziamo ora il secondo modello con SQRFOOT come variabile esplicativa.
+Analizziamo ora il secondo modello con *SQRFOOT* come variabile esplicativa.
+
 ```{r echo=FALSE}
 fit_SQRFOOT <- lm(TPY ~ SQRFOOT, data = Data)
 summary(fit_SQRFOOT)
@@ -646,7 +646,7 @@ summary(fit_SQR_TAX)
 
 Anche graficamente sembrano funzionare:
 
-* Modello con PRO
+* Modello con *PRO*
 
 ```{r echo=FALSE}
 p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
@@ -660,7 +660,7 @@ p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
 resiplot(fit_SQR_PRO, p)
 ```
 
-* Modello con TAXEXEMPT
+* Modello con *TAXEXEMPT*
 
 ```{r echo=FALSE}
 p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = TAXEXEMPT)) +
@@ -699,8 +699,8 @@ test   <- Data[!sample, ]
 fit_train <- lm(TPY ~ NUMBED - 1, train)
 summary(fit_train)
 ```
-Guardando il summary del modello applicato solo ad una parte dei dati si ritrova un risultato molto simile
 
+Guardando il summary del modello applicato solo ad una parte dei dati si ritrova un risultato molto simile
 
 ```{r echo=FALSE}
 #Dati predetti
@@ -727,10 +727,10 @@ gr <- ggplot(data = test, aes(x = NUMBED, y = err)) +
   theme_bw()
 
 plot_grid(dp, gr)
-
 ```
+
 Nel primo gafico confrontiamo i dati predetti rispetto ai dati reali del dataset test. Come si vede si avvicinano molto alla bisettrice del primo quadrante in rosso, ciò significa che i dati predetti si assomigliano molto ai dati reali.
-Nel secondo grafico sono rappresentati gli errori relativi, e come si vede che la maggior parte degli errori sono ,molto piccoli.
+Nel secondo grafico sono rappresentati gli errori relativi, e come si vede che la maggior parte degli errori sono molto piccoli.
 
 Formula errore relativo
 $$ err_{rel} = \frac{|x_{vero} - x_{pred}|}{|x_{vero}|}$$
@@ -738,6 +738,7 @@ $$ err_{rel} = \frac{|x_{vero} - x_{pred}|}{|x_{vero}|}$$
 ```{r echo=FALSE}
 summary(err)
 ```
+
 Per essere più precisi il 75% dei dati ha un errore più piccolo del 6%, sfortunatamente l'errore più grande è del 42%.
 
 ### Modello MULTIVARIATO log(TPY) ~ log(SQRFOOT) * PRO
@@ -756,6 +757,7 @@ test   <- DataNa[!sample, ]
 fit_train <- lm(log(TPY) ~ log(SQRFOOT) * PRO, train)
 summary(fit_train)
 ```
+
 Guardando il summary del modello applicato solo ad una parte dei dati si ritrovno di nuovo coefficienti molto simili a quelli gia ottenuti
 
 ```{r echo=FALSE}
@@ -783,26 +785,29 @@ gr <- ggplot(data = test, aes(x = SQRFOOT, y = err)) +
   theme_bw()
 
 plot_grid(dp, gr)
-
 ```
+
 Nel primo gafico confrontiamo i dati predetti rispetto ai dati reali del dataset test. Rispetto al modello precedente si osserva una maggiore dispersione.
-Nel secondo grafico sono rappresentati gli errori relativi che come si poteva dedurre sono più alti
+Nel secondo grafico sono rappresentati gli errori relativi che come si poteva dedurre sono più alti.
 
 ```{r echo=FALSE}
 summary(err)
 ```
+
 Per essere più precisi solo il 25% dei dati ha un errore minore del 5%. La metà dei dati ha un errore del 15%. e abbiamo errori che arrivano fino al 170%.
 
 Se andiamo a ricordare il nostro modello considerando tutti i dati ricordiamo che la precentuale di dati spiegati è 68.96%.
+
 ```{r echo=FALSE}
 quantile(err, 0.6896)
 ```
+
 E l'errore relativo a quel quantile è del 23%. Quindi concludiamo che l'errore relativo della nostra predizione sulla percentuale di dati che il nostro modello prometteva di spiegare è al massimo del 23%.
 
 ### Esecuzione ripetuta del proceso train-test
 La divisione del data-set fra quello di train e di test è casuale, quindi per controllare che non siamo stati fortunati nel caso che abbiamo studiato andremo a ripetere il processo 100 volte ed analizzare i risultati attraverso l'R^2 la varianza sui residui e l'errore relativo sui residui.
 
-#### regressione semplice TPY ~ NUMBED - 1
+#### regressione semplice *TPY* ~ *NUMBED* - 1
 
 ```{r echo=F, warning=FALSE}
 #Facciamo un ciclo for nel quale separiamo più volte il data set in test e train
@@ -868,7 +873,7 @@ r22
 
 Per calcolare R^2 abbiamo usato la seguente formula
 $$R^2 = 1 - \frac{dev_{res}} {dev_{tot}}$$
-Come si può notare dal gradico la maggior parte dei dati si avvicina all'R^2 calcolato nel modello che considera la completezza dei dati, ovvero: 0.9929
+Come si può notare dal gradico la maggior parte dei dati si avvicina all'R^2 calcolato nel modello che considera la completezza dei dati, ovvero 0.9929.
 
 ```{r echo=FALSE}
 rd <- ggplot(data = NULL, aes(e[1,])) +
@@ -888,6 +893,7 @@ rer <- ggplot(data = NULL, aes(x = e[2,]))+
 
 plot_grid(rd, rer)
 ```
+
 Dal grafico si può notare che in media gli errori relativi sono molto piccoli, quasi tutti più piccoli del 10%.
 (((Non so bene valutare la varianza dei residui)))
 
@@ -939,7 +945,6 @@ for (i in 1:niter){
 
 ```
 
-
 ```{r echo = FALSE, warning=FALSE}
 #Distribuzioni degli r quadri calcolati
 r21 <- ggplot(data = NULL, aes(y = r[1,])) +
@@ -977,7 +982,8 @@ rer <- ggplot(data = NULL, aes(x = e[2,]))+
 
 plot_grid(rd, rer)
 ```
-Come abbiamo notato anche prima l'errore relativo in questo modello è più alto rispetto al primo ma osserviamo che le medie superano difficilmente il 0.28 
+
+Come abbiamo notato anche prima l'errore relativo in questo modello è più alto rispetto al primo ma osserviamo che le medie superano difficilmente il 0.28.
 
 Dopo entrambe le analisi possiamo concludere che entrambi i modelli performano bene nel processo di train-test e i due casi specifici che siamo siamo andati a studiare non erano dei casi estremi.
 
@@ -985,8 +991,8 @@ Dopo entrambe le analisi possiamo concludere che entrambi i modelli performano b
 
 In ultimo proviamo a creare dei raggruppamenti di osservazioni nel dataset che siano omogenei secondo un determinato criterio.
 Il criterio selezionato è quello che ci sembra essere il più intuitivo: la dimensione della casa di riposo.
-Infatti è possibile sfruttare le variabili NUMBED e SQRFOOT per definire una dimensione della casa di riposo, sia a livello di capacità sia a livello di superficie effettiva.
-La variabile TPY sarà inclusa in ogni raggruppamento.
+Infatti è possibile sfruttare le variabili *NUMBED* e *SQRFOOT* per definire una dimensione della casa di riposo, sia a livello di capacità sia a livello di superficie effettiva.
+La variabile *TPY* sarà inclusa in ogni raggruppamento.
 Il primo confronto che viene effettuato è tra la divisione ottenuta utilizzando solo 1 delle due variabili o entrambe.
 Utilizzando il metodo delle k-medie e la distanza euclidea per il calcolo della matrice delle distanza, adottando 2 centri, otteniamo i seguenti risultati:
 
@@ -1013,9 +1019,11 @@ table(km.sqrfoot$cluster)
 table(km.quant$cluster)
 # Numerosità molto asimmetriche
 ```
-Le tre tabelle indicano le numerosità dei due cluster rispettivamente per il raggruppamento con NUMBED, SQRFOOT e entrambe.
+
+Le tre tabelle indicano le numerosità dei due cluster rispettivamente per il raggruppamento con *NUMBED*, *SQRFOOT* e entrambe.
 
 Visualizziamo graficamente le differenze riscontrate tra il clustering bivariato e quello con tutte e tre le variabili quantitative.
+
 ```{r, echo = F}
 
 # Dataframe di supporto per la rappresentazione grafica
@@ -1089,9 +1097,11 @@ plot_grid(s12,
           s3,
           ncol = 1)
 ```
+
 Si osservano in rosso i punti che appartengono a due cluster diversi a seconda del tipo di clustering adottato, in grigio i centroidi dei cluster ottenuti utilizzando tutte e tre le variabili.
 
 Visualizziamo le varianze within e between dei tre metodi:
+
 ```{r, echo = F}
 km.numbed$tot.withinss 
 km.numbed$betweenss
@@ -1101,8 +1111,9 @@ km.quant$tot.withinss
 km.quant$betweenss
 ```
  
- Visti i risultati, scegliamo di proseguire con il clustering utilizzando soltanto le variabili TPY e SQRFOOT.
+Visti i risultati, scegliamo di proseguire con il clustering utilizzando soltanto le variabili *TPY* e *SQRFOOT*.
 Vediamo qual è il numero migliore di cluster in cui dividere il dataset:
+
 ```{r, echo = F}
 crit.s<-0
 for (i in 2:10) {
@@ -1125,7 +1136,8 @@ table(km.sqrfoot$cluster)
 
 ```
 
-Visualizziamo a schermo le numerosità dei 3 centroidi: sono fortemente asimmetriche, tuttavia è un risultato accettabile considerando l'interpretazione come:
+Visualizziamo a schermo le numerosità dei 3 centroidi: sono fortemente asimmetriche, tuttavia è un risultato accettabile considerando l'interpretazione come:   
+
 * 1: Case di riposo di grandi dimensioni
 * 2: Case di riposo di medie dimensioni
 * 3: Case di riposo di piccole dimensioni
