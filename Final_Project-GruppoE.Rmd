@@ -701,6 +701,7 @@ summary(fit_train)
 ```
 Guardando il summary del modello applicato solo ad una parte dei dati si ritrova un risultato molto simile
 
+
 ```{r echo=FALSE}
 #Dati predetti
 pred <- predict.lm(fit_train, test)
@@ -734,7 +735,7 @@ Nel secondo grafico sono rappresentati gli errori relativi, e come si vede che l
 Formula errore relativo
 $$ err_{rel} = \frac{|x_{vero} - x_{pred}|}{|x_{vero}|}$$
 
-```{recho=FALSE}
+```{r echo=FALSE}
 summary(err)
 ```
 Per essere più precisi il 75% dei dati ha un errore più piccolo del 6%, sfortunatamente l'errore più grande è del 42%.
@@ -773,8 +774,8 @@ dp <- ggplot()+
 err <- abs(test[,'TPY'] - exp(pred))
 err <- err / abs(test[,'TPY'])
 gr <- ggplot(data = test, aes(x = SQRFOOT, y = err)) +
+  geom_abline(intercept = 0, slope = 0, col = "gray40") +
   geom_point() +
-  geom_abline(intercept = 0, slope = 0) +
   ggtitle("Grafico degli errori relativi") +
   xlab("Piedi quadrati")+
   ylab("errore relativo")+
@@ -800,6 +801,231 @@ E l'errore relativo a quel quantile è del 23%. Quindi concludiamo che l'errore 
 
 ### Ripetuta train- test
 La divisione del data-set fra quello di train e di test è casuale, quindi per controllare che non siamo stati fortunati nel caso che abbiamo studiato andremo a ripetere il processo 
+
+#### primo modello
+
+```{r}
+#Facciamo un ciclo for nel quale separiamo più volte il data set in test e train
+#Numero di ripetizioni
+niter <- 100
+#prime due righe due modi diversi per calcolare l'r^2
+r <- matrix(data = 0, nrow = 2, ncol = niter)
+#Martice prima riga varianza dei residui seconda riga la media dell'errore relativo
+e <- matrix(data = 0, nrow = 2, ncol = niter)
+for (i in 1:niter){
+  #Divido il dataset
+  sample <- sample(c(TRUE, FALSE), nrow(Data), replace=TRUE, prob=c(0.9,0.1))
+  train  <- Data[sample, ]
+  test   <- Data[!sample, ]
+  
+  #Faccio il modello
+  fit_train <- lm(TPY ~ NUMBED - 1, train)
+  
+  #Predizion
+  pred <- predict.lm(fit_train, test)
+  
+  #calcolo residui
+  res <- test[,'TPY'] - pred
+  #media dati
+  m <- mean(test[,'TPY'])
+  # Residui totali
+  sst <- sum((test[,'TPY'] - m)^2)
+  #calcolo devianza dei residui
+  sse <- sum(res^2)
+  #devianza della regression
+  ssr <- sum((pred - m)^2)
+  
+  #Calcolo dell'r quadro
+  r1 <- (ssr / sst)
+  r2 <- (1 - sse / sst)
+  r[1, i] <-  r1
+  r[2, i] <-  r2
+  
+  #salvo i residui
+  e[1, i] <- sse / length(res)
+  e[2, i] <- mean(abs(res) / abs(test[,'TPY']))
+}
+
+#Distribuzioni degli r quadri calcolati
+r21 <- ggplot(data = NULL, aes(y = r[1,])) +
+  geom_boxplot() +
+  ylim(c(0.5,1))+
+  ylab("R^2")+
+  theme_bw()
+
+r22 <- ggplot(data = NULL, aes(y = r[2,])) +
+  geom_boxplot() +
+  ylim(c(0.5,1))+
+  ylab("R^2")+
+  theme_bw()
+
+
+
+plot_grid(r21, r22)
+```
+
+
+```{r echo=FALSE}
+rd <- ggplot(data = NULL, aes(e[1,])) +
+  geom_boxplot()+
+  ggtitle("Distribuzione varianze dei residui")+
+  theme_bw()+
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())
+  
+
+rer <- ggplot(data = NULL, aes(x = e[2,]))+
+  geom_boxplot() +
+  ggtitle("Distibuzione media errori relativi")+
+  theme_bw()+
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())
+
+plot_grid(rd, rer)
+```
+
+
+```{r echo=FALSE}
+#Facciamo un ciclo for nel quale separiamo più volte il data set in test e train
+#Numero di ripetizioni
+niter <- 100
+#prime due righe due modi diversi per calcolare l'r^2
+r <- matrix(data = 0, nrow = 2, ncol = niter)
+#vettore dei residui
+devres_v <- vector(mode = "numeric", length = niter)
+for (i in 1:niter){
+  #Divido il dataset
+  sample <- sample(c(TRUE, FALSE), nrow(DataNa), replace=TRUE, prob=c(0.9,0.1))
+  train  <- DataNa[sample, ]
+  test   <- DataNa[!sample, ]
+  
+  #Faccio il modello
+  fit_train <- lm(log(TPY) ~ log(SQRFOOT)*PRO, train)
+  
+  #Predizion
+  pred <- predict.lm(fit_train, test)
+  
+  #calcolo residui
+  res <- test[,'TPY'] - exp(pred)
+  #media dati
+  m <- mean(test[,'TPY'])
+  # Residui totali
+  sst <- sum((test[,'TPY'] - m)^2)
+  #calcolo devianza dei residui
+  sse <- sum(res^2)
+  #devianza della regression
+  ssr <- sum((exp(pred) - m)^2)
+  
+  print(i)
+  
+  #Calcolo dell'r quadro
+  r1 <- (ssr / sst)
+  r2 <- (1 - sse / sst)
+  r[1, i] <-  r1
+  r[2, i] <-  r2
+  
+  #salvo i residui
+  devres_v[i] <- sse
+}
+
+#Distribuzioni degli r quadri calcolati
+ggplot(data = NULL, aes(r[,1])) +
+  geom_boxplot() +
+  xlim(c(0,1)) +
+  theme_bw()
+
+ggplot(data = NULL, aes(r[,2])) +
+  geom_boxplot() +
+  xlim(c(0,1)) +
+  theme_bw()
+
+
+ggplot(data = NULL, aes(devres_v)) +
+  geom_density() +
+  geom_point(aes(x = devres_v, y = 0)) +
+  theme_bw()
+```
+
+#### secondo modello
+
+```{r}
+#Facciamo un ciclo for nel quale separiamo più volte il data set in test e train
+#Numero di ripetizioni
+niter <- 100
+#prime due righe due modi diversi per calcolare l'r^2
+r <- matrix(data = 0, nrow = 2, ncol = niter)
+#Martice prima riga varianza dei residui seconda riga la media dell'errore relativo
+e <- matrix(data = 0, nrow = 2, ncol = niter)
+for (i in 1:niter){
+  #Divido il dataset
+  sample <- sample(c(TRUE, FALSE), nrow(DataNa), replace=TRUE, prob=c(0.9,0.1))
+  train  <- DataNa[sample, ]
+  test   <- DataNa[!sample, ]
+  
+  #Faccio il modello
+  fit_train <- lm(log(TPY) ~ log(SQRFOOT)*PRO, train)
+  
+  #Predizion
+  pred <- predict.lm(fit_train, test)
+  
+  #calcolo residui
+  res <- test[,'TPY'] - exp(pred)
+  #media dati
+  m <- mean(test[,'TPY'])
+  # Residui totali
+  sst <- sum((test[,'TPY'] - m)^2)
+  #calcolo devianza dei residui
+  sse <- sum(res^2)
+  #devianza della regression
+  ssr <- sum((exp(pred) - m)^2)
+  
+  #Calcolo dell'r quadro
+  r1 <- (ssr / sst)
+  r2 <- (1 - sse / sst)
+  r[1, i] <-  r1
+  r[2, i] <-  r2
+  
+  #salvo i residui
+  e[1, i] <- sse / length(res)
+  e[2, i] <- mean(abs(res) / abs(test[,'TPY']))
+}
+
+#Distribuzioni degli r quadri calcolati
+r21 <- ggplot(data = NULL, aes(y = r[1,])) +
+  geom_boxplot() +
+  ylim(c(0.5,1))+
+  ylab("R^2")+
+  theme_bw()
+
+r22 <- ggplot(data = NULL, aes(y = r[2,])) +
+  geom_boxplot() +
+  ylim(c(0.5,1))+
+  ylab("R^2")+
+  theme_bw()
+
+
+
+plot_grid(r21, r22)
+```
+
+
+```{r echo=FALSE}
+rd <- ggplot(data = NULL, aes(e[1,])) +
+  geom_boxplot()+
+  ggtitle("Distribuzione varianze dei residui")+
+  theme_bw()+
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())
+  
+
+rer <- ggplot(data = NULL, aes(x = e[2,]))+
+  geom_boxplot() +
+  ggtitle("Distibuzione media errori relativi")+
+  theme_bw()+
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())
+
+plot_grid(rd, rer)
+```
+
+
+
 
 ## Clustering
 
