@@ -599,12 +599,12 @@ ggplot(data = test, aes(x = SQRFOOT, y = res)) +
 # provo a fare training - test set per il modello con NUMBED
 set.seed(69)
 sample <- sample(c(TRUE, FALSE), nrow(DataNa), replace=TRUE, prob=c(0.9,0.1))
-train  <- Data[sample, ]
-test   <- Data[!sample, ]
+train  <- DataNa[sample, ]
+test   <- DataNa[!sample, ]
 fit_train <- lm(TPY ~ NUMBED, train)
 pred <- predict.lm(fit_train, test)
 # Scatterplot ma i punti rossi sono i predict
-ggplot(Data, aes(x = NUMBED, y = TPY))+
+ggplot(DataNa, aes(x = NUMBED, y = TPY))+
   geom_point(data = train, aes(x = NUMBED, y = TPY)) +
   geom_point(data = test, aes(x = NUMBED, y = pred), col = "red") +
   theme_bw()
@@ -649,7 +649,6 @@ for (i in 1:niter){
   
   #Faccio il modello
   fit_train <- lm(log(TPY) ~ log(SQRFOOT)*PRO, train)
-  summary(fit_train)
   
   #Predizion
   pred <- predict.lm(fit_train, test)
@@ -670,8 +669,8 @@ for (i in 1:niter){
   #Calcolo dell'r quadro
   r1 <- (ssr / sst)
   r2 <- (1 - sse / sst)
-  r[i, 1] <-  r1
-  r[i, 2] <-  r2
+  r[1, i] <-  r1
+  r[2, i] <-  r2
   
   #salvo i residui
   devres_v[i] <- sse
@@ -688,6 +687,7 @@ ggplot(data = NULL, aes(r[,2])) +
   xlim(c(0,1)) +
   theme_bw()
 
+
 ggplot(data = NULL, aes(devres_v)) +
   geom_density() +
   geom_point(aes(x = devres_v, y = 0)) +
@@ -697,7 +697,7 @@ res <- test[,'TPY'] - pred
 summary(res)
 ggplot(data = test, aes(x = NUMBED, y = res)) +
   geom_point() +
-  geom_abline(intercept = 0, slope = 0) +
+  geom_abline(intercept = 0, slope = 1) +
   theme_bw()
 
 
