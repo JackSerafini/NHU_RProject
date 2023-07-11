@@ -1050,7 +1050,7 @@ dist.quant <- daisy(scale(DataNa[,c("NUMBED", "SQRFOOT", "TPY")]))
 #as.matrix(dist.quant)[1:5,1:5] #matrice delle distanze
 
 # Provo il clustering con il metodo delle k medie
-km.numbed <- kmeans(scale(Data[,c("NUMBED", "TPY")]), centers = 2)
+km.numbed <- kmeans(scale(DataNa[,c("NUMBED", "TPY")]), centers = 2)
 km.sqrfoot <- kmeans(scale(na.omit(Data[,c("SQRFOOT", "TPY")])), centers = 2)
 km.quant <- kmeans(scale(na.omit(Data[,c("NUMBED", "SQRFOOT", "TPY")])), centers = 2)
 # Numerosità nei due cluster
