@@ -717,36 +717,91 @@ ggplot(data = na.omit(Data), aes(x = SQRFOOT, y = TPY)) +
 # Provo a farlo utilizzando solo le variabili quantitative (per ora)
 
 # Costruisco le distanze (euclidee per variabili quantitative)
-dist.numbed <- daisy(scale(Data[,c("NUMBED", "TPY")]))
+dist.numbed <- daisy(scale(DataNa[,c("NUMBED", "TPY")]))
 as.matrix(dist.numbed)[1:5,1:5] #matrice delle distanze
-dist.sqrfoot <- daisy(scale(Data[,c("SQRFOOT", "TPY")]))
+dist.sqrfoot <- daisy(scale(DataNa[,c("SQRFOOT", "TPY")]))
 as.matrix(dist.sqrfoot)[1:5,1:5] #matrice delle distanze
 # NB la funzione scale serve a standardizzare il dataset
 
+# Provo anche con la distanza rispetto a tutte e 3 le variabili
+dist.quant <- daisy(scale(DataNa[,c("NUMBED", "SQRFOOT", "TPY")]))
+as.matrix(dist.quant)[1:5,1:5] #matrice delle distanze
+
 # Provo il clustering con il metodo delle k medie
-km.numbed <- kmeans(scale(Data[,c("NUMBED", "TPY")]), centers = 2)
+km.numbed <- kmeans(scale(na.omit(Data)[,c("NUMBED", "TPY")]), centers = 2)
 km.sqrfoot <- kmeans(scale(na.omit(Data[,c("SQRFOOT", "TPY")])), centers = 2)
+km.quant <- kmeans(scale(na.omit(Data[,c("NUMBED", "SQRFOOT", "TPY")])), centers = 2)
 # Numerosità nei due cluster
 table(km.numbed$cluster)
 table(km.sqrfoot$cluster)
+table(km.quant$cluster)
 # Numerosità molto asimmetriche
 
 # Dataframe di supporto per la rappresentazione grafica
-data.centers.numbed <- data.frame(NUMBED = km.numbed$centers[,1]*sd(Data$NUMBED)+mean(Data$NUMBED),
-                                  TPY = km.numbed$centers[,2]*sd(Data$TPY)+mean(Data$TPY))
+data.centers.numbed <- data.frame(NUMBED = km.numbed$centers[,1]*sd(DataNa$NUMBED)+mean(DataNa$NUMBED),
+                                  TPY = km.numbed$centers[,2]*sd(DataNa$TPY)+mean(DataNa$TPY))
 data.centers.sqrfoot <- data.frame(SQRFOOT = km.sqrfoot$centers[,1]*sd(na.omit(Data$SQRFOOT))+mean(na.omit(Data$SQRFOOT)),
                                   TPY = km.sqrfoot$centers[,2]*sd(Data$TPY)+mean(Data$TPY))
+data.centers.numbed.qt <- data.frame(NUMBED = km.quant$centers[,1]*sd(Data$NUMBED)+mean(Data$NUMBED),
+                                  TPY = km.quant$centers[,2]*sd(Data$TPY)+mean(Data$TPY))
+data.centers.sqrfoot.qt <- data.frame(SQRFOOT = km.quant$centers[,1]*sd(na.omit(Data$SQRFOOT))+mean(na.omit(Data$SQRFOOT)),
+                                   TPY = km.quant$centers[,2]*sd(Data$TPY)+mean(Data$TPY))
 # Visualizzo graficamente i clustering
-ggplot(Data, aes(x = NUMBED, y = TPY, col = factor(km.numbed$cluster))) +
-  geom_point() + 
-  theme_classic() +
+n1 <- ggplot(DataNa, aes(x = NUMBED, y = TPY, col = factor(km.numbed$cluster))) +
+  geom_point(shape = 1) +
+  scale_color_manual(values = c("red", "orange")) + 
+  theme_bw() +
   theme(legend.position = "") +
   geom_point(data = data.centers.numbed, aes(x = NUMBED, y = TPY), col = "black")
-ggplot(na.omit(Data), aes(x = SQRFOOT, y = TPY, col = factor(km.sqrfoot$cluster))) +
+n2 <- ggplot(DataNa, aes(x = NUMBED, y = TPY, col = factor(km.quant$cluster))) +
+  geom_point(shape = 1) +
+  scale_color_manual(values = c("red", "orange")) + 
+  theme_bw() +
+  theme(legend.position = "") +
+  geom_point(data = data.centers.numbed.qt, aes(x = NUMBED, y = TPY), col = "black")
+n3 <- ggplot(DataNa, aes(x = NUMBED, y = TPY)) +
+  geom_point(data = DataNa[factor(km.quant$cluster) == factor(km.numbed$cluster),], 
+             mapping = aes(x = NUMBED, y = TPY),
+             shape = 1, col = "yellow") +
+  geom_point(data = DataNa[factor(km.quant$cluster) != factor(km.numbed$cluster),],
+             mapping = aes(x = NUMBED, y = TPY),
+             shape = 1, col = "red") +
+  theme_bw() +
+  geom_point(data = data.centers.numbed, aes(x = NUMBED, y = TPY), col = "black") +
+  geom_point(data = data.centers.numbed.qt, aes(x = NUMBED, y = TPY), col = "grey") 
+n12 <- plot_grid(n1, n2,
+                 nrow = 1)
+plot_grid(n12,
+          n3,
+          ncol = 1)
+
+s1 <- ggplot(na.omit(Data), aes(x = SQRFOOT, y = TPY, col = factor(km.sqrfoot$cluster))) +
   geom_point() + 
-  theme_classic() +
+  scale_color_manual(values = c("orange", "red")) +
+  theme_bw() +
   theme(legend.position = "") +
   geom_point(data = data.centers.sqrfoot, aes(x = SQRFOOT, y = TPY), col = "black")
+s2 <- ggplot(na.omit(Data), aes(x = SQRFOOT, y = TPY, col = factor(km.quant$cluster))) +
+  geom_point() + 
+  scale_color_manual(values = c("red", "orange")) +
+  theme_bw() +
+  theme(legend.position = "") +
+  geom_point(data = data.centers.sqrfoot, aes(x = SQRFOOT, y = TPY), col = "black")
+s3 <- ggplot(DataNa, aes(x = SQRFOOT, y = TPY)) +
+  geom_point(data = DataNa[factor(km.quant$cluster) != factor(km.sqrfoot$cluster),], 
+             mapping = aes(x = SQRFOOT, y = TPY),
+             shape = 1, col = "yellow") +
+  geom_point(data = DataNa[factor(km.quant$cluster) == factor(km.sqrfoot$cluster),],
+             mapping = aes(x = SQRFOOT, y = TPY),
+             shape = 1, col = "red") +
+  theme_bw() +
+  geom_point(data = data.centers.sqrfoot, aes(x = SQRFOOT, y = TPY), col = "black") +
+  geom_point(data = data.centers.sqrfoot.qt, aes(x = SQRFOOT, y = TPY), col = "grey")
+s12 <- plot_grid(s1, s2,
+                 nrow = 1)
+plot_grid(s12,
+          s3,
+          ncol = 1)
 
 # Varianze between
 km.numbed$tot.withinss
@@ -754,6 +809,8 @@ km.numbed$betweenss
 km.sqrfoot$tot.withinss
 km.sqrfoot$betweenss
 # Teoricamente il primo clustering (con numbed) è migliore perché ha varianza within minore
+km.quant$tot.withinss
+km.quant$betweenss
 
 # Provo a fare cluster con dimensioni diverse da 2 a 10
 # Li valuto stampando le varianze within

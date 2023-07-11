@@ -181,9 +181,9 @@ Iniziamo a vedere le variabili esplicative quantitative, quindi NUMBED e SQRFOOT
 
 ```{r, include = T, echo = F}
 "Summary NUMBED"
-summary(log(Data$NUMBED))
+summary((Data$NUMBED))
 "Summary SQRFOOT"
-summary(log(Data$SQRFOOT))
+summary((Data$SQRFOOT))
 c1 <- ggplot(data = Data, aes(y = NUMBED)) +
   geom_boxplot(fill = "yellow") +
   theme_bw() +
@@ -1029,5 +1029,110 @@ plot_grid(rd, rer)
 
 ## Clustering
 
+In ultimo proviamo a creare dei raggruppamenti di osservazioni nel dataset che siano omogenei secondo un determinato criterio.
+Il criterio selezionato è quello che ci sembra essere il più intuitivo: la dimensione della casa di riposo.
+Infatti è possibile sfruttare le variabili NUMBED e SQRFOOT per definire una dimensione della casa di riposo, sia a livello di capacità sia a livello di superficie effettiva.
+La variabile TPY sarà inclusa in ogni raggruppamento.
+Il primo confronto che viene effettuato è tra la divisione ottenuta utilizzando solo 1 delle due variabili o entrambe.
+Utilizzando il metodo delle k-medie e la distanza euclidea per il calcolo della matrice delle distanza, adottando 2 centri, otteniamo i seguenti risultati:
 
+```{r echo = F}
 
+# Costruisco le distanze (euclidee per variabili quantitative)
+dist.numbed <- daisy(scale(Data[,c("NUMBED", "TPY")]))
+#as.matrix(dist.numbed)[1:5,1:5] #matrice delle distanze
+dist.sqrfoot <- daisy(scale(Data[,c("SQRFOOT", "TPY")]))
+#as.matrix(dist.sqrfoot)[1:5,1:5] #matrice delle distanze
+# NB la funzione scale serve a standardizzare il dataset
+
+# Provo anche con la distanza rispetto a tutte e 3 le variabili
+dist.quant <- daisy(scale(DataNa[,c("NUMBED", "SQRFOOT", "TPY")]))
+#as.matrix(dist.quant)[1:5,1:5] #matrice delle distanze
+
+# Provo il clustering con il metodo delle k medie
+km.numbed <- kmeans(scale(Data[,c("NUMBED", "TPY")]), centers = 2)
+km.sqrfoot <- kmeans(scale(na.omit(Data[,c("SQRFOOT", "TPY")])), centers = 2)
+km.quant <- kmeans(scale(na.omit(Data[,c("NUMBED", "SQRFOOT", "TPY")])), centers = 2)
+# Numerosità nei due cluster
+table(km.numbed$cluster)
+table(km.sqrfoot$cluster)
+table(km.quant$cluster)
+# Numerosità molto asimmetriche
+```
+Le tre tabelle indicano le numerosità dei due cluster rispettivamente per il raggruppamento con NUMBED, SQRFOOT e entrambe.
+
+Visualizziamo graficamente le differenze riscontrate tra il clustering bivariato e quello con tutte e tre le variabili quantitative.
+```{r, echo = F}
+
+# Dataframe di supporto per la rappresentazione grafica
+data.centers.numbed <- data.frame(NUMBED = km.numbed$centers[,1]*sd(DataNa$NUMBED)+mean(DataNa$NUMBED),
+                                  TPY = km.numbed$centers[,2]*sd(DataNa$TPY)+mean(DataNa$TPY))
+data.centers.sqrfoot <- data.frame(SQRFOOT = km.sqrfoot$centers[,1]*sd(na.omit(Data$SQRFOOT))+mean(na.omit(Data$SQRFOOT)),
+                                  TPY = km.sqrfoot$centers[,2]*sd(Data$TPY)+mean(Data$TPY))
+data.centers.numbed.qt <- data.frame(NUMBED = km.quant$centers[,1]*sd(Data$NUMBED)+mean(Data$NUMBED),
+                                  TPY = km.quant$centers[,2]*sd(Data$TPY)+mean(Data$TPY))
+data.centers.sqrfoot.qt <- data.frame(SQRFOOT = km.quant$centers[,1]*sd(na.omit(Data$SQRFOOT))+mean(na.omit(Data$SQRFOOT)),
+                                   TPY = km.quant$centers[,2]*sd(Data$TPY)+mean(Data$TPY))
+# Visualizzo graficamente i clustering
+n1 <- ggplot(DataNa, aes(x = NUMBED, y = TPY, col = factor(km.numbed$cluster))) +
+  geom_point(shape = 1) +
+  scale_color_manual(values = c("red", "orange")) + 
+  theme_bw() +
+  theme(legend.position = "") +
+  geom_point(data = data.centers.numbed, aes(x = NUMBED, y = TPY), col = "black") +
+  labs(title = "TPY e NUMBED")
+n2 <- ggplot(DataNa, aes(x = NUMBED, y = TPY, col = factor(km.quant$cluster))) +
+  geom_point(shape = 1) +
+  scale_color_manual(values = c("red", "orange")) + 
+  theme_bw() +
+  theme(legend.position = "") +
+  geom_point(data = data.centers.numbed.qt, aes(x = NUMBED, y = TPY), col = "black") +
+  labs(title = "TPY, NUMBED e SQRFOOT")
+n3 <- ggplot(DataNa, aes(x = NUMBED, y = TPY)) +
+  geom_point(data = DataNa[factor(km.quant$cluster) == factor(km.numbed$cluster),], 
+             mapping = aes(x = NUMBED, y = TPY),
+             shape = 1, col = "yellow") +
+  geom_point(data = DataNa[factor(km.quant$cluster) != factor(km.numbed$cluster),],
+             mapping = aes(x = NUMBED, y = TPY),
+             shape = 1, col = "red") +
+  theme_bw() +
+  geom_point(data = data.centers.numbed, aes(x = NUMBED, y = TPY), col = "black") +
+  geom_point(data = data.centers.numbed.qt, aes(x = NUMBED, y = TPY), col = "grey")  +
+  labs(title = "Differenze tra i due clustering")
+n12 <- plot_grid(n1, n2,
+                 nrow = 1)
+plot_grid(n12,
+          n3,
+          ncol = 1)
+s1 <- ggplot(na.omit(Data), aes(x = SQRFOOT, y = TPY, col = factor(km.sqrfoot$cluster))) +
+  geom_point(shape = 1) + 
+  scale_color_manual(values = c("orange", "red")) +
+  theme_bw() +
+  theme(legend.position = "") +
+  geom_point(data = data.centers.sqrfoot, aes(x = SQRFOOT, y = TPY), col = "black") +
+  labs(title = "TPY e SQRFOOT")
+s2 <- ggplot(na.omit(Data), aes(x = SQRFOOT, y = TPY, col = factor(km.quant$cluster))) +
+  geom_point(shape = 1) + 
+  scale_color_manual(values = c("red", "orange")) +
+  theme_bw() +
+  theme(legend.position = "") +
+  geom_point(data = data.centers.sqrfoot, aes(x = SQRFOOT, y = TPY), col = "black") +
+  labs(title = "TPY, NUMBED e SQRFOOT")
+s3 <- ggplot(DataNa, aes(x = SQRFOOT, y = TPY)) +
+  geom_point(data = DataNa[factor(km.quant$cluster) != factor(km.sqrfoot$cluster),], 
+             mapping = aes(x = SQRFOOT, y = TPY),
+             shape = 1, col = "yellow") +
+  geom_point(data = DataNa[factor(km.quant$cluster) == factor(km.sqrfoot$cluster),],
+             mapping = aes(x = SQRFOOT, y = TPY),
+             shape = 1, col = "red") +
+  theme_bw() +
+  geom_point(data = data.centers.sqrfoot, aes(x = SQRFOOT, y = TPY), col = "black") +
+  geom_point(data = data.centers.sqrfoot.qt, aes(x = SQRFOOT, y = TPY), col = "grey") +
+  labs(title = "Differenze tra i due clustering")
+s12 <- plot_grid(s1, s2,
+                 nrow = 1)
+plot_grid(s12,
+          s3,
+          ncol = 1)
+```
+Si osservano in rosso i punti che appartengono a due cluster diversi a seconda del tipo di clustering adottato, in grigio i centri dei cluster ottenuti utilizzando tutte e tre le variabili.
