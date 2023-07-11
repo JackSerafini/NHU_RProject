@@ -909,4 +909,55 @@ plot_grid(s12,
           s3,
           ncol = 1)
 ```
-Si osservano in rosso i punti che appartengono a due cluster diversi a seconda del tipo di clustering adottato, in grigio i centri dei cluster ottenuti utilizzando tutte e tre le variabili.
+Si osservano in rosso i punti che appartengono a due cluster diversi a seconda del tipo di clustering adottato, in grigio i centroidi dei cluster ottenuti utilizzando tutte e tre le variabili.
+
+Visualizziamo le varianze within e between dei tre metodi:
+```{r, echo = F}
+km.numbed$tot.withinss 
+km.numbed$betweenss
+km.sqrfoot$tot.withinss 
+km.sqrfoot$betweenss
+km.quant$tot.withinss 
+km.quant$betweenss
+```
+ 
+ Visti i risultati, scegliamo di proseguire con il clustering utilizzando soltanto le variabili TPY e SQRFOOT.
+Vediamo qual è il numero migliore di cluster in cui dividere il dataset:
+```{r, echo = F}
+crit.s<-0
+for (i in 2:10) {
+  set.seed(69)
+  group.sqrfoot<-kmeans(scale(na.omit(Data[,c("SQRFOOT", "TPY")])), i, nstart=10)
+  crit.s[i-1]<-group.sqrfoot$tot.withinss
+}
+clsdb <- data.frame(index = 2:10, crit.s)
+ggplot(clsdb, aes(index, crit.s)) +
+  geom_point() +
+  geom_line() +
+  theme_bw()
+```
+
+A giudicare dal grafico, rappresentante la varianza between rispetto ai centroidi ottenuti aumentando il numero di centroidi, sembra essere una buona idea provare ad effettuare del clustering utilizzando 3 centroidi.
+
+```{r echo = F}
+km.sqrfoot <- kmeans(scale(na.omit(Data[,c("SQRFOOT", "TPY")])), centers = 3)
+table(km.sqrfoot$cluster)
+
+```
+
+Visualizziamo a schermo le numerosità dei 3 centroidi: sono fortemente asimmetriche, tuttavia è un risultato accettabile considerando l'interpretazione come:
+* 1: Case di riposo di grandi dimensioni
+* 2: Case di riposo di medie dimensioni
+* 3: Case di riposo di piccole dimensioni
+
+```{r, echo = F}
+data.centers.sqrfoot <- data.frame(SQRFOOT = km.sqrfoot$centers[,1]*sd(na.omit(Data$SQRFOOT))+mean(na.omit(Data$SQRFOOT)),
+                                   TPY = km.sqrfoot$centers[,2]*sd(Data$TPY)+mean(Data$TPY))
+ggplot(na.omit(Data), aes(x = SQRFOOT, y = TPY, col = factor(km.sqrfoot$cluster))) +
+  geom_point() + 
+  theme_bw() +
+  theme(legend.position = "") +
+  geom_point(data = data.centers.sqrfoot, aes(x = SQRFOOT, y = TPY), col = "black") +
+  scale_color_manual(values = heat.colors(3))
+```
+
