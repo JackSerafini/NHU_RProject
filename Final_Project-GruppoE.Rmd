@@ -804,7 +804,7 @@ La divisione del data-set fra quello di train e di test è casuale, quindi per c
 
 #### regressione semplice TPY ~ NUMBED - 1
 
-```{r echo=False, warning=FALSE}
+```{r echo=F, warning=FALSE}
 #Facciamo un ciclo for nel quale separiamo più volte il data set in test e train
 #Numero di ripetizioni
 niter <- 100
