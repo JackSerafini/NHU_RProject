@@ -681,9 +681,119 @@ Per maggiore significatività dei coefficienti e leggera superiorità in $R^2$ s
 
 ## Train Set e Test Set
 
-Per verificare la bontà dei due modelli individuati, si divide il dataset in due sottoinsiemi (casuali) composti l'uno dall'80% (Train Set) dei dati, l'altro dal restante 20% (Test Set).
+Per verificare la bontà dei due modelli individuati, si divide il dataset in due sottoinsiemi (casuali) composti l'uno dall'90% (Train Set) dei dati, l'altro dal restante 10% (Test Set).
 La verifica avviene costruendo i due modelli che abbiamo ricavato sfruttando le osservazioni del Train Set, e poi utilizzarle per stimare le osservazioni nel Test Set.
 
+### Modello regressione semplice TPY ~ NUMBED - 1
+
+```{r}
+set.seed(69)
+
+#Divisione data set
+# 80% dei dati nel training e 20% nel test
+sample <- sample(c(TRUE, FALSE), nrow(Data), replace=TRUE, prob=c(0.9,0.1))
+train  <- Data[sample, ]
+test   <- Data[!sample, ]
+
+#Faccio il fit con il modello che abbiamo selezionato (che in caso si può cambiare)
+fit_train <- lm(TPY ~ NUMBED - 1, train)
+summary(fit_train)
+```
+Guardando il summary del modello applicato solo ad una parte dei dati si ritrova un risultato molto simile
+
+```{r}
+#Dati predetti
+pred <- predict.lm(fit_train, test)
+
+dp <- ggplot()+
+  geom_point(aes(x = test[,'TPY'], y = pred)) +
+  ggtitle("Dati predetti vs dati reali") +
+  geom_abline(intercept = 0, slope = 1, col = "red") +
+  xlab("TPY reali") +
+  ylab("TPY predetti")+
+  theme_bw()
+
+#calcolo residui
+err <- abs(test[,'TPY'] - pred)
+err <- err / abs(test[,'TPY'])
+gr <- ggplot(data = test, aes(x = NUMBED, y = err)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 0) +
+  ggtitle("Grafico degli errori relativi") +
+  xlab("Posti letto")+
+  ylab("errore relativo")+
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 15))+
+  theme_bw()
+
+plot_grid(dp, gr)
+
+```
+Nel primo gafico confrontiamo i dati predetti rispetto ai dati reali del dataset test. Come si vede si avvicinano molto alla bisettrice del primo quadrante in rosso, ciò significa che i dati predetti si assomigliano molto ai dati reali.
+Nel secondo grafico sono rappresentati gli errori relativi, e come si vede che la maggior parte degli errori sono ,olto piccoli.
+
+```{r}
+summary(err)
+```
+Per essere più precisi il 75% dei dati ha un errore più piccolo del 6%, sfortunatamente l'errore più grande è del 42%.
+
+### Modello MULTIVARIATO log(TPY) ~ log(SQRFOOT) * PRO
+Facciamo adesso lo stesso studio con il secondo modello
+
+```{r}
+set.seed(69)
+
+#Divisione data set
+# 90% dei dati nel training e 10% nel test
+sample <- sample(c(TRUE, FALSE), nrow(DataNa), replace=TRUE, prob=c(0.9,0.1))
+train  <- DataNa[sample, ]
+test   <- DataNa[!sample, ]
+
+#Faccio il fit con il modello che abbiamo selezionato (che in caso si può cambiare)
+fit_train <- lm(log(TPY) ~ log(SQRFOOT) * PRO, train)
+summary(fit_train)
+```
+Guardando il summary del modello applicato solo ad una parte dei dati si ritrovno di nuovo coefficienti molto simili a quelli gia ottenuti
+
+```{r}
+#Dati predetti
+pred <- predict.lm(fit_train, test)
+
+dp <- ggplot()+
+  geom_point(aes(x = test[,'TPY'], y = exp(pred))) +
+  ggtitle("Dati predetti vs dati reali") +
+  geom_abline(intercept = 0, slope = 1, col = "red") +
+  xlab("TPY reali") +
+  ylab("TPY predetti")+
+  theme_bw()
+
+#calcolo residui
+err <- abs(test[,'TPY'] - exp(pred))
+err <- err / abs(test[,'TPY'])
+gr <- ggplot(data = test, aes(x = SQRFOOT, y = err)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 0) +
+  ggtitle("Grafico degli errori relativi") +
+  xlab("Piedi quadrati")+
+  ylab("errore relativo")+
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10))+
+  theme_bw()
+
+plot_grid(dp, gr)
+
+```
+Nel primo gafico confrontiamo i dati predetti rispetto ai dati reali del dataset test. Rispetto al modello precedente si osserva una maggiore dispersione.
+Nel secondo grafico sono rappresentati gli errori relativi che come si poteva dedurre sono più alti
+
+```{r}
+summary(err)
+```
+Per essere più precisi solo il 25% dei dati ha un errore minore del 5%. La metà dei dati ha un errore del 15%. e abbiamo errori che arrivano fino al 170%.
+
+Se andiamo a ricordare il nostro modello considerando tutti i dati ricordiamo che la precentuale di dati spiegati è 68.96%.
+```{r}
+quantile(err, 0.6896)
+```
+E l'errore relativo a quel quantile è del 23%. Quindi concludiamo che l'errore relativo della nostra predizione sulla percentuale di dati che il nostro modello prometteva di spiegare è al massimo del 23%.
 
 
 ## Clustering
