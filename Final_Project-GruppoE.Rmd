@@ -686,7 +686,7 @@ La verifica avviene costruendo i due modelli che abbiamo ricavato sfruttando le 
 
 ### Modello regressione semplice TPY ~ NUMBED - 1
 
-```{r}
+```{r echo=FALSE}
 set.seed(69)
 
 #Divisione data set
@@ -701,7 +701,7 @@ summary(fit_train)
 ```
 Guardando il summary del modello applicato solo ad una parte dei dati si ritrova un risultato molto simile
 
-```{r}
+```{r echo=FALSE}
 #Dati predetti
 pred <- predict.lm(fit_train, test)
 
@@ -729,9 +729,12 @@ plot_grid(dp, gr)
 
 ```
 Nel primo gafico confrontiamo i dati predetti rispetto ai dati reali del dataset test. Come si vede si avvicinano molto alla bisettrice del primo quadrante in rosso, ciò significa che i dati predetti si assomigliano molto ai dati reali.
-Nel secondo grafico sono rappresentati gli errori relativi, e come si vede che la maggior parte degli errori sono ,olto piccoli.
+Nel secondo grafico sono rappresentati gli errori relativi, e come si vede che la maggior parte degli errori sono ,molto piccoli.
 
-```{r}
+Formula errore relativo
+$$ err_{rel} = \frac{|x_{vero} - x_{pred}|}{|x_{vero}|}$$
+
+```{recho=FALSE}
 summary(err)
 ```
 Per essere più precisi il 75% dei dati ha un errore più piccolo del 6%, sfortunatamente l'errore più grande è del 42%.
@@ -739,7 +742,7 @@ Per essere più precisi il 75% dei dati ha un errore più piccolo del 6%, sfortu
 ### Modello MULTIVARIATO log(TPY) ~ log(SQRFOOT) * PRO
 Facciamo adesso lo stesso studio con il secondo modello
 
-```{r}
+```{r echo=FALSE}
 set.seed(69)
 
 #Divisione data set
@@ -754,7 +757,7 @@ summary(fit_train)
 ```
 Guardando il summary del modello applicato solo ad una parte dei dati si ritrovno di nuovo coefficienti molto simili a quelli gia ottenuti
 
-```{r}
+```{r echo=FALSE}
 #Dati predetti
 pred <- predict.lm(fit_train, test)
 
@@ -784,17 +787,19 @@ plot_grid(dp, gr)
 Nel primo gafico confrontiamo i dati predetti rispetto ai dati reali del dataset test. Rispetto al modello precedente si osserva una maggiore dispersione.
 Nel secondo grafico sono rappresentati gli errori relativi che come si poteva dedurre sono più alti
 
-```{r}
+```{r echo=FALSE}
 summary(err)
 ```
 Per essere più precisi solo il 25% dei dati ha un errore minore del 5%. La metà dei dati ha un errore del 15%. e abbiamo errori che arrivano fino al 170%.
 
 Se andiamo a ricordare il nostro modello considerando tutti i dati ricordiamo che la precentuale di dati spiegati è 68.96%.
-```{r}
+```{r echo=FALSE}
 quantile(err, 0.6896)
 ```
 E l'errore relativo a quel quantile è del 23%. Quindi concludiamo che l'errore relativo della nostra predizione sulla percentuale di dati che il nostro modello prometteva di spiegare è al massimo del 23%.
 
+### Ripetuta train- test
+La divisione del data-set fra quello di train e di test è casuale, quindi per controllare che non siamo stati fortunati nel caso che abbiamo studiato andremo a ripetere il processo 
 
 ## Clustering
 
