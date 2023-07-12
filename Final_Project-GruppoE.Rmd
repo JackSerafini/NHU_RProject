@@ -1262,16 +1262,24 @@ ggplot(na.omit(Data), aes(x = SQRFOOT, y = NUMBED, col = factor(km.ns$cluster)))
 Vediamo come si distribuisce TPY rispetto a questi cluster
 
 ```{r, echo = F}
-ggplot(DataNa, aes(x = factor(km.ns$cluster), y = TPY, fill = factor(km.ns$cluster))) +
+g1 <- ggplot(DataNa, aes(x = factor(km.ns$cluster), y = TPY, fill = factor(km.ns$cluster))) +
   geom_boxplot() +
   theme_bw() +
   theme(legend.position = "") +
   scale_fill_manual(values = heat.colors(3)) +
   labs(x = "")
+g2 <- ggplot(DataNa, aes(x = TPY, fill = factor(km.ns$cluster))) +
+  geom_histogram(bins = 20, col = "black") +
+  theme_bw() +
+  theme(legend.position = "") +
+  scale_fill_manual(values = heat.colors(3)) +
+  labs(x = "", y = "frequenza assoluta")
+plot_grid(g1, g2,
+          nrow = 1)
 ```
 
 
 ## Conclusioni
 
-Per concludere, dalla nostra analisi della regressione lineare con la variabile *TPY* come variabile di risposta abbiamo potuto osservare come ovviamente il modello *TPY* ~ *NUMBED* senza tenere conto dell'intercetta sia il modello più affidabile, con una aderenza dei dati al modello del circa 99%. Nonostante ciò, abbiamo comunque deciso di analizzare l'altro modello, composto da *TPY* ~ *SQRFOOT* * *PRO*, il quale, nononostante peggiore rispetto al primo, era comunque soddisfacente.    
+Per concludere, dalla nostra analisi della regressione lineare con la variabile *TPY* come variabile di risposta abbiamo potuto osservare come ovviamente il modello *TPY* ~ *NUMBED* senza tenere conto dell'intercetta sia il modello più affidabile, con una aderenza dei dati al modello del circa 99%. Nonostante ciò, abbiamo comunque deciso di analizzare l'altro modello, composto da *log(TPY)* ~ *log(SQRFOOT)* * *PRO*, il quale, nononostante peggiore rispetto al primo, era comunque soddisfacente.    
 Quindi, si capisce come, grazie anche all'analisi di raggruppamento, il numero di pazienti annui, o *TPY*, cresca linearmente rispetto alla grandezza di un ospedale, grandezza ovviamente legata anche al numero di posti letto presenti.
