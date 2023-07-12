@@ -1186,17 +1186,7 @@ plot_grid(s12,
 
 Si osservano in rosso i punti che appartengono a due cluster diversi a seconda del tipo di clustering adottato, in grigio i centroidi dei cluster ottenuti utilizzando tutte e tre le variabili.
 
-Visualizziamo le varianze within e between dei tre metodi:
-
-```{r, echo = F}
-km.numbed$tot.withinss 
-km.numbed$betweenss
-km.sqrfoot$tot.withinss 
-km.sqrfoot$betweenss
-km.quant$tot.withinss 
-km.quant$betweenss
-```
- 
+Visualizziamo le varianze within e between dei tre metodi, ed osserviamo che il metodo che utilizza esclusivamente SQRFOOT ha varianza within minore in favore di una varianza between maggiore.
 Visti i risultati, scegliamo di proseguire con il clustering utilizzando soltanto le variabili *TPY* e *SQRFOOT*.
 Vediamo qual è il numero migliore di cluster in cui dividere il dataset:
 
