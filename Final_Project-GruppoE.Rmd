@@ -1098,7 +1098,7 @@ table(km.quant$cluster)
 
 Le tre tabelle indicano le numerosità dei due cluster rispettivamente per il raggruppamento con *NUMBED*, *SQRFOOT* e entrambe.
 
-Visualizziamo graficamente le differenze riscontrate tra il clustering bivariato e quello con tutte e tre le variabili quantitative.
+Visualizziamo graficamente le differenze riscontrate tra il clustering bivariato e quello con tutte e tre le variabili quantitative:
 
 ```{r, echo = F}
 
