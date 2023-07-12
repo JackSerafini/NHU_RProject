@@ -2,7 +2,7 @@
 #### Giacomo Serafini, Enrico Guerriero, Leonardo Marsich, Gilberto Bran
 
 ## Data Set
-Il dataset *WiscNursingHome* racchiude le informazioni riguardo diverse centinaia di case di riposo, informazioni che poi saranno utilizzate per capire come si relaziona il numero di pazienti rispetto alle caratteristiche della struttura.   
+Il dataset *WiscNursingHome* contiene le informazioni di più di 350 case di riposo, che verranno utilizzate per capire come si relaziona il numero di pazienti rispetto alle caratteristiche della struttura.   
 Nel dataset sono presenti 12 variabili:
 
 * *hospID*: l'ID rappresentativo della singola struttura (quantitativa)
@@ -11,11 +11,11 @@ Nel dataset sono presenti 12 variabili:
 * *NUMBED*: il numero di letti (quantitativa)
 * *SQRFOOT*: il numero di piedi quadrati della struttura (quantitativa)
 * *MSA*: codice dell'area statistica metropolitana (area divisa in 13 zone, più lo 0 se rurale) (categoriale)
-* *URBAN*: 1 se urbana, O se rurale (categoriale)
+* *URBAN*: 1 se urbana, 0 se rurale (categoriale)
 * *PRO*: 0 se non-profit, 1 altrimenti (categoriale)
-* *TAXEXEMPT*: 1 se esente dalle tasse (categoriale)
-* *SELFFUNDINS*: 1 se autofinanziato per l'assicurazione (categoriale)
-* *MCERT*: 1 se certificato Medicare (categoriale)
+* *TAXEXEMPT*: 1 se esente dalle tasse, 0 altrimenti (categoriale)
+* *SELFFUNDINS*: 1 se autofinanziato per l'assicurazione, 0 altrimenti (categoriale)
+* *MCERT*: 1 se certificato Medicare, 0 altrimenti (categoriale)
 * *ORGSTR*: 1 se con finalità di lucro, 2 se esente dalle tasse, 3 se unità governativa (categoriale)
 
 L'obiettivo della nostra analisi sarà quindi quello di capire come le varie caratteristiche di una casa di riposo sono tra loro collegate (se collegate in alcun modo), per poter così capire quali sono le principali peculiarità di una struttura che portano ad avere un numero maggiore di pazienti.
