@@ -1229,3 +1229,35 @@ ggplot(na.omit(Data), aes(x = SQRFOOT, y = TPY, col = factor(km.sqrfoot$cluster)
   scale_color_manual(values = heat.colors(3))
 ```
 
+
+#### Clustering alternativo
+
+Un altro possibile approccio per il clustering può essere non includere la variabile TPY e vedere come si comporta nei vari cluster.
+Costruiamo nuovamente i cluster con il metodo delle k-medie con 3 centroidi.
+Stavolta utilizziamo le variabili NUMBED e SQRFOOT, costruendo le matrici delle distanze con la distanza euclidea.
+Seguono le numerosità nei 3 cluster e la rappresentazione grafica:
+```{r echo = F}
+dist.ns <- daisy(scale(DataNa[,c("NUMBED", "SQRFOOT")]))
+km.ns <- kmeans(scale(DataNa[,c("NUMBED", "SQRFOOT")]), centers = 3)
+table(km.ns$cluster)
+data.centers.ns <- data.frame(SQRFOOT = km.ns$centers[,1]*sd(na.omit(Data$SQRFOOT))+mean(na.omit(Data$SQRFOOT)),
+                                   NUMBED = km.ns$centers[,2]*sd(Data$NUMBED)+mean(Data$NUMBED))
+ggplot(na.omit(Data), aes(x = SQRFOOT, y = NUMBED, col = factor(km.ns$cluster))) +
+  geom_point() + 
+  theme_bw() +
+  theme(legend.position = "") +
+  geom_point(data = data.centers.ns, aes(x = SQRFOOT, y = NUMBED), col = "black") +
+  scale_color_manual(values = heat.colors(3))
+```
+
+Vediamo come si distribuisce TPY rispetto a questi cluster
+
+```{r, echo = F}
+ggplot(DataNa, aes(x = factor(km.ns$cluster), y = TPY, fill = factor(km.ns$cluster))) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(legend.position = "") +
+  scale_fill_manual(values = heat.colors(3)) +
+  labs(x = "")
+```
+
