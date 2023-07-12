@@ -577,6 +577,8 @@ Nel summary possiamo poi individuare l'intercetta e il coefficiente angolare: l'
 Sull'intercetta si può fare un'ulteriore considerazione: lo standard error è 0.6925, quasi quanto l'intercetta; risulta infatti, dal test del t-value, che l'ipotesi nulla che il coefficiente sia nullo non può essere rifiutata.
 Infine, studiando la statistica $R^2$, possiamo vedere un valore pari a 0.9678, il quale suggerisce un'aderenza del modello ai dati molto alta, quasi totale, circa del 97%.
 
+#### Costruzione del Modello TPY ~ NUMBED senza intercetta
+
 Ora proviamo a costruire il modello senza intercetta, così da stabilire se possa essere migliore:
 
 ```{r, echo=FALSE}
@@ -658,18 +660,20 @@ Per quanto riguarda le variabili dicotomiche, i due modelli migliori sono quelli
 fit_SQR_PRO <- lm(log(TPY) ~ log(SQRFOOT)*PRO, DataNa)
 summary(fit_SQR_PRO)
 ```
+
 La varianza dei residui è molta bassa, la mediana è molto vicino allo zero. Tutti i coefficienti sono molto significativi e l'$R^2$ è 0.6896, migliorato rispetto a quello ottenuto precedentemente ovvero 0.6751.
 
 ```{r echo=FALSE}
 fit_SQR_TAX <- lm(log(TPY) ~ log(SQRFOOT)*TAXEXEMPT, DataNa)
 summary(fit_SQR_TAX)
 ```
-Anche qui la varianza è molto bassa, simmetrica rispetto allo zero. Tutti i coefficienti sono molto significativi, a parte TAXEXEMPT1. L'$R^2$ è 0.6866, migliorato rispetto a quello ottenuto precedentemente ovvero 0.6751.
+
+Anche qui la varianza è molto bassa, simmetrica rispetto allo zero. Tutti i coefficienti sono molto significativi, a parte *TAXEXEMPT1*. L'$R^2$ è 0.6866, migliorato rispetto a quello ottenuto precedentemente ovvero 0.6751.
 
 Anche graficamente sembrano funzionare:
 
 * Modello con *PRO*    
-In blu sono rappresentati i punti (e la relativa retta di regressione) per PRO = 0, in rosso i punti e la relativa retta per PRO = 1.    
+In blu sono rappresentati i punti (e la relativa retta di regressione) per *PRO* = 0, in rosso i punti e la relativa retta per *PRO* = 1.    
 
 ```{r echo=FALSE}
 p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
@@ -682,11 +686,12 @@ p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
   scale_color_manual(values = c("blue", "red"))
 resiplot(fit_SQR_PRO, p)
 ```
-Dai gafici dei residui si può afermare che l'omeschedasticità, la notmalità sono rispettati.
+
+Dai grafici dei residui si può affermare che l'omoschedasticità e la normalità sono rispettate.
 
 
 * Modello con *TAXEXEMPT*
-In blu sono rappresentati i punti (e la relativa retta di regressione) per TAXEXEMPT = 0, in rosso i punti e la retta per TAXEXEMPT = 1.
+In blu sono rappresentati i punti (e la relativa retta di regressione) per *TAXEXEMPT* = 0, in rosso i punti e la retta per *TAXEXEMPT* = 1.
 
 ```{r echo=FALSE}
 p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = TAXEXEMPT)) +
@@ -700,7 +705,7 @@ p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = TAXEXEMPT))
 resiplot(fit_SQR_TAX, p)
 ```
 
-Dai gafici dei residui si può afermare che l'omeschedasticità, la notmalità sono rispettati.
+Dai grafici dei residui si può affermare che l'omoschedasticità e la normalità sono rispettate.
 
 Si osserva come entrambe le versioni siano molto valide, sembra quindi immediato pensare che il modello con la variabile ORGSTR sia ancora più valido, in quanto *ORGSTR* "unione" di *PRO* e *TAXEXEMPT* (vale 1 se "profit", 2 se "tax exempt" e 3 se "governmental unit"); tuttavia, risulta invece non significativa la differenza tra profit e governmental unit, sia per quanto riguarda l'intercetta sia per quanto riguarda l'interazione moltiplicativa.
 
@@ -769,6 +774,7 @@ Formula errore relativo
 $$ err_{rel} = \frac{|x_{vero} - x_{pred}|}{|x_{vero}|}$$
 
 *Summary Errori*
+
 ```{r echo=FALSE}
 quantile(err, probs = seq(0,1,0.1))
 ```
@@ -796,10 +802,13 @@ summary(fit_train)
 Guardando il summary del modello applicato solo ad una parte dei dati si ritrovano di nuovo coefficienti molto simili a quelli gia ottenuti: 
 
 * *Coefficienti modello ottenuto con la completezza dei dati*
+
 ```{r echo=FALSE}
 coef(fit_SQR_PRO)
 ```
+
 * *Coefficienti ottenuti con il dataset train*
+
 ```{r echo=FALSE}
 coef(fit_train)
 ```
@@ -1204,7 +1213,7 @@ ggplot(clsdb, aes(index, crit.s)) +
   theme_bw()
 ```
 
-A giudicare dal grafico, rappresentante la varianza between rispetto ai centroidi ottenuti aumentando il numero di centroidi, sembra essere una buona idea provare ad effettuare del clustering utilizzando 3 centroidi.
+A giudicare dal grafico rappresentante la varianza between rispetto ai centroidi ottenuti aumentando il numero di centroidi, sembra essere una buona idea provare ad effettuare del clustering utilizzando 3 centroidi.
 
 ```{r echo = F}
 km.sqrfoot <- kmeans(scale(na.omit(Data[,c("SQRFOOT", "TPY")])), centers = 3)
