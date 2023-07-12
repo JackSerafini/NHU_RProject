@@ -620,7 +620,7 @@ summary(fit_SQRFOOT)
 Studiando i residui dal summary, si può vedere questi si dispongano simmetricamente rispetto lo zero, nonostante fra il minimo ed il massimo ci sia una differenza di 240, molto maggiore rispetto al range interquartilico e alla distanza riscontrata nel modello *TPY* ~ *NUMBED*.
 La mediana si dispone comunque vicino allo 0, ed il primo ed il terzo quartile valgono rispettivamente -15.391 e 15.615, oltre ad essere assolutamente simmetrici, ci dicono anche che la metà dei valori si troverà proprio in questo intervallo.    
 In questo modello l'intercetta vale 33.5475 mentre il coefficiente angolare è pari a 1.1179 (molto vicino a 1, quindi circa per ogni piede quadrato c'è un paziente in più). 
-Infine, l'R^2 risulta pari a 0.6756, quindi abbiamo un'aderenza del modello di circa il 68%, quindi di nuovo alta nonostante minore rispetto a quella del modello precedente.
+Infine, l'$R^2$ risulta pari a 0.6756, quindi abbiamo un'aderenza del modello di circa il 68%, quindi di nuovo alta nonostante minore rispetto a quella del modello precedente.
 La retta di regressione lineare risulta essere:
 $$TPY = 33.54754 + 1.11786 \times SQRFOOT$$
 Questo modello risulta comunque peggiore di quello con *NUMBED*.
@@ -684,6 +684,8 @@ Per maggiore significatività dei coefficienti e leggera superiorità in $R^2$ s
 Per verificare la bontà dei due modelli individuati, si divide il dataset in due sottoinsiemi (casuali) composti l'uno dall'90% (Train Set) dei dati, l'altro dal restante 10% (Test Set).
 La verifica avviene costruendo i due modelli che abbiamo ricavato sfruttando le osservazioni del Train Set, e poi utilizzarle per stimare le osservazioni nel Test Set.
 
+Andremo prima ad analizzare una suddivisione specifica per ogni modello, e poi ripeteremo lo studio in maniera più aprossimato 100 volte.
+
 ### Modello regressione semplice TPY ~ NUMBED - 1
 
 ```{r echo=FALSE}
@@ -700,7 +702,11 @@ fit_train <- lm(TPY ~ NUMBED - 1, train)
 summary(fit_train)
 ```
 
-Guardando il summary del modello applicato solo ad una parte dei dati si ritrova un risultato molto simile
+Guardando il summary del modello applicato solo ad una parte dei dati si ritrova un risultato molto simile.
+*Modello consideranto la completezza dei dati*
+$$TPY = 0.920075\times NUMBED$$
+*Modello consideranto il data set train*
+$$TPY = 0.918973\times NUMBED$$
 
 ```{r echo=FALSE}
 #Dati predetti
@@ -718,8 +724,8 @@ dp <- ggplot()+
 err <- abs(test[,'TPY'] - pred)
 err <- err / abs(test[,'TPY'])
 gr <- ggplot(data = test, aes(x = NUMBED, y = err)) +
+  geom_abline(intercept = 0, slope = 0, col = "gray40") +
   geom_point() +
-  geom_abline(intercept = 0, slope = 0) +
   ggtitle("Grafico degli errori relativi") +
   xlab("Posti letto")+
   ylab("errore relativo")+
@@ -735,11 +741,14 @@ Nel secondo grafico sono rappresentati gli errori relativi, e come si vede che l
 Formula errore relativo
 $$ err_{rel} = \frac{|x_{vero} - x_{pred}|}{|x_{vero}|}$$
 
+*Summary Errori*
 ```{r echo=FALSE}
-summary(err)
+quantile(err, probs = seq(0,1,0.1))
 ```
 
-Per essere più precisi il 75% dei dati ha un errore più piccolo del 6%, sfortunatamente l'errore più grande è del 42%.
+Per essere più precisi il 90% dei dati ha un errore più piccolo del 10%, sfortunatamente l'errore più grande è del 42%.
+
+
 
 ### Modello MULTIVARIATO log(TPY) ~ log(SQRFOOT) * PRO
 Facciamo adesso lo stesso studio con il secondo modello
@@ -758,7 +767,16 @@ fit_train <- lm(log(TPY) ~ log(SQRFOOT) * PRO, train)
 summary(fit_train)
 ```
 
-Guardando il summary del modello applicato solo ad una parte dei dati si ritrovno di nuovo coefficienti molto simili a quelli gia ottenuti
+Guardando il summary del modello applicato solo ad una parte dei dati si ritrovno di nuovo coefficienti molto simili a quelli gia ottenuti.
+*Coefficienti modello ottenuto con la completezza dei dati*
+```{r}
+coef(fit_SQR_PRO)
+```
+*Coefficienti ottenuti con il dataset train*
+```{r}
+coef(fit_train)
+```
+
 
 ```{r echo=FALSE}
 #Dati predetti
@@ -791,10 +809,10 @@ Nel primo gafico confrontiamo i dati predetti rispetto ai dati reali del dataset
 Nel secondo grafico sono rappresentati gli errori relativi che come si poteva dedurre sono più alti.
 
 ```{r echo=FALSE}
-summary(err)
+quantile(err, probs = seq(0,1,0.1))
 ```
 
-Per essere più precisi solo il 25% dei dati ha un errore minore del 5%. La metà dei dati ha un errore del 15%. e abbiamo errori che arrivano fino al 170%.
+In questo caso il 40% dei dati ha un errore relativo più piccolo del 10%. il 90% dei dati ha un errore più piccolo del 52%. In questo caso l'errore arriva anche al 170%.
 
 Se andiamo a ricordare il nostro modello considerando tutti i dati ricordiamo che la precentuale di dati spiegati è 68.96%.
 
@@ -802,10 +820,10 @@ Se andiamo a ricordare il nostro modello considerando tutti i dati ricordiamo ch
 quantile(err, 0.6896)
 ```
 
-E l'errore relativo a quel quantile è del 23%. Quindi concludiamo che l'errore relativo della nostra predizione sulla percentuale di dati che il nostro modello prometteva di spiegare è al massimo del 23%.
+E l'errore relativo a quel quantile è minore del 24%. Quindi concludiamo che l'errore relativo della nostra predizione sulla percentuale di dati che il nostro modello prometteva di spiegare è al massimo del 24%.
 
 ### Esecuzione ripetuta del proceso train-test
-La divisione del data-set fra quello di train e di test è casuale, quindi per controllare che non siamo stati fortunati nel caso che abbiamo studiato andremo a ripetere il processo 100 volte ed analizzare i risultati attraverso l'R^2 la varianza sui residui e l'errore relativo sui residui.
+La divisione del data-set fra quello di train e di test è casuale, quindi per controllare che non siamo stati fortunati nel caso che abbiamo studiato andremo a ripetere il processo 100 volte ed analizzare i risultati attraverso l'$R^2$ la varianza sui residui, l'errore relativo sui residui e i coefficienti ottenuti.
 
 #### regressione semplice *TPY* ~ *NUMBED* - 1
 
@@ -840,11 +858,13 @@ for (i in 1:niter){
   #devianza della regression
   ssr <- sum((pred - m)^2)
   
+  
   #Calcolo dell'r quadro
-  r1 <- (ssr / sst)
+  #r1 <- (ssr / sst)
   r2 <- (1 - sse / sst)
-  r[1, i] <-  r1
+  #r[1, i] <-  r1
   r[2, i] <-  r2
+  r[1,i] <- coef(fit_train)
   
   #salvo i residui
   e[1, i] <- sse / length(res)
@@ -863,26 +883,12 @@ r21 <- ggplot(data = NULL, aes(y = r[1,])) +
 
 r22 <- ggplot(data = NULL, aes(x = r[2,])) +
   geom_boxplot() +
-  xlab("R^2")+
   scale_x_continuous(breaks = scales::pretty_breaks(n = 12, bounds = FALSE))+
-  theme_bw()
-
-r22
-```
-
-
-Per calcolare R^2 abbiamo usato la seguente formula
-$$R^2 = 1 - \frac{dev_{res}} {dev_{tot}}$$
-Come si può notare dal gradico la maggior parte dei dati si avvicina all'R^2 calcolato nel modello che considera la completezza dei dati, ovvero 0.9929.
-
-```{r echo=FALSE}
-rd <- ggplot(data = NULL, aes(e[1,])) +
-  geom_boxplot()+
-  ggtitle("Distribuzione varianze dei residui")+
+  ggtitle("Distribuzione R^2")+
+  xlab("")+
+  geom_vline(xintercept = 0.9929, col = "gold3")+
   theme_bw()+
-  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())+
-  scale_x_continuous(breaks = scales::pretty_breaks(n = 12, bounds = FALSE))
-  
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())
 
 rer <- ggplot(data = NULL, aes(x = e[2,]))+
   geom_boxplot() +
@@ -891,14 +897,30 @@ rer <- ggplot(data = NULL, aes(x = e[2,]))+
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())+
   scale_x_continuous(breaks = scales::pretty_breaks(n = 7, bounds = FALSE))
 
-plot_grid(rd, rer)
+plot_grid(r22, rer)
 ```
 
-Dal grafico si può notare che in media gli errori relativi sono molto piccoli, quasi tutti più piccoli del 10%.
-(((Non so bene valutare la varianza dei residui)))
+
+Per calcolare $R^2$ abbiamo usato la seguente formula
+$$R^2 = 1 - \frac{dev_{res}} {dev_{tot}}$$
+Come si può notare dal gradico la maggior parte dei dati si avvicina all'$R^2$ calcolato nel modello che considera la completezza dei dati, ovvero 0.9929.
+
+Dal grafico degli errori si può notare che in media gli errori relativi sono molto piccoli, quasi tutti più piccoli del 10%.
+
+```{r echo=FALSE}
+ggplot(data = NULL, aes(x = r[1,]))+
+  geom_boxplot( col = "black", fill = "blue", alpha = 0.5)+
+  theme_bw()+
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())+
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 15, bounds = FALSE))+
+  geom_vline(xintercept = 0.920075, col = "gold3", linewidth = 1)+
+  ggtitle("Disrtibuzione dei coefficienti ottenuti")
+
+```
+In giallo è segnato il coefficiente della regrassione consederando l'interezza dei dati.
 
 
-#### secondo modello
+#### Modello MULTIVARIATO log(TPY) ~ log(SQRFOOT) * PRO
 
 ```{r echo = F}
 #Facciamo un ciclo for nel quale separiamo più volte il data set in test e train
@@ -924,7 +946,7 @@ for (i in 1:niter){
   res <- test[,'TPY'] - exp(pred)
   #media dati
   m <- mean(test[,'TPY'])
-  # Residui totali
+  # Devianza totale
   sst <- sum((test[,'TPY'] - m)^2)
   #calcolo devianza dei residui
   sse <- sum(res^2)
@@ -963,7 +985,7 @@ r22 <- ggplot(data = NULL, aes(x = r[2,])) +
 r22
 ```
 
-Ricordiamo che l'R^2 ottenuto in precedenza è 0.6896, e possiamo andare a notare che la nostra distribuzione si avvicina molto a quel valore.
+Ricordiamo che l'$R^2$ ottenuto in precedenza è 0.6896, e possiamo andare a notare che la nostra distribuzione si avvicina molto a quel valore.
 
 ```{r echo=FALSE}
 rd <- ggplot(data = NULL, aes(e[1,])) +
