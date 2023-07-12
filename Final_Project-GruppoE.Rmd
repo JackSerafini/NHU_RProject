@@ -178,11 +178,20 @@ plot_grid(title,
 
 Iniziamo a vedere le variabili esplicative quantitative, quindi *NUMBED* e *SQRFOOT*.
 
-```{r, include = T, echo = F}
-"Summary NUMBED"
+* Summary NUMBED
+
+```{r}
 summary((Data$NUMBED))
-"Summary SQRFOOT"
+```
+
+* Sumamry SQRFOOT
+
+```{r}
 summary((Data$SQRFOOT))
+```
+
+
+```{r, include = T, echo = F}
 c1 <- ggplot(data = Data, aes(y = NUMBED)) +
   geom_boxplot(fill = "yellow") +
   theme_bw() +
