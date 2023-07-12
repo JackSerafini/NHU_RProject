@@ -1062,7 +1062,7 @@ p4 <- ggplot(data = NULL, aes(x = c[4,]))+
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())+
   scale_x_continuous(breaks = scales::pretty_breaks(n = 15, bounds = FALSE))+
   geom_vline(xintercept = coef(fit_SQR_PRO)[4], col = "gold3", linewidth = 1)+
-  ggtitle(names(coef(fit_SQR_PRO)[3]))
+  ggtitle("PRO1 * LOG(SQRFOOT)")
 
 plot_grid(p1, p2,
           p3, p4)
