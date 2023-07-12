@@ -646,7 +646,7 @@ Dallo scatterplot si può nuovamente osservare una relazione pressochè lineare 
 Per quanto riguarda il grafico Valori Fittati vs Residui, si può subito vedere come questo modello sia peggiore per quanto riguarda la linearità e l'omoschedasticità.    
 Analizzando infine la normalità, si nota come questo modello sia migliore rispetto al precedente rispetto al modello precedente.
 
-### Regressione Lineare Multipla con Variabili Categoriche    
+## Regressione Lineare Multipla con Variabili Categoriche    
 
 Per costruire un modello di regressione multipla abbiamo provato ad aggiungere una variabile qualitativa ai modelli ottenuti precedentemente; non è stato preso in considerazione il modello che tiene conto sia di *NUMBED* sia di *SQRFOOT*, poiché le due variabili sono fortemente correlate e potrebbero generare effetti di multicollinearità.
 
