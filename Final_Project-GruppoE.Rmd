@@ -392,9 +392,9 @@ plot_grid(title1, sc1, sc2,
 Si può subito vedere come ci sia una correlazione quasi totale tra il *TPY* (totale patienti annui) e il *NUMBED* (numero di letti). Inoltre, si può osservare anche un'alta correlazione positiva tra il totale pazienti annui e i piedi quadrati della struttura (*SQRFOOT*), così come tra i piedi quadrati della struttura e il numero di letti. Ciò suggerisce che tutte queste variabili possano essere legate tra loro da una relazione lineare.
 
 
-## Variabili Categoriali
+## Variabili Categoriche
 
-Ora segue anche una breve analisi delle variabili categoriali, in primo luogo delle loro distribuzioni di frequenza.
+Ora segue anche una breve analisi delle variabili categoriche, in primo luogo delle loro distribuzioni di frequenza.
 
 ```{r echo=FALSE}
 p1 <- ggplot(data = Data, aes(x = CRYEAR, fill = CRYEAR)) +
@@ -596,7 +596,7 @@ p <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
    xlab("NUMBED") +
    ylab("TPY") +
    geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red") +
-  geom_point(aes(x = Data[564,'NUMBED'], y = Data[564,'TPY']), colour = "red", size = 1)
+   geom_point(aes(x = Data[564,'NUMBED'], y = Data[564,'TPY']), colour = "red", size = 1)
 resiplot(fit_NUMBED, p)
 ```
 
@@ -623,8 +623,24 @@ In questo modello l'intercetta vale 33.5475 mentre il coefficiente angolare è p
 Infine, l'$R^2$ risulta pari a 0.6756, quindi abbiamo un'aderenza del modello di circa il 68%, quindi di nuovo alta nonostante minore rispetto a quella del modello precedente.
 La retta di regressione lineare risulta essere:
 $$TPY = 33.54754 + 1.11786 \times SQRFOOT$$
-Questo modello risulta comunque peggiore di quello con *NUMBED*.
-C'è però da considerare che, nel caso di *SQRFOOT*, il modello migliora qualora si effettui una trasformazione logaritmica della variabile risposta e della variabile esplicativa, ma verrà ripreso in seguito.
+Questo modello risulta comunque peggiore di quello con *NUMBED*. C'è però da considerare che, nel caso di *SQRFOOT*, il modello migliora qualora si effettui una trasformazione logaritmica della variabile risposta e della variabile esplicativa, ma verrà ripreso in seguito.
+
+Studiamo adesso i grafici della regressione e dei residui:
+
+```{r echo=FALSE}
+p <- ggplot(data = DataNa, aes(x = SQRFOOT, y = TPY)) +
+   geom_point(shape=1) +
+   theme_bw() +
+   xlab("SQRFOOT") +
+   ylab("TPY") +
+   geom_smooth(se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red") +
+   geom_point(aes(x = Data[564,'SQRFOOT'], y = Data[564,'TPY']), colour = "red", size = 1)  +
+   geom_point(aes(x = Data[200,'SQRFOOT'], y = Data[200,'TPY']), colour = "red", size = 1)  +
+   geom_point(aes(x = Data[557,'SQRFOOT'], y = Data[557,'TPY']), colour = "red", size = 1)  
+resiplot(fit_SQRFOOT, p)
+```
+
+#### Manca l'analisi del plot!!
 
 
 ### Regressione Lineare Multipla con Variabili Categoriche    
