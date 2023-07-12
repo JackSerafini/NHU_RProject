@@ -606,8 +606,8 @@ Dallo scatterplot dato dalla relazione tra *TPY* come variabile risposta e *NUMB
 Dal grafico dei Residuals vs Fitted si può notare come, nonostante siano presenti degli outliers al di sotto della curva di regressione, i residui si dispongono in maniera per lo più simmetrica, suggerendo la linearità del modello.
 Anche l'omoschedasticità sembra essere soddisfatta, a meno di una varianza leggermente minore per gli ospedali con meno persone, ma poi sembra stabilizzarsi.    
 Gli altri due grafici, invece, non ci permettono di affermare lo stesso per quanto riguarda la gaussianità; infatti le code sono molto più pesanti di una normale, specialmente la coda inferiore.
-Tuttavia il modello è comunque più che accettabile, nonostante la non-normalità dei residui.    
-Eventuali trasformazioni per rendere i residui gaussiani rendono il modello maggiormente eteroschedastico, quindi le rifiutiamo a favore di un modello più omoschedastico e facile da interpretare.
+Il modello, tuttavia, è comunque più che accettabile, nonostante la non-normalità dei residui.    
+Eventuali trasformazioni per rendere i residui gaussiani rendono il modello maggiormente eteroschedastico, quindi le rifiutiamo in favore di un modello più omoschedastico e facile da interpretare.
 
 
 ### Costruzione del Modello TPY ~ SQRFOOT
