@@ -1273,4 +1273,5 @@ ggplot(DataNa, aes(x = factor(km.ns$cluster), y = TPY, fill = factor(km.ns$clust
 
 ## Conclusioni
 
-Per concludere, dalla nostra analisi si capisce come???
+Per concludere, dalla nostra analisi della regressione lineare con la variabile *TPY* come variabile di risposta abbiamo potuto osservare come ovviamente il modello *TPY* ~ *NUMBED* senza tenere conto dell'intercetta sia il modello più affidabile, con una aderenza dei dati al modello del circa 99%. Nonostante ciò, abbiamo comunque deciso di analizzare l'altro modello, composto da *TPY* ~ *SQRFOOT* * *PRO*, il quale, nononostante peggiore rispetto al primo, era comunque soddisfacente.    
+Quindi, si capisce come, grazie anche all'analisi di raggruppamento, il numero di pazienti annui, o *TPY*, cresca linearmente rispetto alla grandezza di un ospedale, grandezza ovviamente legata anche al numero di posti letto presenti.
