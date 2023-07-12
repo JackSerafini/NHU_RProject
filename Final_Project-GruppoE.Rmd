@@ -18,7 +18,7 @@ Nel dataset sono presenti 12 variabili:
 * *MCERT*: 1 se certificato Medicare, 0 altrimenti (categoriale)
 * *ORGSTR*: 1 se con finalità di lucro, 2 se esente dalle tasse, 3 se unità governativa (categoriale)
 
-L'obiettivo della nostra analisi sarà quindi quello di capire come le varie caratteristiche di una casa di riposo sono tra loro collegate (se collegate in alcun modo), per poter così capire quali sono le principali peculiarità di una struttura che portano ad avere un numero maggiore di pazienti.
+L'obiettivo della nostra analisi è di capire come le caratteristiche di una casa di riposo sono tra loro collegate (se collegate in alcun modo), per comprendere quali sono le principali peculiarità di una struttura che portano ad avere un numero maggiore di pazienti.
 
 ```{r include=FALSE}
 # Richiamo delle librerie
@@ -116,8 +116,8 @@ plot_grid(title,
           rel_heights = c(0.1, 1))
 ```
 
-Si osserva un'assimetria destra nella distribuzione di *TPY*: la coda destra è molto lunga, come si vede da entrambi i grafici; inoltre, la media è superiore alla mediana.
-Ci sono trasformazioni della variabile che possono renderla simmetrica, la migliore che è stata individuata è la trasformazione logaritmica:
+Si osserva un'assimmetria destra nella distribuzione di *TPY*: la coda destra è molto lunga, come si vede da entrambi i grafici; inoltre, la media è superiore alla mediana.
+Tra le trasformazioni effettuate alla variabile che possono renderla simmetrica, la migliore che è stata individuata è la trasformazione logaritmica:
 
 ```{r, include = T, echo = F}
 summary(log(Data$TPY))
@@ -389,12 +389,12 @@ plot_grid(title1, sc1, sc2,
           nrow = 3)
 ```
 
-Si può subito vedere come ci sia una correlazione quasi totale tra il *TPY* (totale patienti annui) e il *NUMBED* (numero di letti). Inoltre, si può osservare anche un'alta correlazione positiva tra il totale pazienti annui e i piedi quadrati della struttura (*SQRFOOT*), così come tra i piedi quadrati della struttura e il numero di letti. Ciò suggerisce che tutte queste variabili possano essere legate tra loro da una relazione lineare.
+Si può subito vedere come ci sia una correlazione quasi totale tra il *TPY* (totale pazienti annui) e il *NUMBED* (numero di letti). Si può osservare ,inoltre, un'alta correlazione positiva tra il totale pazienti annui e i piedi quadrati della struttura *(SQRFOOT*), così come tra i piedi quadrati della struttura e il numero di letti. Ciò suggerisce che tutte queste variabili possano essere legate tra loro da una relazione lineare.
 
 
 ## Variabili Categoriche
 
-Ora segue anche una breve analisi delle variabili categoriche, in primo luogo delle loro distribuzioni di frequenza.
+Di seguito una breve analisi delle variabili categoriche, in primo luogo delle loro distribuzioni di frequenza.
 
 ```{r echo=FALSE}
 p1 <- ggplot(data = Data, aes(x = CRYEAR, fill = CRYEAR)) +
@@ -460,10 +460,10 @@ plot_grid(p1,p2,p3,p4,
           nrow = 2)
 ```
 
-Abbiamo deciso per quanto riguarda la variabile *MSA* di non includere graficamente le osservazioni appartenenti alla classe "0", ovvero le case di riposo poste in zone rurali, poiché già rappresentate nella variabile *URBAN*.
+Abbiamo deciso, per quanto riguarda la variabile *MSA*, di non includere graficamente le osservazioni appartenenti alla classe "0", ovvero le case di riposo poste in zone rurali, poiché già rappresentate nella variabile *URBAN*.
 
 
-Andiamo anche a studiare velocemente le distribuzioni condizionate della variabile risposta:    
+Andiamo anche a studiare le distribuzioni condizionate della variabile risposta:    
 
 ```{r echo=FALSE}
 c4 <- ggplot(data = Data, aes(x = CRYEAR, y = TPY, fill = CRYEAR)) +
@@ -572,8 +572,8 @@ fit_NUMBED <- lm(TPY ~ NUMBED, data = Data)
 summary(fit_NUMBED)
 ```
 
-Studiando i valori ritornati dal summary, si può subito vedere come questo modello sia ottimo: per quanto riguarda i residui, la mediana è molto vicina allo zero, il primo e il terzo quartile sono disposti abbastanza simmetricamente rispetto lo zero, con minimo e massimo invece non si può fare lo stesso discorso e sono molto lontani dai quartili della distribuzione.     
-Nel summary possiamo poi individuare l'intercetta e il coefficiente angolare: l'intercetta vale -0.8778 (valore vicino allo zero, il che ha senso perché nel caso di 0 letti ci si aspetta un numero di pazienti vicino allo zero) mentre il coefficiente angolare è uguale a 0.9272 (valore vicino all'1, infatti per ogni posto letto in più ci si aspetta un paziente in più).
+Studiando i valori ritornati dal summary, si può subito vedere come questo modello sia ottimo: per quanto riguarda i residui, la mediana è molto vicina allo zero, il primo e il terzo quartile sono disposti abbastanza simmetricamente rispetto lo zero. Con minimo e massimo, invece, non si può fare lo stesso discorso e sono molto lontani dai quartili della distribuzione.     
+Nel summary possiamo, poi, individuare l'intercetta e il coefficiente angolare: l'intercetta vale -0.8778 (valore vicino allo zero, il che ha senso perché nel caso di 0 letti ci si aspetta un numero di pazienti vicino allo zero) mentre il coefficiente angolare è uguale a 0.9272 (valore vicino all'1, infatti per ogni posto letto in più ci si aspetta un paziente in più).
 Sull'intercetta si può fare un'ulteriore considerazione: lo standard error è 0.6925, quasi quanto l'intercetta; risulta infatti, dal test del t-value, che l'ipotesi nulla che il coefficiente sia nullo non può essere rifiutata.
 Infine, studiando la statistica $R^2$, possiamo vedere un valore pari a 0.9678, il quale suggerisce un'aderenza del modello ai dati molto alta, quasi totale, circa del 97%.
 
