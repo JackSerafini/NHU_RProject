@@ -896,3 +896,16 @@ ggplot(na.omit(Data), aes(x = SQRFOOT, y = TPY, col = factor(km.sqrfoot$cluster)
 # Potrebbe avere senso per definire ospedali di piccole, medie e grandi dimensioni
 
 
+
+
+
+# Step aic
+
+fit <- lm(log(TPY) ~ ., DataNa[,-1])
+
+library(MASS)
+
+aicmodel <- stepAIC(fit)
+summary(aicmodel)
+
+
