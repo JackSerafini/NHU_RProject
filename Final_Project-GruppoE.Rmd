@@ -180,13 +180,13 @@ Iniziamo a vedere le variabili esplicative quantitative, quindi *NUMBED* e *SQRF
 
 * Summary NUMBED
 
-```{r}
+```{r echo=FALSE}
 summary((Data$NUMBED))
 ```
 
 * Sumamry SQRFOOT
 
-```{r}
+```{r echo=FALSE}
 summary((Data$SQRFOOT))
 ```
 
