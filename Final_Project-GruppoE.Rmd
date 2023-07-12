@@ -640,8 +640,9 @@ p <- ggplot(data = DataNa, aes(x = SQRFOOT, y = TPY)) +
 resiplot(fit_SQRFOOT, p)
 ```
 
-#### Manca l'analisi del plot!!
-
+Dallo scatterplot si può nuovamente osservare una relazione pressochè lineare nonostante peggiore rispetto al modello precedente.     
+Per quanto riguarda il grafico Valori Fittati vs Residui, si può subito vedere come questo modello sia peggiore per quanto riguarda la linearità e l'omoschedasticità.    
+Analizzando infine la normalità, si nota come questo modello sia migliore rispetto al precedente rispetto al modello precedente.
 
 ### Regressione Lineare Multipla con Variabili Categoriche    
 
