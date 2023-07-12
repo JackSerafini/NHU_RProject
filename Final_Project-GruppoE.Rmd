@@ -663,6 +663,7 @@ summary(fit_SQR_TAX)
 Anche graficamente sembrano funzionare:
 
 * Modello con *PRO*
+In blu sono rappresentati i punti (e la relativa retta di regressione) per PRO = 0, in rosso i punti e la relativa retta per PRO = 1.
 
 ```{r echo=FALSE}
 p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
@@ -670,13 +671,14 @@ p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
   theme_bw() +
   xlab("Log(SQRFOOT)") +
   ylab("Log(TPY)") +
-  geom_smooth(data = DataNa[DataNa$PRO == 0,], se = F, method = 'lm', formula = 'y ~ x', lwd = 1, col = "salmon")+
-  geom_smooth(data = DataNa[DataNa$PRO == 1,], se = F, method = 'lm', formula = 'y ~ x', lwd = 1, col = "darkgoldenrod1") +
-  scale_color_manual(values = c("salmon", "darkgoldenrod1"))
+  geom_smooth(data = DataNa[DataNa$PRO == 0,], se = F, method = 'lm', formula = 'y ~ x', lwd = 1, col = "blue")+
+  geom_smooth(data = DataNa[DataNa$PRO == 1,], se = F, method = 'lm', formula = 'y ~ x', lwd = 1, col = "red") +
+  scale_color_manual(values = c("blue", "red"))
 resiplot(fit_SQR_PRO, p)
 ```
 
 * Modello con *TAXEXEMPT*
+In blu sono rappresentati i punti (e la relativa retta di regressione) per TAXEXEMPT = 0, in rosso i punti e la retta per TAXEXEMPT = 1.
 
 ```{r echo=FALSE}
 p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = TAXEXEMPT)) +
@@ -684,9 +686,9 @@ p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = TAXEXEMPT))
   theme_bw() +
   xlab("Log(SQRFOOT)") +
   ylab("Log(TPY)") +
-  geom_smooth(data = DataNa[DataNa$TAXEXEMPT == 0,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "salmon")+
-  geom_smooth(data = DataNa[DataNa$TAXEXEMPT == 1,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "goldenrod1") +
-  scale_color_manual(values = c("salmon", "darkgoldenrod1"))
+  geom_smooth(data = DataNa[DataNa$TAXEXEMPT == 0,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "blue")+
+  geom_smooth(data = DataNa[DataNa$TAXEXEMPT == 1,], se = F, method = 'lm', formula = 'y ~ x', lwd = 0.75, col = "red") +
+  scale_color_manual(values = c("blue", "red"))
 resiplot(fit_SQR_TAX, p)
 ```
 
