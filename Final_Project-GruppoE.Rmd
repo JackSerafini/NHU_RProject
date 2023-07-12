@@ -392,9 +392,9 @@ plot_grid(title1, sc1, sc2,
 Si può subito vedere come ci sia una correlazione quasi totale tra il *TPY* (totale patienti annui) e il *NUMBED* (numero di letti). Inoltre, si può osservare anche un'alta correlazione positiva tra il totale pazienti annui e i piedi quadrati della struttura (*SQRFOOT*), così come tra i piedi quadrati della struttura e il numero di letti. Ciò suggerisce che tutte queste variabili possano essere legate tra loro da una relazione lineare.
 
 
-## Variabili Categoriche
+## Variabili Categoriali
 
-Ora segue anche una breve analisi delle variabili categoriche, in primo luogo delle loro distribuzioni di frequenza.
+Ora segue anche una breve analisi delle variabili categoriali, in primo luogo delle loro distribuzioni di frequenza.
 
 ```{r echo=FALSE}
 p1 <- ggplot(data = Data, aes(x = CRYEAR, fill = CRYEAR)) +
@@ -563,9 +563,9 @@ resiplot <- function(fit, p) {
 
 ## Regressioni Lineari Semplici per la Stima di TPY
 
-I due modelli di regressione semplice sono con le variabili NUMBED e SQRFOOT, in quanto si tratta delle uniche variabili quantitative del dataset.
+I due modelli di regressione semplice sono con le variabili *NUMBED* e *SQRFOOT*, in quanto si tratta delle uniche variabili quantitative del dataset.
 
-#### Costruzione del Modello TPY ~ NUMBED
+### Costruzione del Modello TPY ~ NUMBED
 
 ```{r echo=FALSE}
 fit_NUMBED <- lm(TPY ~ NUMBED, data = Data)
@@ -600,17 +600,17 @@ p <- ggplot(data = Data, aes(x = NUMBED, y = TPY)) +
 resiplot(fit_NUMBED, p)
 ```
 
-Dallo scatterplot dato dalla relazione tra *TPY* come variabile risposta e *NUMBED* come variabile esplicativa, si vede subito come sia presente una relazione lineare tra le due
-Analizzando i grafici, dal primo dei Residuals vs Fitted si può notare come, nonostante siano presenti degli outliers al di sotto della curva di regressione, i residui si dispongono in maniera per lo più simmetrica, suggerendo la linearità del modello.
-Anche l'omoschedasticità sembra essere soddisfatta, a meno di una varianza leggermente minore per gli ospedali con meno persone, ma poi sembra stabilizzarsi.
+Dallo scatterplot dato dalla relazione tra *TPY* come variabile risposta e *NUMBED* come variabile esplicativa, si vede subito come sia presente una relazione lineare tra le due.    
+Dal grafico dei Residuals vs Fitted si può notare come, nonostante siano presenti degli outliers al di sotto della curva di regressione, i residui si dispongono in maniera per lo più simmetrica, suggerendo la linearità del modello.
+Anche l'omoschedasticità sembra essere soddisfatta, a meno di una varianza leggermente minore per gli ospedali con meno persone, ma poi sembra stabilizzarsi.    
 Gli altri due grafici, invece, non ci permettono di affermare lo stesso per quanto riguarda la gaussianità; infatti le code sono molto più pesanti di una normale, specialmente la coda inferiore.
-Tuttavia il modello è comunque più che accettabile, nonostante la non-normalità dei residui.
+Tuttavia il modello è comunque più che accettabile, nonostante la non-normalità dei residui.    
 Eventuali trasformazioni per rendere i residui gaussiani rendono il modello maggiormente eteroschedastico, quindi le rifiutiamo a favore di un modello più omoschedastico e facile da interpretare.
 
 
-#### Costruzione del Modello TPY ~ SQRFOOT
+### Costruzione del Modello TPY ~ SQRFOOT
 
-Analizziamo ora il secondo modello con *SQRFOOT* come variabile esplicativa.
+Analizziamo ora il secondo modello con *SQRFOOT* come variabile esplicativa:
 
 ```{r echo=FALSE}
 fit_SQRFOOT <- lm(TPY ~ SQRFOOT, data = Data)
