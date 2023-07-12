@@ -831,8 +831,8 @@ gr <- ggplot(data = test, aes(x = hospID, y = err)) +
 plot_grid(dp, gr)
 ```
 
-Nel primo gafico confrontiamo i dati predetti rispetto ai dati reali del test-set. Rispetto al modello precedente si osserva una maggiore dispersione.
-Nel secondo grafico sono rappresentati gli errori relativi che come si poteva dedurre sono più alti.
+Nel primo grafico confrontiamo i dati predetti rispetto ai dati reali del test-set, e rispetto al modello precedente si osserva una maggiore dispersione.
+Nel secondo grafico sono rappresentati gli errori relativi che, come si poteva dedurre, sono più alti.
 
 ```{r echo=FALSE}
 quantile(err, probs = seq(0,1,0.1))
