@@ -1206,7 +1206,7 @@ ggplot(clsdb, aes(index, crit.s)) +
   theme_bw()
 ```
 
-A giudicare dal grafico, rappresentante la varianza between rispetto ai centroidi ottenuti aumentando il numero di centroidi, sembra essere una buona idea provare ad effettuare del clustering utilizzando 3 centroidi.
+A giudicare dal grafico rappresentante la varianza between rispetto ai centroidi ottenuti aumentando il numero di centroidi, sembra essere una buona idea provare ad effettuare del clustering utilizzando 3 centroidi.
 
 ```{r echo = F}
 km.sqrfoot <- kmeans(scale(na.omit(Data[,c("SQRFOOT", "TPY")])), centers = 3)
