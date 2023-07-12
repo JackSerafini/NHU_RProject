@@ -275,7 +275,7 @@ plot_grid(title,
           rel_heights = c(0.1, 2))
 ```
 
-Si osserva una forte asimmetricità analoga a *TPY* anche nelle distribuzioni delle variabili esplicative, in particolare in *SQRFOOT*.
+Si osserva una forte asimmetria analoga a *TPY* anche nelle distribuzioni delle variabili esplicative, in particolare in *SQRFOOT*.
 
 Analizziamo ora le correlazioni tra le variabili quantitative (compresa la risposta):
 
@@ -695,7 +695,8 @@ p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
   scale_color_manual(values = c("blue", "red"))
 resiplot(fit_SQR_PRO, p)
 ```
-
+Modello:
+$$log(TPY) = 1.88 + 0.65*log(SQRFOOT) -0.45*PRO1 +0.15*log(SQRFOOT)*PRO1$$
 Dai grafici dei residui si può affermare che l'omoschedasticità e la normalità sono rispettate.
 
 
