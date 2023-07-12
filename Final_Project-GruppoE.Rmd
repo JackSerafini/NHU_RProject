@@ -1270,3 +1270,5 @@ ggplot(DataNa, aes(x = factor(km.ns$cluster), y = TPY, fill = factor(km.ns$clust
   labs(x = "")
 ```
 
+
+## Conclusioni
