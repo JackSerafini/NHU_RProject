@@ -848,10 +848,10 @@ quantile(err, 0.6896)
 
 E l'errore relativo a quel quantile è minore del 24%. Quindi concludiamo che l'errore relativo della nostra predizione sulla percentuale di dati che il nostro modello prometteva di spiegare è al massimo del 24%.
 
-### Esecuzione ripetuta del proceso train-test
-La divisione del data-set fra quello di train e di test è casuale, quindi per controllare che non siamo stati fortunati nel caso che abbiamo studiato andremo a ripetere il processo 100 volte ed analizzare i risultati attraverso l'$R^2$ la varianza sui residui, l'errore relativo sui residui e i coefficienti ottenuti.
+### Esecuzione ripetuta del proceso train test
+La divisione del dataset fra quello di train e di test è casuale, quindi, per controllare che non siamo stati fortunati nel caso che abbiamo studiato andremo a ripetere il processo 100 volte e ad analizzare i risultati attraverso l'$R^2$, la varianza sui residui, l'errore relativo sui residui e i coefficienti ottenuti.
 
-#### regressione semplice *TPY* ~ *NUMBED* - 1
+#### Regressione Semplice *TPY* ~ *NUMBED* - 1
 
 ```{r echo=F, warning=FALSE}
 #Facciamo un ciclo for nel quale separiamo più volte il data set in test e train
@@ -929,9 +929,10 @@ plot_grid(r22, rer)
 
 Per calcolare $R^2$ abbiamo usato la seguente formula
 $$R^2 = 1 - \frac{dev_{res}} {dev_{tot}}$$
-Come si può notare dal gradico la maggior parte dei dati si avvicina all'$R^2$ calcolato nel modello che considera la completezza dei dati, ovvero 0.9929.
+Come si può notare dal grafico la maggior parte dei dati si avvicina all'$R^2$ calcolato nel modello che considera la completezza dei dati, ovvero 0.9929.
 
 Dal grafico degli errori si può notare che in media gli errori relativi sono molto piccoli, quasi tutti più piccoli del 10%.
+
 
 ```{r echo=FALSE}
 ggplot(data = NULL, aes(x = r[1,]))+
@@ -943,10 +944,11 @@ ggplot(data = NULL, aes(x = r[1,]))+
   ggtitle("Disrtibuzione dei coefficienti ottenuti")
 
 ```
-In giallo è segnato il coefficiente della regrassione consederando l'interezza dei dati.
+
+In giallo è segnato il coefficiente della regressione considerando l'interezza dei dati.
 
 
-#### Modello MULTIVARIATO log(TPY) ~ log(SQRFOOT) * PRO
+#### Modello Multivariato log(TPY) ~ log(SQRFOOT) * PRO
 
 ```{r echo = F}
 #Facciamo un ciclo for nel quale separiamo più volte il data set in test e train
@@ -1016,9 +1018,9 @@ rer <- ggplot(data = NULL, aes(x = e[2,]))+
 plot_grid(r22, rer)
 ```
 
-Ricordiamo che l'$R^2$ ottenuto in precedenza è 0.6896, e possiamo andare a notare che la nostra distribuzione si avvicina molto a quel valore.
+Ricordiamo che l'$R^2$ ottenuto in precedenza è 0.6896, e notiamo che la nostra distribuzione si avvicina molto a quel valore.
 
-Come abbiamo notato anche prima l'errore relativo in questo modello è più alto rispetto al primo ma osserviamo che le medie superano difficilmente il 0.28.
+Come abbiamo notato prima l'errore relativo in questo modello è più alto rispetto al primo ma osserviamo che le medie superano difficilmente lo 0.28.
 
 ```{r echo=FALSE}
 p1 <- ggplot(data = NULL, aes(x = c[1,]))+
@@ -1056,9 +1058,10 @@ p4 <- ggplot(data = NULL, aes(x = c[4,]))+
 plot_grid(p1, p2,
           p3, p4)
 ```
-Dal precedente grafico possiamo capire che i coefficienti ottenuti nel nostro test si avvicinano molto al coefficienti reali (in giallo).
 
-Dopo entrambe le analisi possiamo concludere che entrambi i modelli performano bene nel processo di train-test e i due casi specifici che siamo siamo andati a studiare non erano dei casi estremi.
+Dal precedente grafico possiamo capire che i coefficienti ottenuti nel nostro test si avvicinano molto ai coefficienti reali (in giallo).
+
+Dopo entrambe le analisi possiamo concludere che entrambi i modelli performano bene nel processo di train-test, i due casi specifici che siamo siamo andati a studiare all'inizio non erano dei casi estremi.
 
 ## Clustering
 
