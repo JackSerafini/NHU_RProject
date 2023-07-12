@@ -655,21 +655,21 @@ Procediamo quindi con la costruzione di un modello di regressione multipla intro
 Per quanto riguarda le variabili dicotomiche, i due modelli migliori sono quelli individuati con l'introduzione delle variabili *PRO* e *TAXEXEMPT*:
 
 ```{r echo=FALSE}
-fit_SQR_PRO <- lm(log(TPY) ~ log(SQRFOOT)*PRO, Data)
+fit_SQR_PRO <- lm(log(TPY) ~ log(SQRFOOT)*PRO, DataNa)
 summary(fit_SQR_PRO)
 ```
 La varianza dei residui è molta bassa, la mediana è molto vicino allo zero. Tutti i coefficienti sono molto significativi e l'$R^2$ è 0.6896, migliorato rispetto a quello ottenuto precedentemente ovvero 0.6751.
 
 ```{r echo=FALSE}
-fit_SQR_TAX <- lm(log(TPY) ~ log(SQRFOOT)*TAXEXEMPT, Data)
+fit_SQR_TAX <- lm(log(TPY) ~ log(SQRFOOT)*TAXEXEMPT, DataNa)
 summary(fit_SQR_TAX)
 ```
 Anche qui la varianza è molto bassa, simmetrica rispetto allo zero. Tutti i coefficienti sono molto significativi, a parte TAXEXEMPT1. L'$R^2$ è 0.6866, migliorato rispetto a quello ottenuto precedentemente ovvero 0.6751.
 
 Anche graficamente sembrano funzionare:
 
-* Modello con *PRO*
-In blu sono rappresentati i punti (e la relativa retta di regressione) per PRO = 0, in rosso i punti e la relativa retta per PRO = 1.
+* Modello con *PRO*    
+In blu sono rappresentati i punti (e la relativa retta di regressione) per PRO = 0, in rosso i punti e la relativa retta per PRO = 1.    
 
 ```{r echo=FALSE}
 p <- ggplot(data = DataNa, aes(x = log(SQRFOOT), y = log(TPY), col = PRO)) +
@@ -714,7 +714,7 @@ La verifica avviene costruendo i due modelli che abbiamo ricavato sfruttando le 
 
 Andremo prima ad analizzare una suddivisione specifica per ogni modello, e poi ripeteremo lo studio in maniera più aprossimato 100 volte.
 
-### Modello regressione semplice TPY ~ NUMBED - 1
+### Modello Regressione Semplice TPY ~ NUMBED - 1
 
 ```{r echo=FALSE}
 set.seed(69)
@@ -751,11 +751,10 @@ dp <- ggplot()+
 #calcolo residui
 err <- abs(test[,'TPY'] - pred)
 err <- err / abs(test[,'TPY'])
-gr <- ggplot(data = test, aes(x = NUMBED, y = err)) +
+gr <- ggplot(data = test, aes(x = hospID, y = err)) +
   geom_abline(intercept = 0, slope = 0, col = "gray40") +
   geom_point() +
   ggtitle("Grafico degli errori relativi") +
-  xlab("Posti letto")+
   ylab("errore relativo")+
   scale_y_continuous(breaks = scales::pretty_breaks(n = 15))+
   theme_bw()
@@ -763,8 +762,8 @@ gr <- ggplot(data = test, aes(x = NUMBED, y = err)) +
 plot_grid(dp, gr)
 ```
 
-Nel primo gafico confrontiamo i dati predetti rispetto ai dati reali del dataset test. Come si vede si avvicinano molto alla bisettrice del primo quadrante in rosso, ciò significa che i dati predetti si assomigliano molto ai dati reali.
-Nel secondo grafico sono rappresentati gli errori relativi, e come si vede che la maggior parte degli errori sono molto piccoli.
+Nel primo grafico confrontiamo i dati predetti rispetto ai dati reali del dataset test. Come si vede si avvicinano molto alla bisettrice (in rosso) del primo quadrante, ciò significa che i dati predetti assomigliano molto ai dati reali.
+Nel secondo grafico sono rappresentati gli errori relativi, e come si vede la maggior parte degli errori sono molto piccoli.   
 
 Formula errore relativo
 $$ err_{rel} = \frac{|x_{vero} - x_{pred}|}{|x_{vero}|}$$
@@ -774,12 +773,11 @@ $$ err_{rel} = \frac{|x_{vero} - x_{pred}|}{|x_{vero}|}$$
 quantile(err, probs = seq(0,1,0.1))
 ```
 
-Per essere più precisi il 90% dei dati ha un errore più piccolo del 10%, sfortunatamente l'errore più grande è del 42%.
+Per essere più precisi il 90% dei dati ha un errore più piccolo del 10%, sfortunatamente l'errore più grande è del 42%.    
 
 
-
-### Modello MULTIVARIATO log(TPY) ~ log(SQRFOOT) * PRO
-Facciamo adesso lo stesso studio con il secondo modello
+### Modello Multivariato log(TPY) ~ log(SQRFOOT) * PRO
+Facciamo adesso lo stesso studio con il secondo modello:    
 
 ```{r echo=FALSE}
 set.seed(69)
@@ -795,13 +793,13 @@ fit_train <- lm(log(TPY) ~ log(SQRFOOT) * PRO, train)
 summary(fit_train)
 ```
 
-Guardando il summary del modello applicato solo ad una parte dei dati si ritrovno di nuovo coefficienti molto simili a quelli gia ottenuti.
-*Coefficienti modello ottenuto con la completezza dei dati*
-```{r}
+Guardando il summary del modello applicato solo ad una parte dei dati si ritrovano di nuovo coefficienti molto simili a quelli gia ottenuti:     
+* *Coefficienti modello ottenuto con la completezza dei dati*
+```{r echo=FALSE}
 coef(fit_SQR_PRO)
 ```
-*Coefficienti ottenuti con il dataset train*
-```{r}
+* *Coefficienti ottenuti con il dataset train*
+```{r echo=FALSE}
 coef(fit_train)
 ```
 
@@ -821,11 +819,10 @@ dp <- ggplot()+
 #calcolo residui
 err <- abs(test[,'TPY'] - exp(pred))
 err <- err / abs(test[,'TPY'])
-gr <- ggplot(data = test, aes(x = SQRFOOT, y = err)) +
+gr <- ggplot(data = test, aes(x = hospID, y = err)) +
   geom_abline(intercept = 0, slope = 0, col = "gray40") +
   geom_point() +
   ggtitle("Grafico degli errori relativi") +
-  xlab("Piedi quadrati")+
   ylab("errore relativo")+
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10))+
   theme_bw()
@@ -833,14 +830,14 @@ gr <- ggplot(data = test, aes(x = SQRFOOT, y = err)) +
 plot_grid(dp, gr)
 ```
 
-Nel primo gafico confrontiamo i dati predetti rispetto ai dati reali del dataset test. Rispetto al modello precedente si osserva una maggiore dispersione.
+Nel primo gafico confrontiamo i dati predetti rispetto ai dati reali del test-set. Rispetto al modello precedente si osserva una maggiore dispersione.
 Nel secondo grafico sono rappresentati gli errori relativi che come si poteva dedurre sono più alti.
 
 ```{r echo=FALSE}
 quantile(err, probs = seq(0,1,0.1))
 ```
 
-In questo caso il 40% dei dati ha un errore relativo più piccolo del 10%. il 90% dei dati ha un errore più piccolo del 52%. In questo caso l'errore arriva anche al 170%.
+In questo caso il 40% dei dati ha un errore relativo più piccolo del 10%, il 90% dei dati ha un errore più piccolo del 52%. In questo caso l'errore arriva anche al 170%.
 
 Se andiamo a ricordare il nostro modello considerando tutti i dati ricordiamo che la precentuale di dati spiegati è 68.96%.
 
