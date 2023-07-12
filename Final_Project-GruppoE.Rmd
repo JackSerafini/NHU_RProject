@@ -577,6 +577,8 @@ Nel summary possiamo poi individuare l'intercetta e il coefficiente angolare: l'
 Sull'intercetta si può fare un'ulteriore considerazione: lo standard error è 0.6925, quasi quanto l'intercetta; risulta infatti, dal test del t-value, che l'ipotesi nulla che il coefficiente sia nullo non può essere rifiutata.
 Infine, studiando la statistica $R^2$, possiamo vedere un valore pari a 0.9678, il quale suggerisce un'aderenza del modello ai dati molto alta, quasi totale, circa del 97%.
 
+#### Costruzione del Modello TPY ~ NUMBED senza intercetta
+
 Ora proviamo a costruire il modello senza intercetta, così da stabilire se possa essere migliore:
 
 ```{r, echo=FALSE}
