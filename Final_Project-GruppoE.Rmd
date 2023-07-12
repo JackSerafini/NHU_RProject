@@ -793,7 +793,8 @@ fit_train <- lm(log(TPY) ~ log(SQRFOOT) * PRO, train)
 summary(fit_train)
 ```
 
-Guardando il summary del modello applicato solo ad una parte dei dati si ritrovano di nuovo coefficienti molto simili a quelli gia ottenuti:     
+Guardando il summary del modello applicato solo ad una parte dei dati si ritrovano di nuovo coefficienti molto simili a quelli gia ottenuti: 
+
 * *Coefficienti modello ottenuto con la completezza dei dati*
 ```{r echo=FALSE}
 coef(fit_SQR_PRO)
